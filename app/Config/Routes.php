@@ -47,6 +47,10 @@ $routes->get('/login', 'Users::index');
 $routes->post('/register', 'Users::register');
 $routes->post('/index', 'Users::index');
 $routes->get('/logout', 'Users::logout');
+$routes->get('/aduan', 'Aduan::index');
+$routes->post('/aduan/submit', 'Aduan::submit');
+$routes->get('/laporan', 'Aduan::laporan');
+$routes->get('/aduan/delete/(:num)', 'Aduan::delete/$1');
 
 // Halaman Admin
 $routes->get('/dashboard', 'Dashboard::index', ['filter' => 'auth']);

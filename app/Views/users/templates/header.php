@@ -31,18 +31,18 @@
                     <?php if (session()->get('isLoggedIn')) : ?>
                         <?php $role = session()->get('role'); ?>
                         <?php if ($role == 'admin') : ?>
-                            <li class="nav-item"><a class="nav-link" href="/dashboard">Dashboard</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/laporan">Laporan</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/wilayah">Data Wilayah</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/maps">Peta</a></li>
-                            <a class="btn btn-primary" href="/logout">Keluar</a>
-                        <?php elseif ($role == 'user') : ?>
-                            <li class="nav-item"><a class="nav-link" href="/halaman_utama">Halaman Utama</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/informasi">Informasi</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/maps_user">Peta</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/chat">LAPOR</a></li>
-                            <a class="btn btn-primary" href="/logout">Keluar</a>
-                        <?php endif; ?>
+                        <li class="nav-item"><a class="nav-link" href="/dashboard">Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/wilayah">Data Wilayah</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/maps">Peta</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/laporan">Laporan</a></li> <!-- Tambahan -->
+                        <a class="btn btn-primary" href="/logout">Keluar</a>
+                    <?php elseif ($role == 'user') : ?>
+                        <li class="nav-item"><a class="nav-link" href="/halaman_utama">Halaman Utama</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/informasi">Informasi</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/maps_user">Peta</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/form">Lapor</a></li> <!-- Tambahan -->
+                        <a class="btn btn-primary" href="/logout">Keluar</a>
+                    <?php endif; ?>
                     <?php else : ?>
                         <li class="nav-item"><a class="nav-link" href="/halaman_utama">Halaman Utama</a></li>
                         <li class="nav-item"><a class="nav-link" href="/informasi">Informasi</a></li>
