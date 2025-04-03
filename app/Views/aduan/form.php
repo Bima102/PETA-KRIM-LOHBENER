@@ -1,4 +1,4 @@
-<div class="container mt-5">
+<div class="container mt-5 mb-5"> <!-- Menambahkan margin bawah -->
     <h2 class="text-center">Form Aduan Masyarakat</h2>
 
     <!-- Tampilkan Pesan Sukses Jika Ada -->
@@ -20,7 +20,7 @@
     <?php endif; ?>
 
     <div class="d-flex justify-content-center">
-        <form action="/aduan/submit" method="post" class="p-4 shadow-lg bg-white rounded" style="max-width: 600px; width: 100%;">
+        <form action="/aduan/submit" method="post" class="p-5 shadow-lg bg-white rounded form-container" style="max-width: 800px; width: 100%;">
             <div class="mb-3">
                 <label for="jenis_kejahatan" class="form-label">Jenis Kejahatan</label>
                 <input type="text" class="form-control" name="jenis_kejahatan" value="<?= old('jenis_kejahatan') ?>" required>

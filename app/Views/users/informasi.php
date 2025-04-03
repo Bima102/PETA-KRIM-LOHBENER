@@ -1,80 +1,51 @@
-<div class="row g-3 ms-5 py-5">
-  <div class="col-10 col-md-10">
-    <div class="card">
-      <img src="<?= base_url(); ?>/assets/img/content/pencuri.jpg" class="card-img-top" alt="..." style="width: 300px;" />
-      <div class="card-body">
-        <h5 class="card-title">Pencurian Biasa (CUBIS)</h5>
-        <p class="card-text">Pencurian biasa diatur dalam Pasal 362 KUHP yaitu setiap perbuatan yang mengakibatkan
-          barang dibawah atau diluar kekuasaan pemiliknya dan perbuatan yang dilakukan oleh pelaku dengan mengambil
-          barang orang lain dan bertentangan dengan hukum.</p>
+<div class="container mt-5">
+  <h2 class="text-center mb-4">Jenis Kejahatan</h2>
+  <div class="row g-4">
+    <?php 
+    $data = [
+        [
+            "img" => "pencuri.jpg",
+            "title" => "Pencurian Biasa (CUBIS)",
+            "desc" => "Pencurian biasa, sebagaimana diatur dalam Pasal 362 KUHP, adalah tindakan mengambil barang milik orang lain dengan maksud untuk memilikinya secara melawan hukum. Tindakan ini mencakup unsur-unsur seperti perbuatan mengambil, objek berupa barang, kepemilikan oleh orang lain, dan niat untuk memiliki secara melawan hukum...",
+            "url" => "https://www.hukumonline.com/klinik/a/ini-bunyi-pasal-362-kuhp-tentang-pencurian-lt65802c0e6e0f9/" 
+        ],
+        [
+            "img" => "malingmotor.jpg",
+            "title" => "Pencurian Kendaraan Bermotor (CURANMOR)",
+            "desc" => "​Pencurian kendaraan bermotor (curanmor) adalah tindakan mengambil kendaraan bermotor milik orang lain secara melawan hukum dengan tujuan memiliki atau menjualnya kembali. Modus operandi yang umum digunakan antara lain merusak kunci kontak, memecahkan kaca kendaraan, atau menggunakan kunci palsu. Kasus curanmor seringkali menimbulkan kerugian material yang signifikan bagi korban, serta menurunkan rasa aman dalam masyarakat. ...",
+            "url" => "https://www.liputan6.com/feeds/read/5922507/memahami-makna-curanmor-sebuah-kejahatan-pencurian-kendaraan-bermotor?"
+        ],
+        [
+            "img" => "begal.jpg",
+            "title" => "Pencurian Dengan Kekerasan (CURAS)",
+            "desc" => "Pencurian dengan kekerasan (curas) adalah tindakan mengambil barang milik orang lain dengan menggunakan ancaman atau kekerasan fisik, seringkali disertai dengan pembunuhan. Berbeda dengan pencurian biasa yang dilakukan secara diam-diam, curas melibatkan kekerasan langsung terhadap korban untuk mencapai tujuan pelaku...",
+            "url" => "https://www.detik.com/hikmah/khazanah/d-6639301/hudud-pengertian-dan-penerapan-hukumnya-di-indonesia?"
+        ],
+        [
+            "img" => "Pencurianp.jpg",
+            "title" => "Pencurian Dengan Pemberatan (CURAT)",
+            "desc" => "​Pencurian dengan pemberatan (curat) adalah tindakan mengambil barang milik orang lain dengan cara memasuki rumah atau bangunan korban, biasanya dengan merusak pintu atau jendela, untuk mengambil barang berharga. Modus operandi ini sering melibatkan perencanaan dan pengamatan terhadap target sebelum aksi dilakukan...",
+            "url" => "https://news.detik.com/berita/d-7015208/polres-metro-bekasi-ungkap-13-kasus-pidana-pencurian-hingga-pembunuhan?"
+        ],
+        [
+            "img" => "pembunuhan.jpg",
+            "title" => "Pembunuhan",
+            "desc" => "​Pembunuhan adalah tindakan sengaja yang mengakibatkan hilangnya nyawa seseorang, dilakukan dengan niat oleh pelakunya. Unsur utama dalam pembunuhan adalah adanya niat atau kesengajaan dari pelaku untuk menghilangkan nyawa korban. Dalam hukum Indonesia, pembunuhan dibagi menjadi beberapa kategori, antara lain pembunuhan biasa, pembunuhan dengan pemberatan, dan pembunuhan berencana, yang masing-masing memiliki unsur dan konsekuensi hukum yang berbeda...",
+            "url" => "https://www.detik.com/hikmah/khazanah/d-7090974/diyat-pengertian-faktor-jenis-dan-hikmahnya?"
+        ]
+    ];
+
+    foreach ($data as $item) : ?>
+      <div class="col-md-6 col-lg-4">
+        <div class="card crime-card">
+          <img src="<?= base_url(); ?>/assets/img/<?= $item['img']; ?>" class="card-img-top" alt="<?= $item['title']; ?>" />
+          <div class="card-body">
+            <h5 class="card-title"><?= $item['title']; ?></h5>
+            <p class="card-text"><?= $item['desc']; ?></p>
+            <a href="<?= $item['url']; ?>" class="btn btn-dark btn-sm" target="_blank">Selengkapnya</a>
+          </div>
+        </div>
       </div>
-    </div>
+    <?php endforeach; ?>
   </div>
 </div>
-
-<div class="row g-3 ms-5">
-  <div class="col-10 col-md-10">
-    <div class="card">
-      <img src="<?= base_url(); ?>/assets/img/content/malingmotor.jpg" class="card-img-top" alt="..." style="width: 300px;" />
-      <div class="card-body">
-        <h5 class="card-title">Pencurian Dengan Kekerasan (CURAS)</h5>
-        <p class="card-text">Pencurian dengan kekerasan adalah pencurian yang dilakukan dengan melukai fisik baik
-          sengaja maupun tidak disengaja yang dilakukan oleh seseorang atau sekelompok orang atau disebut juga sebagai
-          “perampokan”.</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="row g-3 ms-5 py-5">
-  <div class="col-10 col-md-10">
-    <div class="card">
-      <img src="<?= base_url(); ?>/assets/img/content/begal.jpg" class="card-img-top" alt="..." style="width: 300px;" />
-      <div class="card-body">
-        <h5 class="card-title">Pencurian Dengan Kekerasan (CURAS)</h5>
-        <p class="card-text">Pencurian dengan kekerasan adalah pencurian yang dilakukan dengan melukai fisik baik
-          sengaja maupun tidak disengaja yang dilakukan oleh seseorang atau sekelompok orang atau disebut juga sebagai
-          “perampokan”.</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="row g-3 ms-5">
-  <div class="col-10 col-md-10">
-    <div class="card">
-      <img src="<?= base_url(); ?>/assets/img/Pencurianp.jpg" class="card-img-top" alt="..." style="width: 300px;" />
-      <div class="card-body">
-        <h5 class="card-title">Pencurian Dengan Pemberatan (CURAT)</h5>
-        <p class="card-text">Pencurian ini diatur dalam Pasal 363 KUHP dan jenis pencurian yang berbeda dengan
-          jenis-jenis pencurian lainnya. Pencurian dilakukan dengan cara atau keadaan tertentu sehingga bersifat lebih
-          berat. Misalnya :</p>
-        </p>1. Pencurian hewan ternak</p>
-        <p> 2. pencurian pada saat kebakaran, letusan, banjir, gempa bumi atau gempa laut, gunung Meletus.</p>
-        <p> 3. Perbuatan dilakukan oleh dua orang atau lebih dengan bersekutu.</p>
-        <p> 4. Pencurian di waktu malam dalam sebuah rumah atau pekarangan tertutup.</p>
-        <p> 5. Pencurian dengan melakukan perbuatan perusakan seperti memecahkan kaca mobil, merusak pintu/perabotan
-          rumah, dan lainnya.</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="row g-3 ms-5 py-5">
-  <div class="col-10 col-md-10">
-    <div class="card">
-      <img src="<?= base_url(); ?>/assets/img/content/pembunuhan.jpg" class="card-img-top" alt="..." style="width: 300px;" />
-      <div class="card-body">
-        <h5 class="card-title">Pembunuhan</h5>
-        <p class="card-text">Kata pembunuhan berasal dari kata dasar “bunuh” yang mendapat awalan pe- dan akhiran-an
-          yang mengandung makna mematikan. Dalam peristiwa pembunuhan minimal ada 2 (dua) orang yang terlibat, orang
-          yang dengan sengaja mematikan atau menghilangkan nyawa disebut pembunuh (pelaku), sedangkan orang yang
-          dimatikan atau orang yang dihilangkan nyawanya disebut sebagai pihak terbunuh (korban).</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="container-fluid mt-5">
-    <div class="row m-3 text-center" id="newsType"></div>
-    <div class="row me-2 ms-2" id="newsdetails"></div>
-  </div>

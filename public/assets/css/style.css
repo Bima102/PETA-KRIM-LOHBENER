@@ -138,3 +138,62 @@ body {
     margin: 0 auto;
   }
 }
+
+body {
+  background-color: #f8f9fa;
+  font-family: 'Arial', sans-serif;
+}
+
+h2 {
+  font-weight: bold;
+  color: #333;
+}
+
+.crime-card {
+  border: none;
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+  border-radius: 10px;
+}
+
+.crime-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.crime-card img {
+  height: 200px;
+  object-fit: cover;
+  transition: transform 0.5s ease-in-out;
+}
+
+.crime-card:hover img {
+  transform: scale(1.1);
+}
+
+.card-body {
+  background: #fff;
+  padding: 15px;
+  text-align: center;
+}
+
+.card-title {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #343a40;
+}
+
+.card-text {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.btn-dark {
+  background-color: #000;
+  border: none;
+  transition: background 0.3s ease;
+}
+
+.btn-dark:hover {
+  background-color: #444;
+}

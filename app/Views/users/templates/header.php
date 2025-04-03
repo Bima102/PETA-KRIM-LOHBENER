@@ -20,8 +20,8 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
         <div class="container">
             <a class="navbar-brand fs-6 d-flex align-items-center" href="#">
-                <img src="<?= base_url('img/polisi.png'); ?>" alt="Logo Polisi" width="40" height="40" class="me-2">
-                PETA-KRIM INDRAMAYU 
+                <img src="<?= base_url('assets/img/polisi.png'); ?>" alt="Logo Polisi" width="40" height="40" class="me-2">
+                PETA-KRIM LOHBENER 
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
                 <span class="navbar-toggler-icon"></span>
@@ -40,7 +40,7 @@
                         <li class="nav-item"><a class="nav-link" href="/halaman_utama">Halaman Utama</a></li>
                         <li class="nav-item"><a class="nav-link" href="/informasi">Informasi</a></li>
                         <li class="nav-item"><a class="nav-link" href="/maps_user">Peta</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/form">Lapor</a></li> <!-- Tambahan -->
+                        <li class="nav-item"><a class="nav-link" href="/aduan">Lapor</a></li> <!-- Tambahan -->
                         <a class="btn btn-primary" href="/logout">Keluar</a>
                     <?php endif; ?>
                     <?php else : ?>

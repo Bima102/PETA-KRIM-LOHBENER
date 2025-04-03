@@ -8,9 +8,9 @@
         <h1 class="text-white text-center display-4 mb-3 mt-3 fw-bold">
         Selamat datang di </h1>
         <h1 class="text-white text-center display-4 mb-3 mt-3 fw-bold">
-        Sistem  Pemetaan Wilayah Rawan Kriminalitas Di Kabupaten Indramayu Berbasis Web </h1>
+        Sistem  Pemetaan Wilayah Rawan Kriminalitas Di Kecamatan Lohbener Berbasis Web </h1>
         <h1 class="text-white text-center display-4 mb-3 mt-3 fw-bold">
-        (PETA-KRIM Indramayu)</h1>
+        (PETA-KRIM LOHBENER)</h1>
         <div class="row justify-content-center">
           <div class="col-md-8">
           </div>

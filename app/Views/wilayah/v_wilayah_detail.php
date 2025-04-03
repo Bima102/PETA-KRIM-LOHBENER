@@ -2,10 +2,7 @@
   <div class="col-md-12">
     <div class="card">
       <div class="card-header card-header-primary">
-        <h4 class="card-title">Detail Wilayah</h4>
-        <p class="card-category">
-          Menu Detail Wilayah
-        </p>
+        <h4 class="card-title">Menu Detail Wilayah</h4>
       </div>
       <div class="card-body">
         <a href="<?= base_url('/wilayah'); ?>" class="btn btn-primary">Kembali</a>

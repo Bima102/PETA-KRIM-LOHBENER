@@ -49,10 +49,7 @@ $submit = [
   <div class="col-md-12">
     <div class="card">
       <div class="card-header card-header-primary">
-        <h4 class="card-title">Data Wilayah</h4>
-        <p class="card-category">
-          Menu Data Wilayah
-        </p>
+        <h4 class="card-title">Menu Data Wilayah</h4>
       </div>
       <div class="card-body">
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
