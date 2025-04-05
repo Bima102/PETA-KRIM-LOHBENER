@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controllers;
-use App\Models\M_Aduan; // Menggunakan model M_Aduan
+use App\Models\M_Aduan;
 use CodeIgniter\Controller;
 
 class Aduan extends Controller
@@ -10,15 +10,25 @@ class Aduan extends Controller
 
     public function __construct()
     {
-        $this->aduanModel = new M_Aduan(); // Menggunakan model M_Aduan
+        $this->aduanModel = new M_Aduan();
         helper(['form', 'url']);
     }
 
     public function index()
     {
+        // Cek apakah user sudah login
+        if (!session()->get('isLoggedIn')) {
+            return redirect()->to('/login')->with('errors', ['Silakan login terlebih dahulu.']);
+        }
+
+        // Ambil nama user dari session
+        $namaPelapor = session()->get('firstname') . ' ' . session()->get('lastname');
+
         $data = [
-            'title' => 'Form Aduan'
+            'title' => 'Form Aduan',
+            'pelapor' => $namaPelapor
         ];
+
         echo view('users/templates/header', $data);
         echo view('aduan/form', $data);
         echo view('users/templates/footer');
@@ -26,16 +36,18 @@ class Aduan extends Controller
 
     public function submit()
     {
-        // Validasi input
+        // Validasi input form (tanpa pelapor, karena otomatis)
         if (!$this->validate([
             'jenis_kejahatan' => 'required',
             'kecamatan' => 'required',
             'kelurahan' => 'required',
-            'daerah' => 'required',
-            'pelapor' => 'required'
+            'daerah' => 'required'
         ])) {
             return redirect()->to('/aduan')->withInput()->with('errors', $this->validator->getErrors());
         }
+
+        // Ambil nama pelapor dari session
+        $namaPelapor = session()->get('firstname') . ' ' . session()->get('lastname');
 
         // Simpan data ke database
         $this->aduanModel->save([
@@ -43,13 +55,10 @@ class Aduan extends Controller
             'kecamatan' => $this->request->getPost('kecamatan'),
             'kelurahan' => $this->request->getPost('kelurahan'),
             'daerah' => $this->request->getPost('daerah'),
-            'pelapor' => $this->request->getPost('pelapor')
+            'pelapor' => $namaPelapor
         ]);
 
-        // Set session flashdata untuk pesan sukses
         session()->setFlashdata('success', 'Laporan berhasil dikirim.');
-
-        // Tetap di halaman form aduan
         return redirect()->to('/aduan');
     }
 
@@ -59,6 +68,7 @@ class Aduan extends Controller
             'title' => 'Laporan Aduan',
             'aduan' => $this->aduanModel->findAll()
         ];
+
         echo view('users/templates/header', $data);
         echo view('aduan/laporan', $data);
         echo view('users/templates/footer');

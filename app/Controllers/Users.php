@@ -8,18 +8,27 @@ class Users extends BaseController
 {
     public function index()
     {
-        $data = [
-            'title' => 'Login'
-        ];
+        $data = ['title' => 'Login'];
         helper(['form']);
-
 
         if ($this->request->getMethod() == 'post') {
             $model = new M_User();
+            $email = $this->request->getVar('email');
+            $password = $this->request->getVar('password');
 
-            $user = $model->where('email', $this->request->getVar('email'))
-                ->first();
+            // Cek apakah email ada di database
+            $user = $model->where('email', $email)->first();
 
+            if (!$user) {
+                return redirect()->back()->with('error', 'Email tidak terdaftar.');
+            }
+
+            // Verifikasi password
+            if (!password_verify($password, $user['password'])) {
+                return redirect()->back()->with('error', 'Password salah.');
+            }
+
+            // Set session jika login berhasil
             $this->setUserSession($user);
             return redirect()->to('dashboard');
         }
@@ -46,96 +55,43 @@ class Users extends BaseController
 
     public function register()
     {
-        $data = [
-            'title' => 'Register'
-        ];
+        $data = ['title' => 'Register'];
         helper(['form']);
-
+    
         if ($this->request->getMethod() == 'post') {
-            //let's do the validation here
             $rules = [
                 'firstname' => 'required|min_length[3]|max_length[20]',
                 'lastname' => 'required|min_length[3]|max_length[20]',
-                'email' => 'required|min_length[6]|max_length[50]|valid_email|is_unique[users.email]',
+                'email' => 'required|valid_email|is_unique[users.email]',
                 'password' => 'required|min_length[8]|max_length[255]',
                 'password_confirm' => 'matches[password]',
             ];
-
+    
             if (!$this->validate($rules)) {
                 $data['validation'] = $this->validator;
             } else {
                 $model = new M_User();
-
                 $newData = [
                     'firstname' => $this->request->getVar('firstname'),
                     'lastname' => $this->request->getVar('lastname'),
                     'email' => $this->request->getVar('email'),
-                    'password' => $this->request->getVar('password'),
+                    'password' => $this->request->getVar('password'), // Tanpa hashing di sini
                 ];
                 $model->save($newData);
-                $session = session();
-                $session->setFlashdata('success', 'Successful Registration');
-                return redirect()->to('/');
+    
+                session()->setFlashdata('success', 'Pendaftaran berhasil. Silakan login.');
+                return redirect()->to('/login');
             }
         }
-
-
+    
         echo view('users/templates/header', $data);
         echo view('register');
         echo view('users/templates/footer');
-    }
-
-    public function profile()
-    {
-
-        $data = [];
-        helper(['form']);
-        $model = new M_User();
-
-        if ($this->request->getMethod() == 'post') {
-            //let's do the validation here
-            $rules = [
-                'firstname' => 'required|min_length[3]|max_length[20]',
-                'lastname' => 'required|min_length[3]|max_length[20]',
-            ];
-
-            if ($this->request->getPost('password') != '') {
-                $rules['password'] = 'required|min_length[8]|max_length[255]';
-                $rules['password_confirm'] = 'matches[password]';
-            }
-
-
-            if (!$this->validate($rules)) {
-                $data['validation'] = $this->validator;
-            } else {
-
-                $newData = [
-                    'id' => session()->get('id'),
-                    'firstname' => $this->request->getPost('firstname'),
-                    'lastname' => $this->request->getPost('lastname'),
-                ];
-                if ($this->request->getPost('password') != '') {
-                    $newData['password'] = $this->request->getPost('password');
-                }
-                $model->save($newData);
-
-                session()->setFlashdata('success', 'Successfuly Updated');
-                return redirect()->to('/profile');
-            }
-        }
-
-        $data['user'] = $model->where('id', session()->get('id'))->first();
-        echo view('templates/header', $data);
-        echo view('profile');
-        echo view('templates/footer');
-    }
+    }    
 
     public function logout()
     {
         session()->destroy();
         return redirect()->to('/');
     }
-
-    //--------------------------------------------------------------------
-
 }
