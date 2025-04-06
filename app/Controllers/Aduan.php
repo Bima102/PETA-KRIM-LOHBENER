@@ -36,12 +36,13 @@ class Aduan extends Controller
 
     public function submit()
     {
-        // Validasi input form (tanpa pelapor, karena otomatis)
+        // Validasi input form
         if (!$this->validate([
             'jenis_kejahatan' => 'required',
-            'kecamatan' => 'required',
             'kelurahan' => 'required',
-            'daerah' => 'required'
+            'daerah' => 'required',
+            'latitude' => 'required',
+            'longitude' => 'required',
         ])) {
             return redirect()->to('/aduan')->withInput()->with('errors', $this->validator->getErrors());
         }
@@ -52,10 +53,11 @@ class Aduan extends Controller
         // Simpan data ke database
         $this->aduanModel->save([
             'jenis_kejahatan' => $this->request->getPost('jenis_kejahatan'),
-            'kecamatan' => $this->request->getPost('kecamatan'),
-            'kelurahan' => $this->request->getPost('kelurahan'),
-            'daerah' => $this->request->getPost('daerah'),
-            'pelapor' => $namaPelapor
+            'kelurahan'       => $this->request->getPost('kelurahan'),
+            'daerah'          => $this->request->getPost('daerah'),
+            'latitude'        => $this->request->getPost('latitude'),
+            'longitude'       => $this->request->getPost('longitude'),
+            'pelapor'         => $namaPelapor
         ]);
 
         session()->setFlashdata('success', 'Laporan berhasil dikirim.');

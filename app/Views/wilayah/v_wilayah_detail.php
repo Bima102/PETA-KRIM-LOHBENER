@@ -16,24 +16,30 @@
           </div>
         </div>
         <div class="table-responsive">
-          <table class="table table-striped">
-            <thead class="text-primary">
+          <table class="table table-bordered table-striped table-hover">
+            <thead class="table-dark text-center">
               <tr>
                 <th>Latitude</th>
                 <th>Longitude</th>
                 <th>Deskripsi</th>
-                <th>Action</th>
+                <th>Aksi</th>
               </tr>
             </thead>
-            <tr>
-              <td><?= $dWilayah->latitude; ?></td>
-              <td><?= $dWilayah->longitude; ?></td>
-              <td><?= $dWilayah->deskripsi; ?></td>
-              <td>
-                <a href="/editWilayah/<?= $dWilayah->id; ?>"><i class="bi bi-pencil-fill text-primary fs-5"></i></a>
-                <a href="/wilayahDelete/<?= $dWilayah->id; ?>" onclick="return confirm('Apakah Anda Yakin Ingin Menghapus?')"><i class="bi bi-trash3-fill ms-3 remove text-danger fs-5"></i></a>
-              </td>
-            </tr>
+            <tbody>
+              <tr class="text-center">
+                <td><?= esc($dWilayah->latitude); ?></td>
+                <td><?= esc($dWilayah->longitude); ?></td>
+                <td><?= esc($dWilayah->deskripsi); ?></td>
+                <td>
+                  <a href="/editWilayah/<?= $dWilayah->id; ?>" class="btn btn-sm btn-warning">
+                    <i class="fas fa-edit"></i> Edit
+                  </a>
+                  <a href="/wilayahDelete/<?= $dWilayah->id; ?>" onclick="return confirm('Apakah Anda Yakin Ingin Menghapus?')" class="btn btn-sm btn-danger ms-1">
+                    <i class="fas fa-trash-alt"></i> Hapus
+                  </a>
+                </td>
+              </tr>
+            </tbody>
           </table>
         </div>
       </div>

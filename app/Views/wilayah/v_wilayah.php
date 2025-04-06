@@ -132,8 +132,8 @@ $submit = [
         </div>
 
         <div class="table-responsive">
-          <table class="table table-striped">
-            <thead class="text-primary">
+          <table class="table table-bordered table-striped table-hover">
+            <thead class="table-dark text-center">
               <tr>
                 <th>No</th>
                 <th>Provinsi</th>
@@ -147,13 +147,17 @@ $submit = [
             <tbody>
               <?php foreach ($content as $row => $value) : ?>
                 <tr>
-                  <td><?= $row + 1; ?></td>
+                  <td class="text-center"><?= $row + 1; ?></td>
                   <td><?= $value->nama; ?></td>
                   <td><?= $value->kknama; ?></td>
                   <td><?= $value->kecnama; ?></td>
                   <td><?= $value->kelnama; ?></td>
                   <td><?= $value->nama_daerah; ?></td>
-                  <td><a href="/detailWilayah/<?= $value->id; ?>" class="btn btn-primary">Detail</a></td>
+                  <td class="text-center">
+                    <a href="/detailWilayah/<?= $value->id; ?>" class="btn btn-primary btn-sm">
+                      <i class="fas fa-info-circle"></i> Detail
+                    </a>
+                  </td>
                 </tr>
               <?php endforeach; ?>
             </tbody>
