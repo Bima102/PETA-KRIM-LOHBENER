@@ -15,12 +15,9 @@ class Wilayah extends BaseController
 
   public function wilayah_data_read()
   {
-    $this->builder->select('region.nama_daerah, provinsi.nama, provinsi.provinsi_id, 
-        kabupaten_kota.nama as kknama, kabupaten_kota.kabupaten_kota_id, kecamatan.nama as kecnama,
-        kelurahan.nama as kelnama, region.deskripsi, region.latitude, region.longitude, region.nama_daerah, 
+    $this->builder->select('region.nama_daerah, kecamatan.nama as kecnama,
+        kelurahan.nama as kelnama, region.deskripsi, region.latitude, region.longitude, 
         region.gambar, region.id');
-    $this->builder->join('provinsi', 'provinsi.provinsi_id = region.provinsi_id');
-    $this->builder->join('kabupaten_kota', 'kabupaten_kota.kabupaten_kota_id = region.kabupaten_kota_id');
     $this->builder->join('kecamatan', 'kecamatan.kecamatan_id = region.kecamatan_id');
     $this->builder->join('kelurahan', 'kelurahan.kelurahan_id = region.kelurahan_id');
     $query = $this->builder->get();
@@ -29,8 +26,6 @@ class Wilayah extends BaseController
     $data = [
       'title'     => 'Data Wilayah',
       'content'   => $query->getResult(),
-      'prov'      => $dataModel->get_data_prov()->getResult(),
-      'kabkota'   => $dataModel->get_data_kota()->getResult(),
       'kecamatan' => $dataModel->get_data_kecamatan()->getResult(),
       'kelurahan' => $dataModel->get_data_kelurahan()->getResult(),
       'validation' => \Config\Services::validation()
@@ -56,23 +51,17 @@ class Wilayah extends BaseController
       // return redirect()->to('/wilayah_data_import')->withInput();
     }
 
-    // ambil gambar
     $fileSampul = $this->request->getFile('gambar');
-    // apakah tidakl ada gambar yang di upload
     if ($fileSampul->getError() == 4) {
       $namaSampul = 'danger.png';
     } else {
-      //generate nama sampul random
       $namaSampul = $fileSampul->getRandomName();
-      // pindahkan file ke folder public/img
       $fileSampul->move('img', $namaSampul);
     }
 
     if ($this->request->getPost()) {
       $modelMasterData = new \App\Models\M_Wilayah();
       $dataMaster = [
-        'provinsi_id'       => $this->request->getPost('provinsi'),
-        'kabupaten_kota_id' => $this->request->getPost('kabkota'),
         'kecamatan_id'      => $this->request->getPost('kecamatan'),
         'kelurahan_id'      => $this->request->getPost('kelurahan'),
         'users_id'          => session()->get('id'),
@@ -83,9 +72,7 @@ class Wilayah extends BaseController
         'gambar'            => $namaSampul,
       ];
       $modelMasterData->save($dataMaster);
-      // $id_masterData = $modelMasterData->insertID();
       session()->setFlashdata('msg', 'Data berhasil ditambahkan..');
-
       return redirect()->to('/wilayah');
     }
   }
@@ -111,7 +98,7 @@ class Wilayah extends BaseController
   {
     $dataModel = new \App\Models\M_Wilayah();
     $this->builder->select('region.nama_daerah, kecamatan.nama as kecam_nama,
-        kelurahan.nama as kelur_nama, region.deskripsi, region.latitude, region.longitude, region.nama_daerah, 
+        kelurahan.nama as kelur_nama, region.deskripsi, region.latitude, region.longitude, 
         region.gambar, region.id');
     $this->builder->join('kecamatan', 'kecamatan.kecamatan_id = region.kecamatan_id');
     $this->builder->join('kelurahan', 'kelurahan.kelurahan_id = region.kelurahan_id');
@@ -139,7 +126,6 @@ class Wilayah extends BaseController
     } else if ($fileGambar != 'danger.png') {
       $namaGambar = $fileGambar->getRandomName();
       $fileGambar->move('img', $namaGambar);
-      // unlink('img/' . $this->request->getVar('gambarLama'));
     }
 
     $dataModel = new \App\Models\M_Wilayah();
@@ -155,7 +141,6 @@ class Wilayah extends BaseController
     ]);
 
     session()->setFlashdata('msg', 'Data berhasil diubah..');
-
     return redirect()->to('/wilayah');
   }
 
@@ -170,7 +155,6 @@ class Wilayah extends BaseController
 
     $dataModel->delete($id);
     session()->setFlashData('msg', 'Data berhasil dihapus..');
-    
     return redirect()->to('/wilayah');
   }
 }

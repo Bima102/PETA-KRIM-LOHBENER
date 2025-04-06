@@ -1,9 +1,4 @@
 <?php
-$csv = [
-  'name' => 'csv',
-  'id'   => 'csv'
-];
-
 $nama_daerah = [
   'name' => 'nama_daerah',
   'id'   => 'nama_daerah',
@@ -17,7 +12,7 @@ $lat = [
   'id'   => 'latitude',
   'class' => 'form-control text-dark fw-bold',
   'value' => null,
-  'placeholder' => 'latitude'
+  'placeholder' => 'Latitude'
 ];
 
 $long = [
@@ -25,7 +20,7 @@ $long = [
   'id'   => 'longitude',
   'class' => 'form-control text-dark fw-bold',
   'value' => null,
-  'placeholder' => 'longitude'
+  'placeholder' => 'Longitude'
 ];
 
 $desk = [
@@ -33,7 +28,7 @@ $desk = [
   'id'   => 'deskripsi',
   'class' => 'form-control text-dark fw-bold',
   'value' => null,
-  'placeholder' => 'deskripsi'
+  'placeholder' => 'Deskripsi'
 ];
 
 $submit = [
@@ -52,10 +47,9 @@ $submit = [
         <h4 class="card-title">Menu Data Wilayah</h4>
       </div>
       <div class="card-body">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
           Tambah Data
         </button>
-        <hr>
 
         <?php if (session()->getFlashdata('msg')) : ?>
           <div class="alert alert-success text-dark" role="alert">
@@ -63,93 +57,80 @@ $submit = [
           </div>
         <?php endif; ?>
 
-        <!-- Modal -->
+        <!-- Modal Tambah Data -->
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Data Wilayah</h1>
+                <h5 class="modal-title" id="exampleModalLabel">Tambah Data Wilayah</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
                 <form action="/wilayah_data_save" method="POST" enctype="multipart/form-data">
                   <div class="form-group">
-                    <?= form_label('Provinsi', 'provinsi'); ?><br>
-                    <select id="provinsi" class="form-control text-dark fw-bold p-2" name="provinsi" aria-readonly="true">
-                      <?php foreach ($prov as $row) : ?>
-                        <option value="<?= $row->provinsi_id; ?>"><?= $row->nama; ?></option>
-                      <?php endforeach; ?>
-                    </select><br>
-                    <?= form_label('Kota', 'kota'); ?><br>
-                    <select id="kabkota" class="form-control text-dark fw-bold p-2" name="kabkota" aria-readonly="true">
-                      <?php foreach ($kabkota as $row) : ?>
-                        <option value="<?= $row->kabupaten_kota_id; ?>"><?= $row->nama; ?></option>
-                      <?php endforeach; ?>
-                    </select><br>
-                    <?= form_label('Kecamatan', 'kecamatan'); ?><br>
-                    <select id="kecamatan" class="form-control text-dark fw-bold p-2" name="kecamatan">
+                    <?= form_label('Kecamatan', 'kecamatan'); ?>
+                    <select id="kecamatan" class="form-control text-dark fw-bold p-2 mb-3" name="kecamatan" required>
                       <option value="">-- Pilih Kecamatan --</option>
                       <?php foreach ($kecamatan as $row) : ?>
                         <option value="<?= $row->kecamatan_id; ?>"><?= $row->nama; ?></option>
                       <?php endforeach; ?>
-                    </select><br>
-                    <?= form_label('Kelurahan', 'kelurahan'); ?><br>
-                    <select id="kelurahan" class="form-control text-dark fw-bold p-2" name="kelurahan">
+                    </select>
+
+                    <?= form_label('Kelurahan', 'kelurahan'); ?>
+                    <select id="kelurahan" class="form-control text-dark fw-bold p-2 mb-3" name="kelurahan" required>
                       <option value="">-- Pilih Kelurahan --</option>
                       <?php foreach ($kelurahan as $row) : ?>
                         <option value="<?= $row->kelurahan_id; ?>"><?= $row->nama; ?></option>
                       <?php endforeach; ?>
-                    </select><br>
-                    <div class="col">
-                      <?= form_label('Nama Jalan/Daerah', 'Nama Jalan/Daerah'); ?>
-                      <input type="text" class="form-control text-dark fw-bold p-2" name="nama_daerah" id=" nama_daerah" placeholder="Nama Jalan/Daerah">
-                    </div>
+                    </select>
+
+                    <?= form_label('Nama Daerah/Jalan', 'nama_daerah'); ?>
+                    <?= form_input($nama_daerah); ?><br>
+
                     <div class="row">
-                      <div class="col">
-                        <?= form_label('Latitude', 'Latitude'); ?>
-                        <input type="text" class="form-control text-dark fw-bold p-2" name="latitude" id=" latitude" placeholder="Latitude / Garis Lintang">
+                      <div class="col-md-6">
+                        <?= form_label('Latitude', 'latitude'); ?>
+                        <?= form_input($lat); ?>
                       </div>
-                      <div class="col">
+                      <div class="col-md-6">
                         <?= form_label('Longitude', 'longitude'); ?>
-                        <input type="text" class="form-control text-dark fw-bold p-2" name="longitude" id=" longitude" placeholder="Longitude / Garis bujur">
+                        <?= form_input($long); ?>
                       </div>
-                    </div>
-                    <div class="col">
-                      <?= form_label('Deskripsi', 'deskripsi'); ?>
-                      <input type="text" class="form-control text-dark fw-bold p-2" name="deskripsi" id=" deskripsi" placeholder="Pembunuhan / Begal / Pencurian">
-                    </div>
+                    </div><br>
+
+                    <?= form_label('Deskripsi', 'deskripsi'); ?>
+                    <?= form_input($desk); ?><br>
+
                     <?= form_label('Gambar', 'gambar'); ?>
-                    <input type="file" class="form-control text-dark fw-bold mb-5 p-2" id="gambar" name="gambar">
+                    <input type="file" class="form-control text-dark fw-bold p-2 mb-4" id="gambar" name="gambar">
                   </div>
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <?= form_submit($submit); ?>
+                  </div>
+                </form>
               </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="Submit" class="btn btn-primary">Submit</button>
-              </div>
-              </form>
             </div>
           </div>
         </div>
 
+        <!-- Tabel Data -->
         <div class="table-responsive">
           <table class="table table-bordered table-striped table-hover">
             <thead class="table-dark text-center">
               <tr>
                 <th>No</th>
-                <th>Provinsi</th>
-                <th>Kota/Kabupaten</th>
                 <th>Kecamatan</th>
                 <th>Kelurahan</th>
                 <th>Daerah/Jalan</th>
-                <th>Action</th>
+                <th>Aksi</th>
               </tr>
             </thead>
             <tbody>
               <?php foreach ($content as $row => $value) : ?>
                 <tr>
                   <td class="text-center"><?= $row + 1; ?></td>
-                  <td><?= $value->nama; ?></td>
-                  <td><?= $value->kknama; ?></td>
                   <td><?= $value->kecnama; ?></td>
                   <td><?= $value->kelnama; ?></td>
                   <td><?= $value->nama_daerah; ?></td>
@@ -163,6 +144,7 @@ $submit = [
             </tbody>
           </table>
         </div>
+
       </div>
     </div>
   </div>

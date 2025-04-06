@@ -5,6 +5,7 @@ namespace App\Controllers;
 class Maps extends BaseController
 {
     protected $builder, $db;
+
     public function __construct()
     {
         helper('form');
@@ -14,15 +15,17 @@ class Maps extends BaseController
 
     public function index()
     {
-        $this->builder->select('region.nama_daerah, provinsi.nama, provinsi.provinsi_id, 
-        kabupaten_kota.nama as kknama, kabupaten_kota.kabupaten_kota_id, kecamatan.nama as kecnama,
-        kelurahan.nama as kelnama, region.deskripsi, region.latitude, region.longitude, region.nama_daerah, 
-        region.gambar');
-        $this->builder->join('provinsi', 'provinsi.provinsi_id = region.provinsi_id');
-        $this->builder->join('kabupaten_kota', 'kabupaten_kota.kabupaten_kota_id = region.kabupaten_kota_id');
+        // Ambil data dari tabel yang masih relevan (tanpa provinsi dan kabupaten_kota)
+        $this->builder->select('region.nama_daerah, kecamatan.nama as kecnama,
+            kelurahan.nama as kelnama, region.deskripsi, region.latitude, 
+            region.longitude, region.gambar');
+
+        // Join hanya ke tabel yang kolom foreign key-nya masih ada
         $this->builder->join('kecamatan', 'kecamatan.kecamatan_id = region.kecamatan_id');
         $this->builder->join('kelurahan', 'kelurahan.kelurahan_id = region.kelurahan_id');
+
         $query = $this->builder->get();
+
         $data = [
             'title' => 'Maps',
             'dataWilayah' => $query->getResult(),

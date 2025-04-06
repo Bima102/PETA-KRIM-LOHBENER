@@ -1,37 +1,8 @@
 <?php
-$csv = [
-    'name' => 'csv',
-    'id'   => 'csv'
-];
-
-$lat = [
-    'name' => 'latitude',
-    'id'   => 'latitude',
-    'class' => 'form-control',
-    'value' => null,
-    'placeholder' => 'latitude'
-];
-
-$long = [
-    'name' => 'longitude',
-    'id'   => 'longitude',
-    'class' => 'form-control',
-    'value' => null,
-    'placeholder' => 'longitude'
-];
-
-$desk = [
-    'name' => 'deskripsi',
-    'id'   => 'deskripsi',
-    'class' => 'form-control',
-    'value' => null,
-    'placeholder' => 'deskripsi'
-];
-
 $submit = [
     'name'  => 'submit',
     'id'    => 'submit',
-    'value' => 'Submit',
+    'value' => 'Update',
     'class' => 'btn btn-primary',
     'type'  => 'submit'
 ];
@@ -41,11 +12,9 @@ $submit = [
     <div class="col-md-12">
         <div class="card">
             <div class="card-header card-header-primary">
-                <a href="<?= base_url('/wilayah'); ?>" class="btn btn-primary mb-5 mt-3">Kembali</a>
-                <h4 class="card-title">Edit Data</h4>
-                <p class="card-category">
-                    Menu Edit Data
-                </p>
+                <a href="<?= base_url('/wilayah'); ?>" class="btn btn-primary mb-3 mt-3">Kembali</a>
+                <h4 class="card-title">Edit Data Wilayah</h4>
+                <p class="card-category">Formulir Edit Data Wilayah</p>
             </div>
 
             <?php if (session()->getFlashdata('msg')) : ?>
@@ -56,54 +25,66 @@ $submit = [
 
             <div class="card-body">
                 <form action="/wilayah/wilayahUpdate/<?= $wilayah->id; ?>" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="gambarLama" value="<?= $wilayah->gambar; ?>">
+
                     <div class="form-group">
-                        <input type="hidden" name="gambarLama" value="<?= $wilayah->gambar; ?>">
-                        <?= form_label('Kecamatan', 'kecamatan'); ?><br>
-                        <select id="kecamatan" class="form-control fw-bold p-2" name="kecamatan">
-                            <option value="" hidden></option>
+                        <?= form_label('Kecamatan', 'kecamatan'); ?>
+                        <select id="kecamatan" class="form-control fw-bold p-2" name="kecamatan" required>
+                            <option value="" disabled hidden>Pilih Kecamatan</option>
                             <?php foreach ($kecamatan as $row) : ?>
-                                <option value="<?= $row->kecamatan_id; ?>" <?= $row->kecamatan_id == 1553 ? 'selected' : null ?>><?= $row->nama; ?></option>
-                            <?php endforeach; ?>
-                        </select><br>
-                        <?= form_label('Kelurahan', 'kelurahan'); ?><br>
-                        <select id="kelurahan" class="form-control fw-bold p-2" name="kelurahan">
-                            <option value="" hidden></option>
-                            <?php foreach ($kelurahan as $row) : ?>
-                                <option value="<?= $row->kelurahan_id; ?>" <?= $wilayah->id == $row->kelurahan_id ? 'selected' : null ?>>
+                                <option value="<?= $row->kecamatan_id; ?>" <?= $row->kecamatan_id == $wilayah->kecamatan_id ? 'selected' : '' ?>>
                                     <?= $row->nama; ?>
                                 </option>
                             <?php endforeach; ?>
-                        </select><br>
+                        </select>
 
-                        <div class="col">
-                            <?= form_label('Nama Jalan/Daerah', 'Nama Jalan/Daerah'); ?>
-                            <input type="text" class="form-control fw-bold p-2" name="nama_daerah" id=" nama_daerah" placeholder="Nama Jalan/Daerah" value="<?= (old('nama_daerah')) ? old('nama_daerah') : $wilayah->nama_daerah; ?>">
-                        </div>
+                        <?= form_label('Kelurahan', 'kelurahan'); ?>
+                        <select id="kelurahan" class="form-control fw-bold p-2" name="kelurahan" required>
+                            <option value="" disabled hidden>Pilih Kelurahan</option>
+                            <?php foreach ($kelurahan as $row) : ?>
+                                <option value="<?= $row->kelurahan_id; ?>" <?= $row->kelurahan_id == $wilayah->kelurahan_id ? 'selected' : '' ?>>
+                                    <?= $row->nama; ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+
+                        <?= form_label('Nama Jalan/Daerah', 'nama_daerah'); ?>
+                        <input type="text" class="form-control fw-bold p-2" name="nama_daerah" id="nama_daerah"
+                               placeholder="Contoh: Jl. Merdeka / RT 01 RW 02"
+                               value="<?= old('nama_daerah', $wilayah->nama_daerah); ?>" required>
+
                         <div class="row">
                             <div class="col">
-                                <?= form_label('Latitude', 'Latitude'); ?>
-                                <input type="text" class="form-control fw-bold p-2" name="latitude" id=" latitude" placeholder="Latitude / Garis Lintang" value="<?= (old('latitude')) ? old('latitude') : $wilayah->latitude; ?>">
+                                <?= form_label('Latitude', 'latitude'); ?>
+                                <input type="text" class="form-control fw-bold p-2" name="latitude" id="latitude"
+                                       placeholder="Contoh: -7.123456"
+                                       value="<?= old('latitude', $wilayah->latitude); ?>" required>
                             </div>
                             <div class="col">
                                 <?= form_label('Longitude', 'longitude'); ?>
-                                <input type="text" class="form-control fw-bold p-2" name="longitude" id=" longitude" placeholder="Longitude / Garis Bujur" value="<?= (old('longitude')) ? old('longitude') : $wilayah->longitude; ?>">
+                                <input type="text" class="form-control fw-bold p-2" name="longitude" id="longitude"
+                                       placeholder="Contoh: 109.123456"
+                                       value="<?= old('longitude', $wilayah->longitude); ?>" required>
                             </div>
                         </div>
-                        <div class="col">
-                            <?= form_label('Deskripsi', 'deskripsi'); ?>
-                            <input type="text" class="form-control fw-bold p-2" name="deskripsi" id=" deskripsi" placeholder="Pembunuhan / Begal / Pencurian" value="<?= (old('deskripsi')) ? old('deskripsi') : $wilayah->deskripsi; ?>">
-                        </div>
+
+                        <?= form_label('Deskripsi', 'deskripsi'); ?>
+                        <input type="text" class="form-control fw-bold p-2" name="deskripsi" id="deskripsi"
+                               placeholder="Contoh: Pembunuhan / Begal / Pencurian"
+                               value="<?= old('deskripsi', $wilayah->deskripsi); ?>" required>
+
                         <?= form_label('Gambar', 'gambar'); ?>
-                        <input type="file" class="form-control fw-bold p-2 d-inline-block" id="gambar" name="gambar" value="<?= (old('gambar')); ?>">
-                        <img src="/img/<?= $wilayah->gambar; ?>" width="200" class="d-inline-block mb-5" alt="Gambar 1">
+                        <input type="file" class="form-control fw-bold p-2" id="gambar" name="gambar">
+                        <div class="mt-3">
+                            <img src="/img/<?= $wilayah->gambar; ?>" width="200" alt="Gambar Sebelumnya" class="img-thumbnail">
+                        </div>
                     </div>
-                    <?= form_submit($submit); ?>
+
+                    <div class="mt-4">
+                        <?= form_submit($submit); ?>
+                    </div>
                 </form>
             </div>
         </div>
     </div>
-</div>
-</div>
-</div>
-</div>
 </div>

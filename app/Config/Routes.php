@@ -49,21 +49,20 @@ $routes->post('/index', 'Users::index');
 $routes->get('/logout', 'Users::logout');
 $routes->get('/aduan', 'Aduan::index');
 $routes->post('/aduan/submit', 'Aduan::submit');
-$routes->get('/laporan', 'Aduan::laporan');
-$routes->get('/aduan/delete/(:num)', 'Aduan::delete/$1');
+
 
 // Halaman Admin
 $routes->get('/dashboard', 'Dashboard::index', ['filter' => 'auth']);
-$routes->get('/chat', 'Chat::index', ['filter' => 'auth']);
 $routes->get('/wilayah', 'wilayah::wilayah_data_read', ['filter' => 'auth']);
 $routes->get('/maps', 'maps::index', ['filter' => 'auth']);
 $routes->get('/maps_user', 'maps::index');
-$routes->get('/laporan', 'laporan::laporan_data_read', ['filter' => 'auth']);
 $routes->post('/wilayah_data_save', 'Wilayah::wilayah_data_save', ['filter' => 'auth']);
 $routes->get('/detailWilayah/(:any)', 'Wilayah::wilayah_detail/$1');
 $routes->post('/wilayah/wilayahUpdate/(:segment)', 'Wilayah::wilayahUpdate/$1', ['filter' => 'auth']);
 $routes->get('/editWilayah/(:any)', 'Wilayah::wilayah_edit/$1', ['filter' => 'auth']);
 $routes->get('/wilayahDelete/(:any)', 'Wilayah::wilayahDelete/$1', ['filter' => 'auth']);
+$routes->get('/laporan', 'Aduan::laporan');
+$routes->get('/aduan/delete/(:num)', 'Aduan::delete/$1');
 
 /*
  * --------------------------------------------------------------------

@@ -9,47 +9,30 @@ class M_Wilayah extends Model
     protected $table = 'region';
     protected $primaryKey = 'id';
     protected $allowedFields = [
-        'id', 'provinsi_id', 'kabupaten_kota_id', 'kecamatan_id', 'kelurahan_id', 'nrp', 'nama_daerah', 'latitude', 'longitude', 'deskripsi', 'gambar'
+        'id', 'kecamatan_id', 'kelurahan_id', 'nrp', 'nama_daerah', 'latitude', 'longitude', 'deskripsi', 'gambar'
     ];
     protected $returnType = 'App\Entities\Wilayah';
     protected $useTimeStamp = false;
 
+    // Ambil semua data kecamatan untuk dropdown, dll
     public function get_data_kecamatan()
     {
-        $query = $this->db->table('kecamatan')
+        return $this->db->table('kecamatan')
             ->select('*')
             ->orderBy('nama', 'asc')
             ->get();
-        return $query;
     }
 
+    // Ambil semua data kelurahan
     public function get_data_kelurahan()
     {
-        $query = $this->db->table('kelurahan')
+        return $this->db->table('kelurahan')
             ->select('*')
             ->orderBy('nama', 'asc')
             ->get();
-        return $query;
     }
 
-    public function get_data_prov()
-    {
-        $query = $this->db->table('provinsi')
-            ->select('*')
-            ->orderBy('nama', 'asc')
-            ->get();
-        return $query;
-    }
-
-    public function get_data_kota()
-    {
-        $query = $this->db->table('kabupaten_kota')
-            ->select('*')
-            ->orderBy('nama', 'asc')
-            ->get();
-        return $query;
-    }
-
+    // Mengambil data wilayah berdasarkan ID atau semua
     public function get_wilayah($id = false)
     {
         if ($id == false) {
@@ -59,21 +42,20 @@ class M_Wilayah extends Model
         return $this->where(['id' => $id])->first();
     }
 
+    // Fungsi pencarian berdasarkan nama daerah
     public function pencarian($keyword)
     {
         $builder = $this->builder();
-        $builder->select('region.nama_daerah, provinsi.nama, provinsi.provinsi_id, 
-        kabupaten_kota.nama as kknama, kabupaten_kota.kabupaten_kota_id, kecamatan.nama as kecnama,
-        kelurahan.nama as kelnama, region.deskripsi, region.latitude, region.longitude, region.nama_daerah, 
-        region.gambar, region.id');
-        $builder->join('provinsi', 'provinsi.provinsi_id = region.id');
-        $builder->join('kabupaten_kota', 'kabupaten_kota.kabupaten_kota_id = region.id');
-        $builder->join('kecamatan', 'kecamatan.kecamatan_id = region.id');
-        $builder->join('kelurahan', 'kelurahan.kelurahan_id = region.id');
-        $query = $builder->get()->getResult();
+        $builder->select('region.nama_daerah, kecamatan.nama as kecnama,
+            kelurahan.nama as kelnama, region.deskripsi, region.latitude, region.longitude, 
+            region.gambar, region.id');
+        $builder->join('kecamatan', 'kecamatan.kecamatan_id = region.kecamatan_id');
+        $builder->join('kelurahan', 'kelurahan.kelurahan_id = region.kelurahan_id');
 
-        if ($keyword != '') {
-            $builder->like('nama_daerah', $keyword);
+        if (!empty($keyword)) {
+            $builder->like('region.nama_daerah', $keyword);
         }
+
+        return $builder->get()->getResult();
     }
 }
