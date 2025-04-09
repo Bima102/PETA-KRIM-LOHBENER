@@ -12,7 +12,6 @@ class Dashboard extends BaseController
 
 		echo view('users/templates/header', $data);
 		echo view('dashboard');
-		echo view('users/templates/footer');
 	}
 
 	//--------------------------------------------------------------------

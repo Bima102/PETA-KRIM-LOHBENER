@@ -18,7 +18,7 @@
 </div>
 
 <!-- Jarak lebih dekat tapi tetap nyaman -->
-<div class="container-fluid bg-light py-4 mt-4">
-  <div class="row m-3 text-center" id="newsType"></div>
+<div class="container-fluid bg-light py-2 mt-2">
+  <div class="row mb-3 text-center" id="newsType"></div>
   <div class="row me-2 ms-2" id="newsdetails"></div>
 </div>

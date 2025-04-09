@@ -1,86 +1,56 @@
-<!-- ===== JAVASCRIPT ===== -->
-<script>
-    // variables
-    const newsType = document.getElementById('newsType');
-    const newsdetails = document.getElementById('newsdetails');
+<?php
+// API endpoint
+$apiUrl = 'https://berita-indo-api.vercel.app/v1/tribun-news/jabar';
+$newsDataArr = [];
 
-    // array
-    let newsDataArr = [];
-
-    // APIs
-    const HEADLINES_NEWS =
-        'https://berita-indo-api.vercel.app/v1/tribun-news/jabar';
-
-    window.onload = function() {
-        newsType.innerHTML = '<h1>Berita Terbaru</h1>';
-        headlinesNews();
-    };
-
-    const headlinesNews = async () => {
-        const response = await fetch(HEADLINES_NEWS);
-        newsDataArr = [];
-        if (response.status >= 200 && response.status < 300) {
-            const resJson = await response.json();
-            newsDataArr = resJson.data;
-            console.log(newsDataArr);
-        } else {
-            console.log(response.status, response.statusText);
-            newsdetails.innerHTML = '<h4>Data tidak ditemukan</h4>';
-            return;
-        }
-
-        displayNews();
-    };
-
-    function displayNews() {
-        newsDataArr.forEach((news) => {
-            let col = document.createElement('div');
-            col.className = 'col-sm-12 col-md-4 col-lg-3 p-2 card';
-
-            let card = document.createElement('div');
-            card.className = 'p-2';
-
-            let image = document.createElement('img');
-            image.setAttribute('height', 'matchparent');
-            image.setAttribute('width', '100%');
-            image.src = news.image;
-
-            let cardBody = document.createElement('div');
-
-            let newsHeading = document.createElement('h5');
-            newsHeading.className = 'card-title';
-            newsHeading.innerHTML = news.title;
-
-            let description = document.createElement('p');
-            description.className = 'text-muted';
-            description.innerHTML = news.contentSnippet;
-
-            let link = document.createElement('a');
-            link.className = 'btn btn-dark';
-            link.setAttribute('target', '_blank');
-            link.href = news.link;
-            link.innerHTML = 'Selanjutnya';
-
-            cardBody.appendChild(newsHeading);
-            cardBody.appendChild(description);
-            cardBody.appendChild(link);
-
-            card.appendChild(image);
-            card.appendChild(cardBody);
-
-            col.appendChild(card);
-
-            newsdetails.appendChild(col);
-        });
+// Fetch data
+$response = file_get_contents($apiUrl);
+if ($response !== FALSE) {
+    $resJson = json_decode($response, true);
+    if (isset($resJson['data'])) {
+        $newsDataArr = $resJson['data'];
     }
+}
+?>
 
-    function diskusi() {
-        alert("Silakan login terlebih dahulu!!");
+<!-- Footer Content Start -->
+<div id="newsType" class="text-center mt-5 mb-4">
+    <h1>Berita Terbaru</h1>
+</div>
+
+<!-- News Grid -->
+<div id="newsdetails" class="container">
+    <div class="row g-4"> <!-- Gunakan g-4 untuk spacing antar grid item -->
+        <?php if (!empty($newsDataArr)) : ?>
+            <?php foreach ($newsDataArr as $news) : ?>
+                <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3">
+                    <div class="card h-100 shadow-sm">
+                        <img src="<?= htmlspecialchars($news['image']) ?>" class="card-img-top" alt="News Image" style="height: 180px; object-fit: cover;">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title"><?= htmlspecialchars($news['title']) ?></h5>
+                            <p class="card-text text-muted"><?= htmlspecialchars($news['contentSnippet']) ?></p>
+                            <a href="<?= htmlspecialchars($news['link']) ?>" target="_blank" class="btn btn-dark mt-auto">Selanjutnya</a>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php else : ?>
+            <h4 class="text-center">Data tidak ditemukan</h4>
+        <?php endif; ?>
+    </div>
+</div>
+
+<!-- Optional Custom Styling -->
+<style>
+    #newsdetails .card {
+        border-radius: 12px;
     }
-</script>
+</style>
+
+<!-- Bootstrap JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
-</body>
 
+</body>
 </html>

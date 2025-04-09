@@ -33,7 +33,7 @@ class Wilayah extends BaseController
 
     echo view('users/templates/header', $data);
     echo view('wilayah/v_wilayah');
-    echo view('users/templates/footer');
+    // Footer dihapus
   }
 
   public function wilayah_data_save()
@@ -91,7 +91,7 @@ class Wilayah extends BaseController
 
     echo view('users/templates/header', $data);
     echo view('wilayah/v_wilayah_detail');
-    echo view('users/templates/footer');
+    // Footer dihapus
   }
 
   public function wilayah_edit($id)
@@ -114,7 +114,7 @@ class Wilayah extends BaseController
 
     echo view('users/templates/header', $data);
     echo view('wilayah/v_wilayah_edit');
-    echo view('users/templates/footer');
+    // Footer dihapus
   }
 
   public function wilayahUpdate($id)

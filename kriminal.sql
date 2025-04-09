@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 18 Mar 2025 pada 19.03
+-- Waktu pembuatan: 06 Apr 2025 pada 20.31
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -24,6 +24,23 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Struktur dari tabel `aduan`
+--
+
+CREATE TABLE `aduan` (
+  `id` int(11) NOT NULL,
+  `jenis_kejahatan` varchar(255) NOT NULL,
+  `kelurahan` varchar(255) NOT NULL,
+  `daerah` varchar(255) NOT NULL,
+  `latitude` varchar(255) NOT NULL,
+  `longitude` varchar(255) NOT NULL,
+  `pelapor` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Struktur dari tabel `connections`
 --
 
@@ -37,31 +54,11 @@ CREATE TABLE `connections` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `kabupaten_kota`
---
-
-CREATE TABLE `kabupaten_kota` (
-  `kabupaten_kota_id` int(11) NOT NULL,
-  `provinsi_id` int(11) NOT NULL,
-  `nama` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
-
---
--- Dumping data untuk tabel `kabupaten_kota`
---
-
-INSERT INTO `kabupaten_kota` (`kabupaten_kota_id`, `provinsi_id`, `nama`) VALUES
-(104, 10, 'Indramayu');
-
--- --------------------------------------------------------
-
---
 -- Struktur dari tabel `kecamatan`
 --
 
 CREATE TABLE `kecamatan` (
   `kecamatan_id` int(11) NOT NULL,
-  `kabupaten_kota_id` int(11) NOT NULL,
   `nama` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
@@ -69,8 +66,8 @@ CREATE TABLE `kecamatan` (
 -- Dumping data untuk tabel `kecamatan`
 --
 
-INSERT INTO `kecamatan` (`kecamatan_id`, `kabupaten_kota_id`, `nama`) VALUES
-(101, 32, 'Lohbener');
+INSERT INTO `kecamatan` (`kecamatan_id`, `nama`) VALUES
+(101, 'Lohbener');
 
 -- --------------------------------------------------------
 
@@ -106,20 +103,6 @@ INSERT INTO `kelurahan` (`kelurahan_id`, `kecamatan_id`, `nama`, `kode_pos`) VAL
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `laporan`
---
-
-CREATE TABLE `laporan` (
-  `id_laporan` int(11) NOT NULL,
-  `no_pelapor` varchar(20) NOT NULL,
-  `jenis_kejahatan` varchar(100) NOT NULL,
-  `alamat` text NOT NULL,
-  `tanggal_laporan` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Struktur dari tabel `migrations`
 --
 
@@ -144,31 +127,11 @@ INSERT INTO `migrations` (`id`, `version`, `class`, `group`, `namespace`, `time`
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `provinsi`
---
-
-CREATE TABLE `provinsi` (
-  `provinsi_id` int(11) NOT NULL,
-  `nama` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
-
---
--- Dumping data untuk tabel `provinsi`
---
-
-INSERT INTO `provinsi` (`provinsi_id`, `nama`) VALUES
-(10, 'Jawa Barat');
-
--- --------------------------------------------------------
-
---
 -- Struktur dari tabel `region`
 --
 
 CREATE TABLE `region` (
   `id` int(11) NOT NULL,
-  `provinsi_id` int(11) NOT NULL,
-  `kabupaten_kota_id` int(11) NOT NULL,
   `kecamatan_id` int(11) NOT NULL,
   `kelurahan_id` int(11) NOT NULL,
   `users_id` int(10) DEFAULT NULL,
@@ -184,10 +147,8 @@ CREATE TABLE `region` (
 -- Dumping data untuk tabel `region`
 --
 
-INSERT INTO `region` (`id`, `provinsi_id`, `kabupaten_kota_id`, `kecamatan_id`, `kelurahan_id`, `users_id`, `nama_daerah`, `latitude`, `longitude`, `deskripsi`, `gambar`, `tingkat_kejahatan`) VALUES
-(5, 10, 104, 101, 6, NULL, 'Jl. Larangan - Lelea', '-6.412335', '108.254448', 'begal', '1741009104_7b8d9bce01eded3064b7.jpeg', 'rendah'),
-(11, 10, 104, 101, 12, NULL, 'jember', '-6.3448895', '108.3155391', 'pencurian', 'danger.png', 'rendah'),
-(12, 10, 104, 101, 9, NULL, 'santing', '-6.4151146', '108.2594006', 'begal', '1742320783_74119f171e93b23ac2e2.png', NULL);
+INSERT INTO `region` (`id`, `kecamatan_id`, `kelurahan_id`, `users_id`, `nama_daerah`, `latitude`, `longitude`, `deskripsi`, `gambar`, `tingkat_kejahatan`) VALUES
+(15, 101, 1, NULL, 'santing', '-6.4151146', '108.2594006', 'begal', '1743964141_e5570a81ffe145f8d9db.png', 'rendah');
 
 -- --------------------------------------------------------
 
@@ -211,14 +172,18 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `role`, `password`, `created_at`, `updated_at`) VALUES
-(1, 'Admin ', 'Choiruddin', 'asd@gmail.com', 'admin', '$2y$10$jAoswCSmfJbNMlTQMFyfkukS8YNt8.fKnBbESV9qpe/7UvSGMMnz.', '2022-11-10 02:14:26', '0000-00-00 00:00:00'),
-(2, 'coba', 'coba', 'coba@gmail.com', 'user', '$2y$10$QNb8sWAm/NNLcjaM7mVapuZiXta6cXuWZtt/we8Rt18P23VMSfUku', '2022-11-18 08:17:32', '0000-00-00 00:00:00'),
-(3, 'coba', 'coba2', 'coba2@gmail.com', 'user', '$2y$10$MfzT/J8x.pBrZwvIOLG67u7SD7r9bgoTHk9kvz0VmWDpJ6fa1pnGy', '2023-01-22 04:47:02', '0000-00-00 00:00:00'),
-(4, 'Bima ', 'Syahputra', 'bimasputra@gmail.com', 'user', '$2y$10$o3mpXqVulHhJtYyyz.uVBe0xBORHYrvybBoiCyeAIcITMe7pehULO', '2025-03-03 06:27:44', '0000-00-00 00:00:00');
+(10, 'wahyu', 'pratama', 'wahyu@gmail.com', 'user', '$2y$10$pdGpQIFWT73BlouWYYaSw.twKwQylqL.T32ia5yApT9Ftd.B1YOna', '2025-04-05 02:05:26', '0000-00-00 00:00:00'),
+(11, 'admin', 'kepolisian', 'admin@gmail.com', 'admin', '$2y$10$jukls5o2bzgj2ssnmMWbu.bZx67ucP1SZGwr.eCQRfUwXnc.8qCyi', '2025-04-05 02:26:20', '0000-00-00 00:00:00');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indeks untuk tabel `aduan`
+--
+ALTER TABLE `aduan`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indeks untuk tabel `connections`
@@ -227,17 +192,10 @@ ALTER TABLE `connections`
   ADD PRIMARY KEY (`c_id`);
 
 --
--- Indeks untuk tabel `kabupaten_kota`
---
-ALTER TABLE `kabupaten_kota`
-  ADD PRIMARY KEY (`kabupaten_kota_id`);
-
---
 -- Indeks untuk tabel `kecamatan`
 --
 ALTER TABLE `kecamatan`
-  ADD PRIMARY KEY (`kecamatan_id`),
-  ADD KEY `kabupaten_kota_id` (`kabupaten_kota_id`);
+  ADD PRIMARY KEY (`kecamatan_id`);
 
 --
 -- Indeks untuk tabel `kelurahan`
@@ -247,31 +205,17 @@ ALTER TABLE `kelurahan`
   ADD KEY `kecamatan_id` (`kecamatan_id`);
 
 --
--- Indeks untuk tabel `laporan`
---
-ALTER TABLE `laporan`
-  ADD PRIMARY KEY (`id_laporan`);
-
---
 -- Indeks untuk tabel `migrations`
 --
 ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `provinsi`
---
-ALTER TABLE `provinsi`
-  ADD PRIMARY KEY (`provinsi_id`);
-
---
 -- Indeks untuk tabel `region`
 --
 ALTER TABLE `region`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `provinsi_id` (`provinsi_id`),
   ADD KEY `kecamatan_id` (`kecamatan_id`),
-  ADD KEY `kabupaten_kota_id` (`kabupaten_kota_id`),
   ADD KEY `kelurahan_id` (`kelurahan_id`);
 
 --
@@ -285,16 +229,16 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT untuk tabel `aduan`
+--
+ALTER TABLE `aduan`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- AUTO_INCREMENT untuk tabel `connections`
 --
 ALTER TABLE `connections`
   MODIFY `c_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
-
---
--- AUTO_INCREMENT untuk tabel `kabupaten_kota`
---
-ALTER TABLE `kabupaten_kota`
-  MODIFY `kabupaten_kota_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=105;
 
 --
 -- AUTO_INCREMENT untuk tabel `kelurahan`
@@ -303,34 +247,22 @@ ALTER TABLE `kelurahan`
   MODIFY `kelurahan_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
--- AUTO_INCREMENT untuk tabel `laporan`
---
-ALTER TABLE `laporan`
-  MODIFY `id_laporan` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT untuk tabel `migrations`
 --
 ALTER TABLE `migrations`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT untuk tabel `provinsi`
---
-ALTER TABLE `provinsi`
-  MODIFY `provinsi_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
-
---
 -- AUTO_INCREMENT untuk tabel `region`
 --
 ALTER TABLE `region`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT untuk tabel `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
@@ -346,9 +278,7 @@ ALTER TABLE `kelurahan`
 -- Ketidakleluasaan untuk tabel `region`
 --
 ALTER TABLE `region`
-  ADD CONSTRAINT `region_ibfk_1` FOREIGN KEY (`provinsi_id`) REFERENCES `provinsi` (`provinsi_id`),
   ADD CONSTRAINT `region_ibfk_5` FOREIGN KEY (`kecamatan_id`) REFERENCES `kecamatan` (`kecamatan_id`),
-  ADD CONSTRAINT `region_ibfk_6` FOREIGN KEY (`kabupaten_kota_id`) REFERENCES `kabupaten_kota` (`kabupaten_kota_id`),
   ADD CONSTRAINT `region_ibfk_7` FOREIGN KEY (`kelurahan_id`) REFERENCES `kelurahan` (`kelurahan_id`);
 COMMIT;
 

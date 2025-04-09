@@ -27,6 +27,5 @@ class Home extends BaseController
         ];
         echo view('users/templates/header', $data);
         echo view('users/informasi');
-        echo view('users/templates/footer');
     }
 }

@@ -34,8 +34,7 @@ class Users extends BaseController
         }
 
         echo view('users/templates/header', $data);
-        echo view('login');
-        echo view('users/templates/footer');
+        echo view('login'); 
     }
 
     private function setUserSession($user)
@@ -75,7 +74,7 @@ class Users extends BaseController
                     'firstname' => $this->request->getVar('firstname'),
                     'lastname' => $this->request->getVar('lastname'),
                     'email' => $this->request->getVar('email'),
-                    'password' => $this->request->getVar('password'), // Tanpa hashing di sini
+                    'password' => $this->request->getVar('password'), 
                 ];
                 $model->save($newData);
     
@@ -85,8 +84,7 @@ class Users extends BaseController
         }
     
         echo view('users/templates/header', $data);
-        echo view('register');
-        echo view('users/templates/footer');
+        echo view('register'); 
     }    
 
     public function logout()

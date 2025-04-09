@@ -31,7 +31,6 @@ class Aduan extends Controller
 
         echo view('users/templates/header', $data);
         echo view('aduan/form', $data);
-        echo view('users/templates/footer');
     }
 
     public function submit()
@@ -73,7 +72,6 @@ class Aduan extends Controller
 
         echo view('users/templates/header', $data);
         echo view('aduan/laporan', $data);
-        echo view('users/templates/footer');
     }
 
     public function delete($id)

@@ -15,12 +15,11 @@ class Maps extends BaseController
 
     public function index()
     {
-        // Ambil data dari tabel yang masih relevan (tanpa provinsi dan kabupaten_kota)
+        // Ambil data dari tabel yang masih relevan
         $this->builder->select('region.nama_daerah, kecamatan.nama as kecnama,
             kelurahan.nama as kelnama, region.deskripsi, region.latitude, 
             region.longitude, region.gambar');
 
-        // Join hanya ke tabel yang kolom foreign key-nya masih ada
         $this->builder->join('kecamatan', 'kecamatan.kecamatan_id = region.kecamatan_id');
         $this->builder->join('kelurahan', 'kelurahan.kelurahan_id = region.kelurahan_id');
 
@@ -31,8 +30,8 @@ class Maps extends BaseController
             'dataWilayah' => $query->getResult(),
         ];
 
+        // Tampilkan hanya header dan halaman maps, tanpa footer
         echo view('users/templates/header', $data);
-        echo view('maps/v_maps');
-        echo view('users/templates/footer');
+        echo view('maps/v_maps', $data);
     }
 }
