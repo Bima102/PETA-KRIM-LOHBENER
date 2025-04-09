@@ -29,7 +29,7 @@ class Aduan extends Controller
             'pelapor' => $namaPelapor
         ];
 
-        echo view('users/templates/header', $data);
+        echo view('templates/header', $data);
         echo view('aduan/form', $data);
     }
 
@@ -38,10 +38,10 @@ class Aduan extends Controller
         // Validasi input form
         if (!$this->validate([
             'jenis_kejahatan' => 'required',
-            'kelurahan' => 'required',
-            'daerah' => 'required',
-            'latitude' => 'required',
-            'longitude' => 'required',
+            'kelurahan'       => 'required',
+            'daerah'          => 'required',
+            'latitude'        => 'required',
+            'longitude'       => 'required',
         ])) {
             return redirect()->to('/aduan')->withInput()->with('errors', $this->validator->getErrors());
         }
@@ -70,13 +70,13 @@ class Aduan extends Controller
             'aduan' => $this->aduanModel->findAll()
         ];
 
-        echo view('users/templates/header', $data);
+        echo view('templates/header', $data);
         echo view('aduan/laporan', $data);
     }
 
     public function delete($id)
     {
         $this->aduanModel->delete($id);
-        return redirect()->to('/aduan/laporan');
+        return redirect()->to('/laporan');
     }
 }

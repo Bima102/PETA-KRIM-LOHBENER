@@ -14,9 +14,9 @@ class M_Aduan extends Model
         'latitude',
         'longitude',
         'pelapor',
-        'created_at' // jika kamu ingin mengatur waktu saat data masuk
+        'created_at' 
     ];
 
-    protected $useTimestamps = true; // aktifkan jika kamu menggunakan kolom created_at
+    protected $useTimestamps = false;
     protected $createdField  = 'created_at';
 }

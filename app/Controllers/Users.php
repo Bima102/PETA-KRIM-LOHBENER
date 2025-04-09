@@ -33,8 +33,8 @@ class Users extends BaseController
             return redirect()->to('dashboard');
         }
 
-        echo view('users/templates/header', $data);
-        echo view('login'); 
+        echo view('templates/header', $data); 
+        echo view('login');                     
     }
 
     private function setUserSession($user)
@@ -56,7 +56,7 @@ class Users extends BaseController
     {
         $data = ['title' => 'Register'];
         helper(['form']);
-    
+
         if ($this->request->getMethod() == 'post') {
             $rules = [
                 'firstname' => 'required|min_length[3]|max_length[20]',
@@ -65,7 +65,7 @@ class Users extends BaseController
                 'password' => 'required|min_length[8]|max_length[255]',
                 'password_confirm' => 'matches[password]',
             ];
-    
+
             if (!$this->validate($rules)) {
                 $data['validation'] = $this->validator;
             } else {
@@ -74,18 +74,18 @@ class Users extends BaseController
                     'firstname' => $this->request->getVar('firstname'),
                     'lastname' => $this->request->getVar('lastname'),
                     'email' => $this->request->getVar('email'),
-                    'password' => $this->request->getVar('password'), 
+                    'password' => password_hash($this->request->getVar('password'), PASSWORD_DEFAULT), // Hashing password
                 ];
                 $model->save($newData);
-    
+
                 session()->setFlashdata('success', 'Pendaftaran berhasil. Silakan login.');
                 return redirect()->to('/login');
             }
         }
-    
-        echo view('users/templates/header', $data);
-        echo view('register'); 
-    }    
+
+        echo view('templates/header', $data); 
+        echo view('register');               
+    }
 
     public function logout()
     {

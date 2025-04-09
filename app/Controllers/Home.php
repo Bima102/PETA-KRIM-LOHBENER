@@ -15,17 +15,17 @@ class Home extends BaseController
         $data = [
             'title' => 'Halaman Utama'
         ];
-        echo view('users/templates/header', $data);
-        echo view('users/index');
-        echo view('users/templates/footer');
+        echo view('templates/header', $data);
+        echo view('index');
+        echo view('templates/footer');
     }
 
     public function informasi()
     {
         $data = [
-            'title' => 'Informasi Rawan Kriminalitas'
+            'title' => 'Informasi Jenis Kejahatan'
         ];
-        echo view('users/templates/header', $data);
-        echo view('users/informasi');
+        echo view('templates/header', $data);
+        echo view('informasi');
     }
 }

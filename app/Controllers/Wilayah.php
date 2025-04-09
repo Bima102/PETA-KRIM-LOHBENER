@@ -31,9 +31,9 @@ class Wilayah extends BaseController
       'validation' => \Config\Services::validation()
     ];
 
-    echo view('users/templates/header', $data);
-    echo view('wilayah/v_wilayah');
-    // Footer dihapus
+    echo view('templates/header', $data);
+    echo view('wilayah/wilayah');
+
   }
 
   public function wilayah_data_save()
@@ -89,9 +89,8 @@ class Wilayah extends BaseController
       throw new \CodeIgniter\Exceptions\PageNotFoundException('Wilayah ' . $id . ' tidak ditemukan');
     }
 
-    echo view('users/templates/header', $data);
-    echo view('wilayah/v_wilayah_detail');
-    // Footer dihapus
+    echo view('templates/header', $data);
+    echo view('wilayah/wilayah_detail');
   }
 
   public function wilayah_edit($id)
@@ -112,9 +111,8 @@ class Wilayah extends BaseController
       'kelurahan'   => $dataModel->get_data_kelurahan()->getResult(),
     ];
 
-    echo view('users/templates/header', $data);
-    echo view('wilayah/v_wilayah_edit');
-    // Footer dihapus
+    echo view('templates/header', $data);
+    echo view('wilayah/wilayah_edit');
   }
 
   public function wilayahUpdate($id)
