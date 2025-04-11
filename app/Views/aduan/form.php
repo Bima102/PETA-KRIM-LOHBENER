@@ -23,7 +23,13 @@
         <form action="/aduan/submit" method="post" class="p-5 shadow-lg bg-white rounded form-container" style="max-width: 800px; width: 100%;">
             <div class="mb-3">
                 <label for="jenis_kejahatan" class="form-label">Jenis Kejahatan</label>
-                <input type="text" class="form-control" name="jenis_kejahatan" value="<?= old('jenis_kejahatan') ?>" required>
+                <select class="form-select" name="jenis_kejahatan" required>
+                    <option value="">-- Pilih Jenis Kejahatan --</option>
+                    <option value="curanmor" <?= old('jenis_kejahatan') == 'curanmor' ? 'selected' : '' ?>>Curanmor</option>
+                    <option value="perampokan" <?= old('jenis_kejahatan') == 'perampokan' ? 'selected' : '' ?>>Perampokan</option>
+                    <option value="begal" <?= old('jenis_kejahatan') == 'begal' ? 'selected' : '' ?>>Begal</option>
+                    <option value="tawuran" <?= old('jenis_kejahatan') == 'tawuran' ? 'selected' : '' ?>>Tawuran</option>
+                </select>
             </div>
             <div class="mb-3">
                 <label for="kelurahan" class="form-label">Kelurahan</label>

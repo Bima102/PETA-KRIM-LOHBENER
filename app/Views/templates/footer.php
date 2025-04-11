@@ -17,11 +17,11 @@ if ($response !== FALSE) {
 <div class="text-center mb-4">
     <h3 class="fw-bold"><i class="bi bi-newspaper me-2 text-primary"></i>Berita & Update Terkini</h3>
     <p class="text-muted">Informasi terbaru seputar berita Jawa Barat.</p>
-  </div>
+</div>
 
 <!-- News Grid -->
-<div id="newsdetails" class="container">
-    <div class="row g-4"> <!-- Gunakan g-4 untuk spacing antar grid item -->
+<div id="newsdetails" class="container py-4">
+    <div class="row g-4">
         <?php if (!empty($newsDataArr)) : ?>
             <?php foreach ($newsDataArr as $news) : ?>
                 <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3">
@@ -43,8 +43,27 @@ if ($response !== FALSE) {
 
 <!-- Optional Custom Styling -->
 <style>
+    body {
+        background-color: #f0f0f0; /* Warna abu-abu terang untuk background halaman */
+    }
+
+    #newsdetails {
+        background-color: #f0f0f0;
+    }
+
     #newsdetails .card {
         border-radius: 12px;
+        background-color: #ffffff; /* Putih bersih untuk card agar kontras */
+        transition: transform 0.3s ease;
+    }
+
+    #newsdetails .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    h3.fw-bold {
+        margin-top: 2rem;
     }
 </style>
 

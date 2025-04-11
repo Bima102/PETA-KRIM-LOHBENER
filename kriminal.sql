@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 06 Apr 2025 pada 20.31
+-- Waktu pembuatan: 11 Apr 2025 pada 21.46
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -29,7 +29,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `aduan` (
   `id` int(11) NOT NULL,
-  `jenis_kejahatan` varchar(255) NOT NULL,
+  `jenis_kejahatan` enum('curanmor','perampokan','begal','tawuran') NOT NULL,
   `kelurahan` varchar(255) NOT NULL,
   `daerah` varchar(255) NOT NULL,
   `latitude` varchar(255) NOT NULL,
@@ -37,6 +37,13 @@ CREATE TABLE `aduan` (
   `pelapor` varchar(255) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `aduan`
+--
+
+INSERT INTO `aduan` (`id`, `jenis_kejahatan`, `kelurahan`, `daerah`, `latitude`, `longitude`, `pelapor`, `created_at`) VALUES
+(8, 'curanmor', 'waru', 'jalan waru', '-6.3941201', '108.1407558', 'Bima  saputra', '2025-04-11 17:19:16');
 
 -- --------------------------------------------------------
 
@@ -134,21 +141,19 @@ CREATE TABLE `region` (
   `id` int(11) NOT NULL,
   `kecamatan_id` int(11) NOT NULL,
   `kelurahan_id` int(11) NOT NULL,
-  `users_id` int(10) DEFAULT NULL,
   `nama_daerah` varchar(255) NOT NULL,
   `latitude` varchar(255) NOT NULL,
   `longitude` varchar(255) NOT NULL,
-  `deskripsi` varchar(255) NOT NULL,
-  `gambar` varchar(255) NOT NULL,
-  `tingkat_kejahatan` enum('rendah','sedang','tinggi') DEFAULT 'rendah'
+  `jenis_kejahatan` enum('curanmor','perampokan','begal','tawuran') DEFAULT NULL,
+  `gambar` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data untuk tabel `region`
 --
 
-INSERT INTO `region` (`id`, `kecamatan_id`, `kelurahan_id`, `users_id`, `nama_daerah`, `latitude`, `longitude`, `deskripsi`, `gambar`, `tingkat_kejahatan`) VALUES
-(15, 101, 1, NULL, 'santing', '-6.4151146', '108.2594006', 'begal', '1743964141_e5570a81ffe145f8d9db.png', 'rendah');
+INSERT INTO `region` (`id`, `kecamatan_id`, `kelurahan_id`, `nama_daerah`, `latitude`, `longitude`, `jenis_kejahatan`, `gambar`) VALUES
+(23, 101, 1, 'kiajaran', '-6.4151146', '108.2594006', 'begal', '1744394233_e1df7678be4c3fa0ce89.png');
 
 -- --------------------------------------------------------
 
@@ -173,7 +178,8 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `role`, `password`, `created_at`, `updated_at`) VALUES
 (10, 'wahyu', 'pratama', 'wahyu@gmail.com', 'user', '$2y$10$pdGpQIFWT73BlouWYYaSw.twKwQylqL.T32ia5yApT9Ftd.B1YOna', '2025-04-05 02:05:26', '0000-00-00 00:00:00'),
-(11, 'admin', 'kepolisian', 'admin@gmail.com', 'admin', '$2y$10$jukls5o2bzgj2ssnmMWbu.bZx67ucP1SZGwr.eCQRfUwXnc.8qCyi', '2025-04-05 02:26:20', '0000-00-00 00:00:00');
+(11, 'admin', 'kepolisian', 'admin@gmail.com', 'admin', '$2y$10$jukls5o2bzgj2ssnmMWbu.bZx67ucP1SZGwr.eCQRfUwXnc.8qCyi', '2025-04-05 02:26:20', '0000-00-00 00:00:00'),
+(12, 'Bima ', 'saputra', 'bima@gmail.com', 'user', '$2y$10$PNKXVL04Q66TEyHHlgBytuIzSgllAZAMKlRGZiyCuv.TiCS2cATh.', '2025-04-09 04:53:37', '0000-00-00 00:00:00');
 
 --
 -- Indexes for dumped tables
@@ -232,7 +238,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT untuk tabel `aduan`
 --
 ALTER TABLE `aduan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT untuk tabel `connections`
@@ -256,13 +262,13 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT untuk tabel `region`
 --
 ALTER TABLE `region`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT untuk tabel `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)

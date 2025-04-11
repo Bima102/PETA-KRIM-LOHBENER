@@ -79,12 +79,16 @@ $submit = [
                         </div>
                     </div>
 
-                    <!-- Deskripsi -->
+                    <!-- Jenis Kejahatan -->
                     <div class="form-group mb-3">
-                        <?= form_label('<i class="fas fa-info-circle me-1"></i> Deskripsi Kejadian', 'deskripsi'); ?>
-                        <input type="text" class="form-control fw-bold p-2 rounded-3" name="deskripsi" id="deskripsi"
-                               placeholder="Contoh: Pembunuhan / Begal / Pencurian"
-                               value="<?= old('deskripsi', $wilayah->deskripsi); ?>" required>
+                        <?= form_label('<i class="fas fa-info-circle me-1"></i> Jenis Kejahatan', 'jenis_kejahatan'); ?>
+                        <select name="jenis_kejahatan" id="jenis_kejahatan" class="form-control fw-bold p-2 rounded-3" required>
+                            <option value="" disabled hidden>Pilih Jenis Kejahatan</option>
+                            <option value="curanmor" <?= old('jenis_kejahatan') == 'curanmor' ? 'selected' : '' ?>>Curanmor</option>
+                            <option value="perampokan" <?= old('jenis_kejahatan') == 'perampokan' ? 'selected' : '' ?>>Perampokan</option>
+                            <option value="begal" <?= old('jenis_kejahatan') == 'begal' ? 'selected' : '' ?>>Begal</option>
+                            <option value="tawuran" <?= old('jenis_kejahatan') == 'tawuran' ? 'selected' : '' ?>>Tawuran</option>
+                        </select>
                     </div>
 
                     <!-- Upload Gambar -->

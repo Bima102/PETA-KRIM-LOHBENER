@@ -27,7 +27,7 @@
     <div id="maps"></div>
 
     <script>
-        let map = L.map('maps').setView([ -6.403131, 108.270018 ], 13);
+        let map = L.map('maps').setView([-6.403131, 108.270018], 13);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
@@ -35,12 +35,12 @@
         }).addTo(map);
 
         <?php foreach ($dataWilayah as $row): ?>
-            L.marker([ <?= $row->latitude ?>, <?= $row->longitude ?> ])
+            L.marker([<?= $row->latitude ?>, <?= $row->longitude ?>])
                 .bindPopup(`
                     <img src="<?= base_url(); ?>/img/<?= esc($row->gambar); ?>" width="200">
                     <br>
-                    <h5><center>Rawan <?= esc($row->deskripsi); ?></center></h5>
-                    <b>Daerah</b>: <?= esc($row->nama_daerah); ?> <br>
+                    <h5><center>Jenis Kejahatan: <?= esc($row->jenis_kejahatan); ?></center></h5>
+                    <b>Jalan/Daerah</b>: <?= esc($row->nama_daerah); ?> <br>
                     <b>Kecamatan</b>: <?= esc($row->kecnama); ?> <br>
                     <b>Kelurahan</b>: <?= esc($row->kelnama); ?>
                 `).addTo(map);

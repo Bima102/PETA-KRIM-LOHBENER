@@ -4,8 +4,8 @@ namespace App\Controllers;
 
 class Wilayah extends BaseController
 {
-
   protected $builder, $db;
+
   public function __construct()
   {
     helper('form');
@@ -16,8 +16,9 @@ class Wilayah extends BaseController
   public function wilayah_data_read()
   {
     $this->builder->select('region.nama_daerah, kecamatan.nama as kecnama,
-        kelurahan.nama as kelnama, region.deskripsi, region.latitude, region.longitude, 
-        region.gambar, region.id');
+        kelurahan.nama as kelnama, region.jenis_kejahatan, region.latitude, region.longitude, 
+        region.gambar, region.id'); // Ganti deskripsi -> jenis_kejahatan
+
     $this->builder->join('kecamatan', 'kecamatan.kecamatan_id = region.kecamatan_id');
     $this->builder->join('kelurahan', 'kelurahan.kelurahan_id = region.kelurahan_id');
     $query = $this->builder->get();
@@ -33,7 +34,6 @@ class Wilayah extends BaseController
 
     echo view('templates/header', $data);
     echo view('wilayah/wilayah');
-
   }
 
   public function wilayah_data_save()
@@ -64,11 +64,10 @@ class Wilayah extends BaseController
       $dataMaster = [
         'kecamatan_id'      => $this->request->getPost('kecamatan'),
         'kelurahan_id'      => $this->request->getPost('kelurahan'),
-        'users_id'          => session()->get('id'),
         'nama_daerah'       => $this->request->getPost('nama_daerah'),
         'latitude'          => $this->request->getPost('latitude'),
         'longitude'         => $this->request->getPost('longitude'),
-        'deskripsi'         => $this->request->getPost('deskripsi'),
+        'jenis_kejahatan'   => $this->request->getPost('jenis_kejahatan'), 
         'gambar'            => $namaSampul,
       ];
       $modelMasterData->save($dataMaster);
@@ -97,11 +96,12 @@ class Wilayah extends BaseController
   {
     $dataModel = new \App\Models\M_Wilayah();
     $this->builder->select('region.nama_daerah, kecamatan.nama as kecam_nama,
-        kelurahan.nama as kelur_nama, region.deskripsi, region.latitude, region.longitude, 
-        region.gambar, region.id');
+        kelurahan.nama as kelur_nama, region.jenis_kejahatan, region.latitude, region.longitude, 
+        region.gambar, region.id'); 
     $this->builder->join('kecamatan', 'kecamatan.kecamatan_id = region.kecamatan_id');
     $this->builder->join('kelurahan', 'kelurahan.kelurahan_id = region.kelurahan_id');
     $query = $this->builder->get();
+
     $data = [
       'title'       => 'Edit Wilayah',
       'validation'  => \Config\Services::validation(),
@@ -129,13 +129,13 @@ class Wilayah extends BaseController
     $dataModel = new \App\Models\M_Wilayah();
     $dataModel->save([
       'id' => $id,
-      'kecamatan_id'  => $this->request->getVar('kecamatan'),
-      'kelurahan_id'  => $this->request->getVar('kelurahan'),
-      'nama_daerah'   => $this->request->getVar('nama_daerah'),
-      'latitude'      => $this->request->getVar('latitude'),
-      'longitude'     => $this->request->getVar('longitude'),
-      'deskripsi'     => $this->request->getVar('deskripsi'),
-      'gambar'        => $namaGambar,
+      'kecamatan_id'    => $this->request->getVar('kecamatan'),
+      'kelurahan_id'    => $this->request->getVar('kelurahan'),
+      'nama_daerah'     => $this->request->getVar('nama_daerah'),
+      'latitude'        => $this->request->getVar('latitude'),
+      'longitude'       => $this->request->getVar('longitude'),
+      'jenis_kejahatan' => $this->request->getVar('jenis_kejahatan'), // Ubah deskripsi jadi jenis_kejahatan
+      'gambar'          => $namaGambar,
     ]);
 
     session()->setFlashdata('msg', 'Data berhasil diubah..');

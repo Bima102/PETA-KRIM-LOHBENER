@@ -23,13 +23,16 @@ $long = [
   'placeholder' => 'Contoh: 109.123456'
 ];
 
-$desk = [
-  'name' => 'deskripsi',
-  'id'   => 'deskripsi',
-  'class' => 'form-control text-dark fw-bold',
-  'value' => null,
-  'placeholder' => 'Deskripsi Kejadian'
+$jenis_kejahatan_options = [
+  '' => '-- Pilih Jenis Kejahatan --',
+  'Pencurian' => 'Pencurian',
+  'Pembunuhan' => 'Pembunuhan',
+  'Begal' => 'Begal',
+  'Perampokan' => 'Perampokan',
+  'Pemerkosaan' => 'Pemerkosaan',
+  'Lainnya' => 'Lainnya'
 ];
+
 
 $submit = [
   'name'  => 'submit',
@@ -158,9 +161,15 @@ $submit = [
           </div>
 
           <div class="form-group mb-3">
-            <?= form_label('Deskripsi Kejadian', 'deskripsi'); ?>
-            <?= form_input($desk); ?>
-          </div>
+            <?= form_label('Jenis Kejahatan', 'jenis_kejahatan'); ?>
+            <select name="jenis_kejahatan" id="jenis_kejahatan" class="form-control fw-bold p-2 rounded-3" required>
+              <option value="" disabled selected>-- Pilih Jenis Kejahatan --</option>
+              <option value="curanmor" <?= old('jenis_kejahatan') == 'curanmor' ? 'selected' : '' ?>>Curanmor</option>
+              <option value="perampokan" <?= old('jenis_kejahatan') == 'perampokan' ? 'selected' : '' ?>>Perampokan</option>
+              <option value="begal" <?= old('jenis_kejahatan') == 'begal' ? 'selected' : '' ?>>Begal</option>
+              <option value="tawuran" <?= old('jenis_kejahatan') == 'tawuran' ? 'selected' : '' ?>>Tawuran</option>
+            </select>
+        </div>
 
           <div class="form-group mb-4">
             <?= form_label('Upload Gambar Wilayah', 'gambar'); ?>
