@@ -236,3 +236,25 @@ h2 {
   vertical-align: middle;
 }
 
+.incident-box {
+  border: 2px solid #dc3545;
+  padding: 1rem;
+  border-radius: 10px;
+  display: inline-block;
+  background-color: #fff0f0;
+}
+.modal-backdrop.show {
+  z-index: 1050;
+}
+
+.modal.show {
+  z-index: 1055;
+}
+body.modal-open {
+overflow: hidden !important;
+}
+
+.chart-container {
+  position: relative;
+  height: 400px;
+}

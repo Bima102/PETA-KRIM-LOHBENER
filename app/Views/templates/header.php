@@ -12,6 +12,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <link href="<?= base_url(); ?>/assets/css/style.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="<?= base_url(); ?>/assets/js/chart.js"></script>
+    
 
     <!-- Section tambahan dari tiap view -->
     <?= $this->renderSection('head'); ?>
@@ -52,7 +55,7 @@
                             <li class="nav-item"><a class="nav-link <?= ($segment1 == 'laporan') ? 'active' : ''; ?>" href="/laporan">Laporan</a></li>
                         <?php elseif ($role == 'user') : ?>
                             <li class="nav-item"><a class="nav-link <?= ($segment1 == 'halaman_utama') ? 'active' : ''; ?>" href="/halaman_utama">Halaman Utama</a></li>
-                            <li class="nav-item"><a class="nav-link <?= ($segment1 == 'informasi') ? 'active' : ''; ?>" href="/informasi">Informasi</a></li>
+                            <li class="nav-item"><a class="nav-link <?= ($segment1 == 'statistik') ? 'active' : ''; ?>" href="/statistik">Statistik Kejahatan</a></li>
                             <li class="nav-item"><a class="nav-link <?= ($segment1 == 'maps_user') ? 'active' : ''; ?>" href="/maps_user">Peta</a></li>
                             <li class="nav-item"><a class="nav-link <?= ($segment1 == 'aduan') ? 'active' : ''; ?>" href="/aduan">Lapor</a></li>
                         <?php endif; ?>
@@ -61,7 +64,7 @@
                         </li>
                     <?php else : ?>
                         <li class="nav-item"><a class="nav-link <?= ($segment1 == 'halaman_utama') ? 'active' : ''; ?>" href="/halaman_utama">Halaman Utama</a></li>
-                        <li class="nav-item"><a class="nav-link <?= ($segment1 == 'informasi') ? 'active' : ''; ?>" href="/informasi">Informasi</a></li>
+                        <li class="nav-item"><a class="nav-link <?= ($segment1 == 'statistik') ? 'active' : ''; ?>" href="/statistik">Statistik Kejahatan</a></li>
                         <li class="nav-item"><a class="nav-link <?= ($segment1 == 'maps_user') ? 'active' : ''; ?>" href="/maps_user">Peta</a></li>
                         <li class="nav-item ms-lg-3">
                             <a class="btn btn-warning text-dark fw-bold" href="/login">Masuk</a>

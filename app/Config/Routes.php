@@ -38,7 +38,6 @@ $routes->set404Override();
 // Route since we don't have to scan directories.
 $routes->get('/', 'Home::halaman_utama');
 $routes->get('/halaman_utama', 'Home::halaman_utama');
-$routes->get('/informasi', 'Home::informasi');
 $routes->cli('/server', 'Server::index');
 
 // Register dan Login
@@ -63,6 +62,7 @@ $routes->get('/editWilayah/(:any)', 'Wilayah::wilayah_edit/$1', ['filter' => 'au
 $routes->get('/wilayahDelete/(:any)', 'Wilayah::wilayahDelete/$1', ['filter' => 'auth']);
 $routes->get('/laporan', 'Aduan::laporan');
 $routes->get('/aduan/delete/(:num)', 'Aduan::delete/$1');
+$routes->get('statistik', 'Statistik::index');
 
 /*
  * --------------------------------------------------------------------

@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class M_Wilayah extends Model
 {
-    protected $table = 'region';
+    protected $table = 'maps';
     protected $primaryKey = 'id';
     protected $allowedFields = [
         'id', 'kecamatan_id', 'kelurahan_id', 'nrp', 'nama_daerah', 'latitude', 'longitude', 'jenis_kejahatan', 'gambar'
@@ -38,4 +38,13 @@ class M_Wilayah extends Model
 
         return $this->where(['id' => $id])->first();
     }
+
+    public function getStatistikKejahatan()
+    {
+        return $this->select('jenis_kejahatan, COUNT(*) as total')
+                    ->groupBy('jenis_kejahatan')
+                    ->orderBy('total', 'DESC')
+                    ->findAll();
+    }
+
 }

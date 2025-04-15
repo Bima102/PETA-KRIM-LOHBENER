@@ -39,8 +39,8 @@
                 .bindPopup(`
                     <img src="<?= base_url(); ?>/img/<?= esc($row->gambar); ?>" width="200">
                     <br>
-                    <h5><center>Jenis Kejahatan: <?= esc($row->jenis_kejahatan); ?></center></h5>
-                    <b>Jalan/Daerah</b>: <?= esc($row->nama_daerah); ?> <br>
+                    <h5><center>hati-hati daerah rawan: <?= esc($row->jenis_kejahatan); ?></center></h5>
+                    <b>Daerah/Jalan</b>: <?= esc($row->nama_daerah); ?> <br>
                     <b>Kecamatan</b>: <?= esc($row->kecnama); ?> <br>
                     <b>Kelurahan</b>: <?= esc($row->kelnama); ?>
                 `).addTo(map);

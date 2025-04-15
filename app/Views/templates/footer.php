@@ -8,7 +8,8 @@ $response = file_get_contents($apiUrl);
 if ($response !== FALSE) {
     $resJson = json_decode($response, true);
     if (isset($resJson['data'])) {
-        $newsDataArr = $resJson['data'];
+        // Ambil hanya 8 berita saja
+        $newsDataArr = array_slice($resJson['data'], 0, 8);
     }
 }
 ?>
@@ -44,7 +45,7 @@ if ($response !== FALSE) {
 <!-- Optional Custom Styling -->
 <style>
     body {
-        background-color: #f0f0f0; /* Warna abu-abu terang untuk background halaman */
+        background-color: #f0f0f0;
     }
 
     #newsdetails {
@@ -53,7 +54,7 @@ if ($response !== FALSE) {
 
     #newsdetails .card {
         border-radius: 12px;
-        background-color: #ffffff; /* Putih bersih untuk card agar kontras */
+        background-color: #ffffff;
         transition: transform 0.3s ease;
     }
 
@@ -71,6 +72,3 @@ if ($response !== FALSE) {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
-
-</body>
-</html>
