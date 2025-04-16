@@ -8,10 +8,10 @@ document.addEventListener('DOMContentLoaded', function () {
     // Generate warna random yang konsisten
     const backgroundColors = dataLabels.map((_, i) => {
         const colors = [
-            'rgba(255, 99, 132, 0.6)',   // merah
-            'rgba(54, 162, 235, 0.6)',  // biru
-            'rgba(255, 206, 86, 0.6)',  // kuning
-            'rgba(75, 192, 192, 0.6)',  // hijau
+            'rgba(214, 5, 5, 0.84)',   // merah
+            'rgba(4, 44, 71, 0.9)',  // biru
+            'rgb(251, 255, 0)',  // kuning
+            'rgb(7, 128, 21)',  // hijau
             'rgba(153, 102, 255, 0.6)', // ungu
             'rgba(255, 159, 64, 0.6)',  // oranye
         ];

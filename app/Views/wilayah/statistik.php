@@ -3,7 +3,7 @@
         <div class="card-body p-5">
             <div class="text-center mb-4">
                 <h2 class="fw-bold"><i class="bi bi-bar-chart-fill text-primary me-2"></i><?= esc($title) ?></h2>
-                <p class="text-muted mb-0">Visualisasi data kriminalitas berdasarkan kategori kejahatan</p>
+                <p class="text-muted mb-0">Statistik data kriminalitas berdasarkan kategori kejahatan</p>
             </div>
 
             <!-- Grafik -->
@@ -16,7 +16,7 @@
             
             <!-- Wilayah Rawan -->
             <div class="mb-5">
-                <h5 class="fw-semibold">Wilayah dengan Kasus Kejahatannya</h5>
+                <h5 class="fw-semibold">Wilayah dengan Kasus dan total Kejahatannya</h5>
                 <div class="table-responsive">
                     <table class="table table-striped table-bordered">
                         <thead class="table-dark">
@@ -48,7 +48,7 @@
                     <!-- Curanmor -->
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="heading1">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#tip1">
+                            <button class="accordion-button " type="button" data-bs-toggle="collapse" data-bs-target="#tip1">
                                 <i class="fas fa-motorcycle me-2"></i> Curanmor
                             </button>
                         </h2>
