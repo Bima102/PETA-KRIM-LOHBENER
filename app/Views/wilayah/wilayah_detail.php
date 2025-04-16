@@ -1,8 +1,9 @@
 <div class="container py-4">
   <div class="card shadow-lg">
     <div class="card-header bg-grey text-black">
-      <h4 class="mb-0">Detail Wilayah</h4>
-      <small class="text-light">Menu Detail Wilayah</small>
+    <h5 class="modal-title fw-bold" id="exampleModalLabel">
+          <i class="fas fa-plus-circle me-2"></i> Detail Wilayah
+        </h5>
     </div>
     <div class="card-body">
       <a href="<?= base_url('/wilayah'); ?>" class="btn btn-primary mb-3">

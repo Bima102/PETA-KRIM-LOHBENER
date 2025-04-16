@@ -37,12 +37,20 @@
         <?php foreach ($dataWilayah as $row): ?>
             L.marker([<?= $row->latitude ?>, <?= $row->longitude ?>])
                 .bindPopup(`
-                    <img src="<?= base_url(); ?>/img/<?= esc($row->gambar); ?>" width="200">
-                    <br>
-                    <h5><center>hati-hati daerah rawan: <?= esc($row->jenis_kejahatan); ?></center></h5>
-                    <b>Daerah/Jalan</b>: <?= esc($row->nama_daerah); ?> <br>
-                    <b>Kecamatan</b>: <?= esc($row->kecnama); ?> <br>
-                    <b>Kelurahan</b>: <?= esc($row->kelnama); ?>
+                    <div style="width: 180px; font-size: 13px;">
+                        <img 
+                            src="<?= base_url(); ?>/img/<?= esc($row->gambar); ?>" 
+                            style="width: 100%; height: 135px; object-fit: cover; border-radius: 6px;"
+                        >
+                        <h5 style="text-align: center; margin-top: 5px; font-size: 14px;">
+                            Hati-hati daerah rawan: <?= esc($row->jenis_kejahatan); ?>
+                        </h5>
+                        <p>
+                            <b>Kecamatan</b>: <?= esc($row->kecnama); ?><br>
+                            <b>Kelurahan</b>: <?= esc($row->kelnama); ?><br>
+                            <b>Daerah/Jalan</b>: <?= esc($row->nama_daerah); ?>
+                        </p>
+                    </div>
                 `).addTo(map);
         <?php endforeach; ?>
     </script>

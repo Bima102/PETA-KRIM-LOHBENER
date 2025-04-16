@@ -13,49 +13,95 @@
                         data-values='<?= json_encode(array_map(fn($item) => (int)$item->total, $statistik)) ?>'>
                 </canvas>
             </div>
-
-            <!-- Deskripsi -->
-            <div class="mb-4 px-2">
-                <h5 class="fw-semibold">Deskripsi Statistik Kejahatan</h5>
-                <p>
-                    Grafik di atas menggambarkan frekuensi berbagai jenis kejahatan yang terjadi, seperti 
-                    <strong>curanmor</strong>, <strong>perampokan</strong>, <strong>begal</strong>, dan <strong>tawuran</strong>. 
-                    Data ini dapat digunakan untuk menganalisis tren dan menentukan prioritas penanganan.
-                </p>
-                <p>
-                    Dengan mengetahui jenis kejahatan yang paling dominan, masyarakat dan aparat bisa bekerja sama 
-                    dalam upaya pencegahan dan meningkatkan keamanan di lingkungan masing-masing.
-                </p>
+            
+            <!-- Wilayah Rawan -->
+            <div class="mb-5">
+                <h5 class="fw-semibold">Wilayah dengan Kasus Kejahatannya</h5>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>No</th>
+                                <th>Wilayah</th>
+                                <th>Jenis Kejahatan</th>
+                                <th>Total Kasus</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($rankingData as $i => $row): ?>
+                            <tr>
+                                <td><?= $i + 1 ?></td>
+                                <td><?= esc($row->wilayah) ?></td>
+                                <td><?= esc($row->jenis_kejahatan) ?></td>
+                                <td><?= esc($row->total) ?></td>
+                            </tr>
+                            <?php endforeach ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
-            <!-- Tabel -->
-            <div class="table-responsive">
-                <table class="table table-striped table-hover align-middle">
-                    <thead class="table-dark">
-                        <tr>
-                            <th><i class="bi bi-shield-exclamation me-2"></i>Jenis Kejahatan</th>
-                            <th><i class="bi bi-graph-up-arrow me-2"></i>Jumlah Kasus</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (!empty($statistik)) : ?>
-                            <?php foreach ($statistik as $item) : ?>
-                                <tr>
-                                    <td><?= esc(ucfirst($item->jenis_kejahatan)) ?></td>
-                                    <td><?= esc($item->total) ?></td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php else : ?>
-                            <tr>
-                                <td colspan="2" class="text-center text-muted">Tidak ada data kejahatan.</td>
-                            </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
+            <!-- Tips Aman -->
+            <div class="mb-5">
+                <h5 class="fw-semibold">Tips Aman Berdasarkan Jenis Kejahatan</h5>
+                <div class="accordion" id="tipsAccordion">
+                    <!-- Curanmor -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading1">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#tip1">
+                                <i class="fas fa-motorcycle me-2"></i> Curanmor
+                            </button>
+                        </h2>
+                        <div id="tip1" class="accordion-collapse collapse show" data-bs-parent="#tipsAccordion">
+                            <div class="accordion-body">
+                                Gunakan kunci ganda, parkir di tempat terang dan ramai, serta pasang alarm kendaraan.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Perampokan -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading2">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#tip2">
+                                <i class="fas fa-mask me-2"></i> Perampokan
+                            </button>
+                        </h2>
+                        <div id="tip2" class="accordion-collapse collapse" data-bs-parent="#tipsAccordion">
+                            <div class="accordion-body">
+                                Hindari berjalan sendirian di malam hari, waspadai lingkungan sekitar, dan jangan pamer barang berharga.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Begal -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading3">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#tip3">
+                                <i class="fas fa-user-ninja me-2"></i> Begal
+                            </button>
+                        </h2>
+                        <div id="tip3" class="accordion-collapse collapse" data-bs-parent="#tipsAccordion">
+                            <div class="accordion-body">
+                                Hindari berkendara sendirian di malam hari, gunakan rute yang ramai dan terang, serta selalu waspada terhadap pengendara mencurigakan di sekitar.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tawuran -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading4">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#tip4">
+                                <i class="fas fa-users me-2"></i> Tawuran
+                            </button>
+                        </h2>
+                        <div id="tip4" class="accordion-collapse collapse" data-bs-parent="#tipsAccordion">
+                            <div class="accordion-body">
+                                Jauhi area yang sering dijadikan tempat nongkrong kelompok tertentu, hindari ikut provokasi, dan segera cari tempat aman jika situasi mulai tidak kondusif.
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
-
-

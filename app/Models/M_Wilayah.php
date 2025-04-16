@@ -47,4 +47,12 @@ class M_Wilayah extends Model
                     ->findAll();
     }
 
+    public function getRankingWilayah()
+    {
+        return $this->select('nama_daerah as wilayah, jenis_kejahatan, COUNT(*) as total')
+                    ->groupBy('nama_daerah, jenis_kejahatan')
+                    ->orderBy('total', 'DESC')
+                    ->findAll();
+    }    
+
 }

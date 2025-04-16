@@ -38,7 +38,7 @@ $submit = [
   'name'  => 'submit',
   'id'    => 'submit',
   'value' => 'Simpan Data',
-  'class' => 'btn btn-success fw-bold px-4',
+  'class' => 'btn btn-warning fw-bold px-4',
   'type'  => 'submit'
 ];
 ?>
@@ -116,7 +116,7 @@ $submit = [
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content rounded-4 shadow">
-      <div class="modal-header bg-primary text-white rounded-top">
+      <div class="modal-header bg-dark text-white rounded-top">
         <h5 class="modal-title fw-bold" id="exampleModalLabel">
           <i class="fas fa-plus-circle me-2"></i> Tambah Data Wilayah
         </h5>

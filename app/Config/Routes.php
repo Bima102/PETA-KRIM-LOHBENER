@@ -39,6 +39,7 @@ $routes->set404Override();
 $routes->get('/', 'Home::halaman_utama');
 $routes->get('/halaman_utama', 'Home::halaman_utama');
 $routes->cli('/server', 'Server::index');
+$routes->get('statistik', 'Statistik::index');
 
 // Register dan Login
 $routes->get('/register', 'Users::register');
@@ -62,7 +63,7 @@ $routes->get('/editWilayah/(:any)', 'Wilayah::wilayah_edit/$1', ['filter' => 'au
 $routes->get('/wilayahDelete/(:any)', 'Wilayah::wilayahDelete/$1', ['filter' => 'auth']);
 $routes->get('/laporan', 'Aduan::laporan');
 $routes->get('/aduan/delete/(:num)', 'Aduan::delete/$1');
-$routes->get('statistik', 'Statistik::index');
+
 
 /*
  * --------------------------------------------------------------------

@@ -17,10 +17,12 @@ class Statistik extends BaseController
     {
         $data = [
             'title' => 'Statistik Kejahatan',
-            'statistik' => $this->wilayahModel->getStatistikKejahatan()
+            'statistik' => $this->wilayahModel->getStatistikKejahatan(),
+            'rankingData' => $this->wilayahModel->getRankingWilayah()
         ];
-
+    
         echo view('templates/header', $data); 
         echo view('wilayah/statistik'); 
-    }
+    }    
+
 }
