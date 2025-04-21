@@ -1,10 +1,11 @@
 <div class="container py-4">
   <div class="card shadow-lg">
     <div class="card-header bg-grey text-black">
-    <h5 class="modal-title fw-bold" id="exampleModalLabel">
-          <i class="fas fa-plus-circle me-2"></i> Detail Wilayah
-        </h5>
+      <h5 class="modal-title fw-bold" id="exampleModalLabel">
+        <i class="fas fa-plus-circle me-2"></i> Detail Wilayah
+      </h5>
     </div>
+
     <div class="card-body">
       <a href="<?= base_url('/wilayah'); ?>" class="btn btn-primary mb-3">
         Kembali
@@ -14,9 +15,11 @@
         <div class="col-md-5 text-center">
           <img src="/img/<?= esc($dWilayah->gambar); ?>" width="100%" alt="Gambar Wilayah" class="img-fluid rounded shadow-sm">
         </div>
+
         <div class="col-md-7">
           <div class="p-3">
             <h5 class="fw-bold">Lokasi: <?= esc($dWilayah->nama_daerah); ?></h5>
+
             <div class="incident-box mt-2">
               <p class="text-muted mb-1">Jenis kejadian yang tercatat:</p>
               <span class="badge bg-danger p-2 fs-6">
@@ -37,6 +40,7 @@
               <th>Aksi</th>
             </tr>
           </thead>
+
           <tbody class="text-center">
             <tr>
               <td><?= $dWilayah->latitude; ?></td>
@@ -64,9 +68,11 @@
         <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Hapus</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
       </div>
+
       <div class="modal-body">
         Apakah Anda yakin ingin menghapus data wilayah ini?
       </div>
+
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
         <a href="/wilayahDelete/<?= $dWilayah->id; ?>" class="btn btn-danger">Ya, Hapus</a>

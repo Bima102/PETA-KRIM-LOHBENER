@@ -110,13 +110,15 @@ $submit = [
         </h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+
       <div class="modal-body p-4">
         <form action="/wilayah_data_save" method="POST" enctype="multipart/form-data">
+
           <!-- Kecamatan -->
           <div class="form-group mb-3">
             <?= form_label('Kecamatan', 'kecamatan'); ?>
             <input type="text" class="form-control fw-bold p-2 rounded-3" name="kecamatan_display" value="Lohbener" readonly>
-            <input type="hidden" name="kecamatan" value="101"> <!-- ganti 1 dengan ID asli kecamatan Lohbener -->
+            <input type="hidden" name="kecamatan" value="101">
           </div>
 
           <!-- Kelurahan -->

@@ -20,12 +20,4 @@ class Home extends BaseController
         echo view('templates/footer');
     }
 
-    public function informasi()
-    {
-        $data = [
-            'title' => 'Informasi Jenis Kejahatan'
-        ];
-        echo view('templates/header', $data);
-        echo view('informasi');
-    }
 }

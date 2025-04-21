@@ -11,7 +11,7 @@ $submit = [
 <div class="row justify-content-center mt-4 mb-5">
     <div class="col-md-10">
         <div class="card shadow-lg border-0 rounded-4" style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);">
-            
+
             <!-- Header -->
             <div class="card-header bg-dark text-warning d-flex align-items-center rounded-top">
                 <h5 class="mb-0 fw-bold">
@@ -110,6 +110,7 @@ $submit = [
 
                 </form>
             </div>
+
         </div>
     </div>
 </div>
