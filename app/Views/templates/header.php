@@ -42,7 +42,7 @@
 <body>
     <?php
         $uri = service('uri');
-        $segment1 = $uri->getSegment(1); // segment pertama dari URI (misal: 'dashboard', 'maps_user', dll)
+        $segment1 = $uri->getSegment(1, ''); // Tambahkan default kosong
     ?>
 
     <!-- ====== NAVBAR ====== -->
@@ -66,15 +66,12 @@
                             <li class="nav-item"><a class="nav-link <?= ($segment1 == 'dashboard') ? 'active' : ''; ?>" href="/dashboard">Dashboard</a></li>
                             <li class="nav-item"><a class="nav-link <?= ($segment1 == 'wilayah') ? 'active' : ''; ?>" href="/wilayah">Data Wilayah</a></li>
                             <li class="nav-item"><a class="nav-link <?= ($segment1 == 'maps') ? 'active' : ''; ?>" href="/maps">Peta</a></li>
-                            <li class="nav-item"><a class="nav-link <?= ($segment1 == 'laporan') ? 'active' : ''; ?>" href="/laporan">Laporan</a></li>
-
                         <?php elseif ($role == 'user') : ?>
                             <li class="nav-item"><a class="nav-link <?= ($segment1 == 'halaman_utama') ? 'active' : ''; ?>" href="/halaman_utama">Halaman Utama</a></li>
                             <li class="nav-item"><a class="nav-link <?= ($segment1 == 'statistik') ? 'active' : ''; ?>" href="/statistik">Statistik Kejahatan</a></li>
                             <li class="nav-item"><a class="nav-link <?= ($segment1 == 'maps_user') ? 'active' : ''; ?>" href="/maps_user">Peta</a></li>
-                            <li class="nav-item"><a class="nav-link <?= ($segment1 == 'aduan') ? 'active' : ''; ?>" href="/aduan">Lapor</a></li>
+                            <li class="nav-item"><a class="nav-link <?= ($segment1 == 'wilayah') ? 'active fw-bold text-primary' : ''; ?>" href="<?= base_url('/wilayah/aduan') ?>">Lapor</a></li>
                         <?php endif; ?>
-
                         <li class="nav-item ms-lg-3">
                             <a class="btn btn-warning text-dark fw-bold" href="/logout">Keluar</a>
                         </li>

@@ -47,8 +47,8 @@ $routes->get('/login', 'Users::index');
 $routes->post('/register', 'Users::register');
 $routes->post('/index', 'Users::index');
 $routes->get('/logout', 'Users::logout');
-$routes->get('/aduan', 'Aduan::index');
-$routes->post('/aduan/submit', 'Aduan::submit');
+$routes->get('/wilayah/aduan', 'Wilayah::aduan');
+$routes->post('/wilayah/aduanSave', 'Wilayah::aduanSave');
 
 
 // Halaman Admin
@@ -61,9 +61,8 @@ $routes->get('/detailWilayah/(:any)', 'Wilayah::wilayah_detail/$1');
 $routes->post('/wilayah/wilayahUpdate/(:segment)', 'Wilayah::wilayahUpdate/$1', ['filter' => 'auth']);
 $routes->get('/editWilayah/(:any)', 'Wilayah::wilayah_edit/$1', ['filter' => 'auth']);
 $routes->get('/wilayahDelete/(:any)', 'Wilayah::wilayahDelete/$1', ['filter' => 'auth']);
-$routes->get('/laporan', 'Aduan::laporan');
-$routes->get('/aduan/delete/(:num)', 'Aduan::delete/$1');
-
+$routes->get('/wilayah/aduanTerima/(:num)', 'Wilayah::aduanTerima/$1');
+$routes->get('/wilayah/aduanTolak/(:num)', 'Wilayah::aduanTolak/$1');
 
 /*
  * --------------------------------------------------------------------

@@ -67,4 +67,15 @@ class M_Wilayah extends Model
             ->orderBy('total', 'DESC')
             ->findAll();
     }
+
+    public function get_pending_laporan()
+    {
+        return $this->db->table('maps')
+            ->select('maps.*, kecamatan.nama as kecnama, kelurahan.nama as kelnama')
+            ->join('kecamatan', 'kecamatan.kecamatan_id = maps.kecamatan_id')
+            ->join('kelurahan', 'kelurahan.kelurahan_id = maps.kelurahan_id')
+            ->where('maps.status', 'pending')
+            ->get();
+    }
+
 }

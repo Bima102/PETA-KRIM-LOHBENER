@@ -30,6 +30,7 @@ class Wilayah extends BaseController
             'content'    => $query->getResult(),
             'kecamatan'  => $dataModel->get_data_kecamatan()->getResult(), // <--- Tambahkan ini
             'kelurahan'  => $dataModel->get_data_kelurahan()->getResult(),
+            'pengaduan'  => $dataModel->get_pending_laporan()->getResult(), // <-- ini tambahan penting
             'validation' => \Config\Services::validation()
         ];
     
@@ -158,4 +159,51 @@ class Wilayah extends BaseController
         session()->setFlashdata('msg', 'Data berhasil dihapus.');
         return redirect()->to('/wilayah');
     }
+
+    public function aduan()
+{
+    $dataModel = new M_Wilayah();
+    $data = [
+        'title' => 'Form Pengaduan',
+        'kelurahan' => $dataModel->get_data_kelurahan()->getResult()
+    ];
+    echo view('templates/header', $data);
+    echo view('wilayah/aduan');
+}
+
+public function aduanSave()
+{
+    $file = $this->request->getFile('gambar');
+    $namaGambar = $file->isValid() ? $file->getRandomName() : 'danger.png';
+
+    if ($file->isValid() && !$file->hasMoved()) {
+        $file->move('img', $namaGambar);
+    }
+
+    $this->db->table('maps')->insert([
+        'kecamatan_id'    => $this->request->getPost('kecamatan'),
+        'kelurahan_id'    => $this->request->getPost('kelurahan'),
+        'nama_daerah'     => $this->request->getPost('nama_daerah'),
+        'latitude'        => $this->request->getPost('latitude'),
+        'longitude'       => $this->request->getPost('longitude'),
+        'jenis_kejahatan' => $this->request->getPost('jenis_kejahatan'),
+        'gambar'          => $namaGambar,
+        'status'          => 'pending' // tambahkan kolom ini di DB
+    ]);
+
+    return redirect()->to('/wilayah/aduan')->with('msg', 'Laporan berhasil dikirim');
+    }
+
+    public function aduanTerima($id)
+    {
+        $this->db->table('maps')->where('id', $id)->update(['status' => 'diterima']);
+        return redirect()->to('/wilayah')->with('msg', 'Laporan telah diterima');
+    }
+
+    public function aduanTolak($id)
+    {
+        $this->db->table('maps')->delete(['id' => $id]);
+        return redirect()->to('/wilayah')->with('msg', 'Laporan ditolak dan dihapus');
+    }
+
 }

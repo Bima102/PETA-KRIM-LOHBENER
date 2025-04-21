@@ -1,4 +1,5 @@
 <?php
+// Input form fields configuration
 $nama_daerah = [
   'name'        => 'nama_daerah',
   'id'          => 'nama_daerah',
@@ -36,11 +37,11 @@ $submit = [
 <div class="row mt-4">
   <div class="col-md-12">
     <div class="card shadow-sm border-0 rounded-4 px-3">
-      <div class="card-header bg-white border-bottom rounded-top py-3 px-4 d-flex align-items-center">
-        <h5 class="mb-0 fw-bold text-dark">
-          <i class="fas fa-map-marked-alt me-2 text-primary"></i> Data Wilayah
-        </h5>
-      </div>
+    <div class="card-header bg-white border-bottom rounded-top py-3 px-4 d-flex align-items-center justify-content-center">
+      <h5 class="mb-0 fw-bold text-dark">
+        <i class="fas fa-map-marked-alt me-2 text-primary"></i> Data Wilayah
+      </h5>
+    </div>
 
       <div class="card-body p-4">
         <?php if (session()->getFlashdata('msg')) : ?>
@@ -50,52 +51,92 @@ $submit = [
           </div>
         <?php endif; ?>
 
-        <!-- Tombol Tambah -->
-        <div class="d-flex justify-content-center mb-4">
-          <button type="button" class="btn btn-primary fw-bold shadow-sm px-4 py-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            <i class="fas fa-plus me-1"></i> Tambah Data
-          </button>
-        </div>
+        <!-- Validasi Laporan -->
+        <hr class="my-5">
+        <h5 class="fw-bold mb-3">
+          <i class="fas fa-check-circle text-success me-2"></i> Validasi Laporan Masyarakat
+        </h5>
 
-        <!-- Tabel -->
-        <div class="table-responsive px-2">
-          <table class="table table-hover align-middle text-nowrap table-borderless shadow-sm rounded-4 overflow-hidden">
-            <thead class="bg-dark text-white text-center">
-              <tr class="fw-bold">
-                <th style="width: 5%;">No</th>
-                <th style="width: 25%;">Kecamatan</th>
-                <th style="width: 25%;">Kelurahan</th>
-                <th>Nama Daerah / Jalan</th>
-                <th style="width: 15%;">Aksi</th>
+        <div class="table-responsive">
+          <table class="table table-bordered table-sm text-center align-middle">
+            <thead class="bg-warning text-dark">
+              <tr>
+                <th>Kecamatan</th>
+                <th>Kelurahan</th>
+                <th>Daerah / Jalan</th>
+                <th>Latitude</th>
+                <th>Longitude</th>
+                <th>Jenis Kejahatan</th>
+                <th>Gambar</th>
+                <th>Aksi</th>
               </tr>
             </thead>
-            <tbody class="bg-white text-center">
-              <?php if (empty($content)) : ?>
+            <tbody>
+              <?php foreach ($pengaduan as $row): ?>
                 <tr>
-                  <td colspan="5" class="text-center text-muted py-4">
-                    <i class="fas fa-folder-open fa-2x mb-2 d-block"></i>
-                    Belum ada data wilayah.
+                  <td><?= $row->kecnama ?></td>
+                  <td><?= $row->kelnama ?></td>
+                  <td class="text-nowrap"><?= $row->nama_daerah ?></td>
+                  <td class="text-nowrap"><?= $row->latitude ?></td>
+                  <td class="text-nowrap"><?= $row->longitude ?></td>
+                  <td class="text-nowrap"><?= ucfirst($row->jenis_kejahatan) ?></td>
+                  <td><img src="/img/<?= $row->gambar ?>" width="60" class="rounded-3"></td>
+                  <td>
+                    <a href="/wilayah/aduanTerima/<?= $row->id ?>" class="btn btn-success btn-sm">Terima</a>
+                    <a href="/wilayah/aduanTolak/<?= $row->id ?>" class="btn btn-danger btn-sm">Tolak</a>
                   </td>
                 </tr>
-              <?php else : ?>
-                <?php foreach ($content as $row => $value) : ?>
-                  <tr class="border-bottom border-light">
-                    <td class="fw-semibold"><?= $row + 1; ?></td>
-                    <td><?= $value->kecnama; ?></td>
-                    <td><?= $value->kelnama; ?></td>
-                    <td><?= $value->nama_daerah; ?></td>
-                    <td>
-                      <a href="/detailWilayah/<?= $value->id; ?>" class="btn btn-sm btn-primary fw-bold px-3">
-                        <i class="fas fa-info-circle me-1"></i> Detail
-                      </a>
-                    </td>
-                  </tr>
-                <?php endforeach; ?>
-              <?php endif; ?>
+              <?php endforeach ?>
             </tbody>
           </table>
         </div>
-      </div>
+      </div> <!-- card-body -->
+    </div> <!-- card -->
+
+    <!-- Tombol Tambah -->
+    <div class="d-flex justify-content-center my-4">
+      <button type="button" class="btn btn-primary fw-bold shadow-sm px-4 py-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        <i class="fas fa-plus me-1"></i> Tambah Data
+      </button>
+    </div>
+
+    <!-- Tabel DATA WILAYAH -->
+    <div class="table-responsive px-2">
+      <table class="table table-hover align-middle text-nowrap table-borderless shadow-sm rounded-4 overflow-hidden">
+        <thead class="bg-dark text-white text-center">
+          <tr class="fw-bold">
+            <th style="width: 5%;">No</th>
+            <th style="width: 25%;">Kecamatan</th>
+            <th style="width: 25%;">Kelurahan</th>
+            <th>Nama Daerah / Jalan</th>
+            <th style="width: 15%;">Aksi</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white text-center">
+          <?php if (empty($content)) : ?>
+            <tr>
+              <td colspan="5" class="text-center text-muted py-4">
+                <i class="fas fa-folder-open fa-2x mb-2 d-block"></i>
+                Belum ada data wilayah.
+              </td>
+            </tr>
+          <?php else : ?>
+            <?php foreach ($content as $row => $value) : ?>
+              <tr class="border-bottom border-light">
+                <td class="fw-semibold"><?= $row + 1; ?></td>
+                <td><?= $value->kecnama; ?></td>
+                <td><?= $value->kelnama; ?></td>
+                <td><?= $value->nama_daerah; ?></td>
+                <td>
+                  <a href="/detailWilayah/<?= $value->id; ?>" class="btn btn-sm btn-primary fw-bold px-3">
+                    <i class="fas fa-info-circle me-1"></i> Detail
+                  </a>
+                </td>
+              </tr>
+            <?php endforeach; ?>
+          <?php endif; ?>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
