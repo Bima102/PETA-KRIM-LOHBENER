@@ -19,24 +19,24 @@ class Wilayah extends BaseController
         $this->builder->select('maps.nama_daerah, kecamatan.nama as kecnama,
             kelurahan.nama as kelnama, maps.jenis_kejahatan, maps.latitude, maps.longitude, 
             maps.gambar, maps.id'); 
-
+    
         $this->builder->join('kecamatan', 'kecamatan.kecamatan_id = maps.kecamatan_id');
         $this->builder->join('kelurahan', 'kelurahan.kelurahan_id = maps.kelurahan_id');
         $query = $this->builder->get();
-
+    
         $dataModel = new M_Wilayah();
         $data = [
-            'title'     => 'Data Wilayah',
-            'content'   => $query->getResult(),
-            'kecamatan' => $dataModel->get_data_kecamatan()->getResult(),
-            'kelurahan' => $dataModel->get_data_kelurahan()->getResult(),
+            'title'      => 'Data Wilayah',
+            'content'    => $query->getResult(),
+            'kecamatan'  => $dataModel->get_data_kecamatan()->getResult(), // <--- Tambahkan ini
+            'kelurahan'  => $dataModel->get_data_kelurahan()->getResult(),
             'validation' => \Config\Services::validation()
         ];
-
+    
         echo view('templates/header', $data);
         echo view('wilayah/wilayah');
     }
-
+    
     public function wilayah_data_save()
     {
         if (!$this->validate([
@@ -108,9 +108,9 @@ class Wilayah extends BaseController
             'validation'  => \Config\Services::validation(),
             'wilayah'     => $dataModel->get_wilayah($id),
             'wilayahkec'  => $query->getResult(),
-            'kecamatan'   => $dataModel->get_data_kecamatan()->getResult(),
+            'kecamatan'   => $dataModel->get_data_kecamatan()->getResult(), // ← tambahkan ini
             'kelurahan'   => $dataModel->get_data_kelurahan()->getResult(),
-        ];
+        ];        
 
         echo view('templates/header', $data);
         echo view('wilayah/wilayah_edit');
@@ -158,5 +158,4 @@ class Wilayah extends BaseController
         session()->setFlashdata('msg', 'Data berhasil dihapus.');
         return redirect()->to('/wilayah');
     }
-    
 }

@@ -6,7 +6,6 @@
 
     <div class="card shadow-sm border-0 rounded-4">
         <div class="card-body p-4">
-
             <div class="table-responsive">
                 <table class="table table-bordered table-hover align-middle text-nowrap shadow-sm rounded-4 overflow-hidden">
                     <thead class="table-dark text-center">
@@ -49,7 +48,6 @@
                     </tbody>
                 </table>
             </div>
-
         </div>
     </div>
 </div>
@@ -66,12 +64,11 @@
             </div>
             <div class="modal-body text-center py-4">
                 <p class="mb-3 fs-6">Apakah Anda yakin ingin menghapus laporan ini?</p>
-                <p class="text-danger fw-semibold mb-0">Tindakan ini tidak dapat dibatalkan.</p>
             </div>
             <div class="modal-footer d-flex justify-content-center">
                 <form id="deleteForm" method="get">
                     <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-danger px-4">Hapus</button>
+                    <button type="submit" class="btn btn-danger px-4">Ya,Hapus</button>
                 </form>
             </div>
         </div>

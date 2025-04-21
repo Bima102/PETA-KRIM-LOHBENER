@@ -5,20 +5,22 @@ document.addEventListener('DOMContentLoaded', function () {
     const dataLabels = JSON.parse(chartEl.dataset.labels);
     const dataValues = JSON.parse(chartEl.dataset.values);
 
-    // Generate warna random yang konsisten
     const backgroundColors = dataLabels.map((_, i) => {
         const colors = [
-            'rgba(214, 5, 5, 0.84)',   // merah
-            'rgba(4, 44, 71, 0.9)',  // biru
-            'rgb(251, 255, 0)',  // kuning
-            'rgb(7, 128, 21)',  // hijau
-            'rgba(153, 102, 255, 0.6)', // ungu
-            'rgba(255, 159, 64, 0.6)',  // oranye
+            'rgba(214, 5, 5, 0.84)',
+            'rgba(4, 44, 71, 0.9)',
+            'rgb(251, 255, 0)',
+            'rgb(7, 128, 21)',
+            'rgba(153, 102, 255, 0.6)',
+            'rgba(255, 159, 64, 0.6)',
         ];
-        return colors[i % colors.length]; // putar jika lebih dari 6 data
+        return colors[i % colors.length];
     });
 
-    const borderColors = backgroundColors.map(color => color.replace('0.6', '1'));
+    const borderColors = backgroundColors.map(color => {
+        // untuk transparansi .6 menjadi 1 (jika ada), atau tetap jika solid
+        return color.includes('0.') ? color.replace(/0\.\d+/, '1') : color;
+    });
 
     new Chart(ctx, {
         type: 'bar',
@@ -45,13 +47,25 @@ document.addEventListener('DOMContentLoaded', function () {
                             return 'Jumlah: ' + context.parsed.y;
                         }
                     }
+                },
+                datalabels: {
+                    anchor: 'end',
+                    align: 'top',
+                    color: '#333',
+                    font: {
+                        weight: 'bold',
+                        size: 12
+                    },
+                    formatter: Math.round
                 }
             },
             scales: {
                 y: {
                     beginAtZero: true,
+                    min: 0,
+                    max: 20,
                     ticks: {
-                        stepSize: 1
+                        stepSize: 5
                     },
                     title: {
                         display: true,
@@ -67,8 +81,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 }
             }
-        }
+        },
+        plugins: [ChartDataLabels]
     });
 });
-
-

@@ -1,38 +1,27 @@
 <?php
 $nama_daerah = [
-  'name' => 'nama_daerah',
-  'id'   => 'nama_daerah',
-  'class' => 'form-control text-dark fw-bold',
-  'value' => null,
+  'name'        => 'nama_daerah',
+  'id'          => 'nama_daerah',
+  'class'       => 'form-control text-dark fw-bold',
+  'value'       => old('nama_daerah'),
   'placeholder' => 'Nama Daerah / Jalan'
 ];
 
 $lat = [
-  'name' => 'latitude',
-  'id'   => 'latitude',
-  'class' => 'form-control text-dark fw-bold',
-  'value' => null,
-  'placeholder' => 'Contoh: -7.123456'
+  'name'        => 'latitude',
+  'id'          => 'latitude',
+  'class'       => 'form-control text-dark fw-bold',
+  'value'       => old('latitude'),
+  'placeholder' => 'Contoh: -6.123456'
 ];
 
 $long = [
-  'name' => 'longitude',
-  'id'   => 'longitude',
-  'class' => 'form-control text-dark fw-bold',
-  'value' => null,
-  'placeholder' => 'Contoh: 109.123456'
+  'name'        => 'longitude',
+  'id'          => 'longitude',
+  'class'       => 'form-control text-dark fw-bold',
+  'value'       => old('longitude'),
+  'placeholder' => 'Contoh: 108.123456'
 ];
-
-$jenis_kejahatan_options = [
-  '' => '-- Pilih Jenis Kejahatan --',
-  'Pencurian' => 'Pencurian',
-  'Pembunuhan' => 'Pembunuhan',
-  'Begal' => 'Begal',
-  'Perampokan' => 'Perampokan',
-  'Pemerkosaan' => 'Pemerkosaan',
-  'Lainnya' => 'Lainnya'
-];
-
 
 $submit = [
   'name'  => 'submit',
@@ -43,6 +32,7 @@ $submit = [
 ];
 ?>
 
+<!-- Section Tabel & Modal -->
 <div class="row mt-4">
   <div class="col-md-12">
     <div class="card shadow-sm border-0 rounded-4 px-3">
@@ -53,21 +43,21 @@ $submit = [
       </div>
 
       <div class="card-body p-4">
-
         <?php if (session()->getFlashdata('msg')) : ?>
           <div class="alert alert-success shadow-sm fw-bold" role="alert">
-            <i class="fas fa-check-circle me-2 text-success"></i><?= session()->getFlashdata('msg'); ?>
+            <i class="fas fa-check-circle me-2 text-success"></i>
+            <?= session()->getFlashdata('msg'); ?>
           </div>
         <?php endif; ?>
 
-        <!-- Tombol Tambah Data -->
+        <!-- Tombol Tambah -->
         <div class="d-flex justify-content-center mb-4">
           <button type="button" class="btn btn-primary fw-bold shadow-sm px-4 py-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
             <i class="fas fa-plus me-1"></i> Tambah Data
           </button>
         </div>
 
-        <!-- Tabel Data -->
+        <!-- Tabel -->
         <div class="table-responsive px-2">
           <table class="table table-hover align-middle text-nowrap table-borderless shadow-sm rounded-4 overflow-hidden">
             <thead class="bg-dark text-white text-center">
@@ -105,38 +95,34 @@ $submit = [
             </tbody>
           </table>
         </div>
-
       </div>
     </div>
   </div>
 </div>
 
-
-<!-- Modal Tambah Data -->
+<!-- Modal Tambah -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content rounded-4 shadow">
       <div class="modal-header bg-dark text-white rounded-top">
-        <h5 class="modal-title fw-bold" id="exampleModalLabel">
+        <h5 class="modal-title fw-bold">
           <i class="fas fa-plus-circle me-2"></i> Tambah Data Wilayah
         </h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body p-4">
         <form action="/wilayah_data_save" method="POST" enctype="multipart/form-data">
+          <!-- Kecamatan -->
           <div class="form-group mb-3">
             <?= form_label('Kecamatan', 'kecamatan'); ?>
-            <select id="kecamatan" class="form-control fw-bold p-2 rounded-3" name="kecamatan" required>
-              <option value="" disabled selected>-- Pilih Kecamatan --</option>
-              <?php foreach ($kecamatan as $row) : ?>
-                <option value="<?= $row->kecamatan_id; ?>"><?= $row->nama; ?></option>
-              <?php endforeach; ?>
-            </select>
+            <input type="text" class="form-control fw-bold p-2 rounded-3" name="kecamatan_display" value="Lohbener" readonly>
+            <input type="hidden" name="kecamatan" value="101"> <!-- ganti 1 dengan ID asli kecamatan Lohbener -->
           </div>
 
+          <!-- Kelurahan -->
           <div class="form-group mb-3">
             <?= form_label('Kelurahan', 'kelurahan'); ?>
-            <select id="kelurahan" class="form-control fw-bold p-2 rounded-3" name="kelurahan" required>
+            <select name="kelurahan" id="kelurahan" class="form-control fw-bold p-2 rounded-3" required>
               <option value="" disabled selected>-- Pilih Kelurahan --</option>
               <?php foreach ($kelurahan as $row) : ?>
                 <option value="<?= $row->kelurahan_id; ?>"><?= $row->nama; ?></option>
@@ -144,11 +130,13 @@ $submit = [
             </select>
           </div>
 
+          <!-- Nama Daerah -->
           <div class="form-group mb-3">
             <?= form_label('Nama Daerah / Jalan', 'nama_daerah'); ?>
             <?= form_input($nama_daerah); ?>
           </div>
 
+          <!-- Koordinat -->
           <div class="row mb-3">
             <div class="col-md-6">
               <?= form_label('Latitude', 'latitude'); ?>
@@ -160,6 +148,7 @@ $submit = [
             </div>
           </div>
 
+          <!-- Jenis Kejahatan -->
           <div class="form-group mb-3">
             <?= form_label('Jenis Kejahatan', 'jenis_kejahatan'); ?>
             <select name="jenis_kejahatan" id="jenis_kejahatan" class="form-control fw-bold p-2 rounded-3" required>
@@ -169,13 +158,15 @@ $submit = [
               <option value="begal" <?= old('jenis_kejahatan') == 'begal' ? 'selected' : '' ?>>Begal</option>
               <option value="tawuran" <?= old('jenis_kejahatan') == 'tawuran' ? 'selected' : '' ?>>Tawuran</option>
             </select>
-        </div>
+          </div>
 
+          <!-- Upload Gambar -->
           <div class="form-group mb-4">
             <?= form_label('Upload Gambar Wilayah', 'gambar'); ?>
             <input type="file" class="form-control text-dark fw-bold p-2" id="gambar" name="gambar">
           </div>
 
+          <!-- Tombol -->
           <div class="modal-footer justify-content-between">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
               <i class="fas fa-times-circle me-1"></i> Tutup
@@ -187,5 +178,3 @@ $submit = [
     </div>
   </div>
 </div>
-
-

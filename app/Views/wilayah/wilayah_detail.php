@@ -34,7 +34,7 @@
               <th>Latitude</th>
               <th>Longitude</th>
               <th>Jenis Kejahatan</th>
-              <th>Action</th>
+              <th>Aksi</th>
             </tr>
           </thead>
           <tbody class="text-center">

@@ -9,50 +9,62 @@ class M_Wilayah extends Model
     protected $table = 'maps';
     protected $primaryKey = 'id';
     protected $allowedFields = [
-        'id', 'kecamatan_id', 'kelurahan_id', 'nrp', 'nama_daerah', 'latitude', 'longitude', 'jenis_kejahatan', 'gambar'
+        'id', 'kecamatan_id', 'kelurahan_id', 'nrp', 'nama_daerah',
+        'latitude', 'longitude', 'jenis_kejahatan', 'gambar'
     ];
     protected $returnType = 'App\Entities\Wilayah';
-    protected $useTimeStamp = false;
+    protected $useTimestamps = false;
 
+    // Ambil semua data kecamatan, bisa dibatasi langsung Lohbener jika ingin hardcoded
     public function get_data_kecamatan()
     {
         return $this->db->table('kecamatan')
             ->select('*')
+            ->where('kecamatan_id', 101) // khusus Lohbener
             ->orderBy('nama', 'asc')
             ->get();
     }
 
+    // Ambil kelurahan yang hanya berada di Kecamatan Lohbener (jika relasinya tersedia)
     public function get_data_kelurahan()
     {
         return $this->db->table('kelurahan')
             ->select('*')
+            ->where('kecamatan_id', 101) // hanya kelurahan di Lohbener
             ->orderBy('nama', 'asc')
             ->get();
     }
 
+    // Ambil data wilayah, bisa all atau by ID
     public function get_wilayah($id = false)
     {
-        if ($id == false) {
-            return $this->findAll();
+        if ($id === false) {
+            return $this->where('kecamatan_id', 101)->findAll();
         }
 
-        return $this->where(['id' => $id])->first();
+        return $this->where([
+            'id' => $id,
+            'kecamatan_id' => 101 // pastikan hanya data Lohbener
+        ])->first();
     }
 
+    // Statistik jumlah kejahatan berdasarkan jenis
     public function getStatistikKejahatan()
     {
         return $this->select('jenis_kejahatan, COUNT(*) as total')
-                    ->groupBy('jenis_kejahatan')
-                    ->orderBy('total', 'DESC')
-                    ->findAll();
+            ->where('kecamatan_id', 101)
+            ->groupBy('jenis_kejahatan')
+            ->orderBy('total', 'DESC')
+            ->findAll();
     }
 
+    // Ranking wilayah rawan berdasarkan jumlah kejahatan per nama daerah
     public function getRankingWilayah()
     {
         return $this->select('nama_daerah as wilayah, jenis_kejahatan, COUNT(*) as total')
-                    ->groupBy('nama_daerah, jenis_kejahatan')
-                    ->orderBy('total', 'DESC')
-                    ->findAll();
-    }    
-
+            ->where('kecamatan_id', 101)
+            ->groupBy('nama_daerah, jenis_kejahatan')
+            ->orderBy('total', 'DESC')
+            ->findAll();
+    }
 }

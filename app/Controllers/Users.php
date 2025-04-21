@@ -90,6 +90,6 @@ class Users extends BaseController
     public function logout()
     {
         session()->destroy();
-        return redirect()->to('/');
+        return redirect()->to(route_to('login'));
     }
 }

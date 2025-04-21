@@ -13,16 +13,23 @@
                         data-values='<?= json_encode(array_map(fn($item) => (int)$item->total, $statistik)) ?>'>
                 </canvas>
             </div>
+
+            <!-- Deskripsi Grafik -->
+            <div class="text-muted text-center mt-3 mb-4 px-3" style="max-width: 800px; margin-left: auto; margin-right: auto;">
+                Grafik di atas menunjukkan jumlah kasus kriminalitas berdasarkan jenis kejahatan yang terjadi di wilayah Lohbener. 
+                Setiap batang mewakili total laporan untuk kategori kejahatan tertentu seperti <strong>curanmor</strong>, <strong>perampokan</strong>, <strong>begal</strong>, dan <strong>tawuran</strong>. 
+                Data ini berguna untuk mengidentifikasi jenis kejahatan yang paling sering terjadi, sehingga dapat membantu dalam pengambilan kebijakan pencegahan dan peningkatan kewaspadaan masyarakat.
+            </div>
             
             <!-- Wilayah Rawan -->
             <div class="mb-5">
-                <h5 class="fw-semibold">Wilayah dengan Kasus dan total Kejahatannya</h5>
+                <h5 class="fw-semibold">Wilayah dengan total Kasus  Kejahatannya</h5>
                 <div class="table-responsive">
                     <table class="table table-striped table-bordered">
                         <thead class="table-dark">
                             <tr>
                                 <th>No</th>
-                                <th>Wilayah</th>
+                                <th>Jalan</th>
                                 <th>Jenis Kejahatan</th>
                                 <th>Total Kasus</th>
                             </tr>
@@ -41,67 +48,3 @@
                 </div>
             </div>
 
-            <!-- Tips Aman -->
-            <div class="mb-5">
-                <h5 class="fw-semibold">Tips Aman Berdasarkan Jenis Kejahatan</h5>
-                <div class="accordion" id="tipsAccordion">
-                    <!-- Curanmor -->
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="heading1">
-                            <button class="accordion-button " type="button" data-bs-toggle="collapse" data-bs-target="#tip1">
-                                <i class="fas fa-motorcycle me-2"></i> Curanmor
-                            </button>
-                        </h2>
-                        <div id="tip1" class="accordion-collapse collapse show" data-bs-parent="#tipsAccordion">
-                            <div class="accordion-body">
-                                Gunakan kunci ganda, parkir di tempat terang dan ramai, serta pasang alarm kendaraan.
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Perampokan -->
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="heading2">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#tip2">
-                                <i class="fas fa-mask me-2"></i> Perampokan
-                            </button>
-                        </h2>
-                        <div id="tip2" class="accordion-collapse collapse" data-bs-parent="#tipsAccordion">
-                            <div class="accordion-body">
-                                Hindari berjalan sendirian di malam hari, waspadai lingkungan sekitar, dan jangan pamer barang berharga.
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Begal -->
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="heading3">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#tip3">
-                                <i class="fas fa-user-ninja me-2"></i> Begal
-                            </button>
-                        </h2>
-                        <div id="tip3" class="accordion-collapse collapse" data-bs-parent="#tipsAccordion">
-                            <div class="accordion-body">
-                                Hindari berkendara sendirian di malam hari, gunakan rute yang ramai dan terang, serta selalu waspada terhadap pengendara mencurigakan di sekitar.
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Tawuran -->
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="heading4">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#tip4">
-                                <i class="fas fa-users me-2"></i> Tawuran
-                            </button>
-                        </h2>
-                        <div id="tip4" class="accordion-collapse collapse" data-bs-parent="#tipsAccordion">
-                            <div class="accordion-body">
-                                Jauhi area yang sering dijadikan tempat nongkrong kelompok tertentu, hindari ikut provokasi, dan segera cari tempat aman jika situasi mulai tidak kondusif.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
