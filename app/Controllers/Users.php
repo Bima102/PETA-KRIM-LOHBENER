@@ -66,7 +66,34 @@ class Users extends BaseController
                 'password_confirm' => 'matches[password]',
             ];
 
-            if (!$this->validate($rules)) {
+            // Pesan kustom berbahasa Indonesia
+            $messages = [
+                'firstname' => [
+                    'required' => 'Nama depan wajib diisi.',
+                    'min_length' => 'Nama depan minimal 3 karakter.',
+                    'max_length' => 'Nama depan maksimal 20 karakter.',
+                ],
+                'lastname' => [
+                    'required' => 'Nama belakang wajib diisi.',
+                    'min_length' => 'Nama belakang minimal 3 karakter.',
+                    'max_length' => 'Nama belakang maksimal 20 karakter.',
+                ],
+                'email' => [
+                    'required' => 'Email wajib diisi.',
+                    'valid_email' => 'Format email tidak valid.',
+                    'is_unique' => 'Email sudah terdaftar, silakan gunakan email lain.',
+                ],
+                'password' => [
+                    'required' => 'Password wajib diisi.',
+                    'min_length' => 'Password minimal 8 karakter.',
+                    'max_length' => 'Password maksimal 255 karakter.',
+                ],
+                'password_confirm' => [
+                    'matches' => 'Konfirmasi password tidak cocok.',
+                ],
+            ];
+
+            if (!$this->validate($rules, $messages)) {
                 $data['validation'] = $this->validator;
             } else {
                 $model = new M_User();
@@ -74,7 +101,7 @@ class Users extends BaseController
                     'firstname' => $this->request->getVar('firstname'),
                     'lastname' => $this->request->getVar('lastname'),
                     'email' => $this->request->getVar('email'),
-                    'password' => password_hash($this->request->getVar('password'), PASSWORD_DEFAULT), // Hashing password
+                    'password' => password_hash($this->request->getVar('password'), PASSWORD_DEFAULT),
                 ];
                 $model->save($newData);
 
@@ -84,7 +111,7 @@ class Users extends BaseController
         }
 
         echo view('templates/header', $data); 
-        echo view('register');               
+        echo view('register', $data);               
     }
 
     public function logout()

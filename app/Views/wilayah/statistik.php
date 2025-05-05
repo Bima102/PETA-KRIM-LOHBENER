@@ -26,12 +26,30 @@
                 Data ini berguna untuk mengidentifikasi jenis kejahatan yang paling sering terjadi, sehingga dapat membantu dalam pengambilan kebijakan pencegahan dan peningkatan kewaspadaan masyarakat.
             </div>
             
+
             <!-- Wilayah Rawan -->
             <div class="mb-5">
-                <h5 class="fw-semibold">
-                    Wilayah dengan total Kasus Kejahatannya
-                </h5>
                 <div class="table-responsive">
+                <!-- Filter Jenis Kejahatan (Diperindah) -->
+                    <form method="GET" action="<?= base_url('/statistik') ?>" class="bg-white p-3 rounded-3 shadow-sm d-flex align-items-center gap-3 flex-wrap">
+                        <label for="jenis_kejahatan" class="form-label fw-semibold mb-0">
+                            <i class="bi bi-funnel-fill me-2 text-primary"></i>Filter Kejahatan:
+                        </label>
+                        <select name="jenis_kejahatan" id="jenis_kejahatan" class="form-select w-auto">
+                            <option value="">Semua</option>
+                            <?php if (isset($jenisList)): ?>
+                                <?php foreach ($jenisList as $jenis): ?>
+                                    <option value="<?= esc($jenis->jenis_kejahatan) ?>"
+                                        <?= $jenisDipilih == $jenis->jenis_kejahatan ? 'selected' : '' ?>>
+                                        <?= ucfirst($jenis->jenis_kejahatan) ?>
+                                    </option>
+                                <?php endforeach ?>
+                            <?php endif ?>
+                        </select>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-search me-1"></i> Tampilkan
+                        </button>
+                    </form>
                     <table class="table table-striped table-bordered">
                         <thead class="table-dark">
                             <tr>

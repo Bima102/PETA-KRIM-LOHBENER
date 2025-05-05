@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <link href="<?= base_url(); ?>/assets/css/style.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
 
     <!-- JS -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -48,10 +49,10 @@
     <!-- ====== NAVBAR ====== -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
         <div class="container">
-            <a class="navbar-brand fs-6 d-flex align-items-center" href="#">
+            <a class="navbar-brand fs-6 d-flex align-items-center" href="#" style="font-family: 'Anton', sans-serif; font-size: 1.5rem; letter-spacing: 1px; color: #ffc107;">
                 <img src="<?= base_url('assets/img/polisi.png'); ?>" alt="Logo Polisi" width="40" height="40" class="me-2">
                 PETA-KRIM LOHBENER
-            </a>
+            </a>                                                                             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -64,6 +65,7 @@
 
                         <?php if ($role == 'admin') : ?>
                             <li class="nav-item"><a class="nav-link <?= ($segment1 == 'dashboard') ? 'active' : ''; ?>" href="/dashboard">Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link <?= ($segment1 == 'statistik') ? 'active' : ''; ?>" href="/statistik">Statistik Kejahatan</a></li>
                             <li class="nav-item"><a class="nav-link <?= ($segment1 == 'wilayah') ? 'active' : ''; ?>" href="/wilayah">Data Wilayah</a></li>
                             <li class="nav-item"><a class="nav-link <?= ($segment1 == 'maps') ? 'active' : ''; ?>" href="/maps">Peta</a></li>
                         <?php elseif ($role == 'user') : ?>

@@ -197,13 +197,56 @@ public function aduanSave()
     public function aduanTerima($id)
     {
         $this->db->table('maps')->where('id', $id)->update(['status' => 'diterima']);
-        return redirect()->to('/wilayah')->with('msg', 'Laporan telah diterima');
+        return redirect()->to('/wilayah')->with('msg', '');
     }
 
     public function aduanTolak($id)
     {
         $this->db->table('maps')->delete(['id' => $id]);
-        return redirect()->to('/wilayah')->with('msg', 'Laporan ditolak dan dihapus');
+        return redirect()->to('/wilayah')->with('msg', 'Laporan ditolak');
     }
+
+    public function statistik()
+{
+    $model = new M_Wilayah();
+    $jenis = $this->request->getGet('jenis_kejahatan');
+
+    if ($jenis) {
+        $statistik = $model->where('jenis_kejahatan', $jenis)
+                           ->where('kecamatan_id', 101)
+                           ->select('jenis_kejahatan, COUNT(*) as total')
+                           ->groupBy('jenis_kejahatan')
+                           ->findAll();
+
+        $rankingData = $model->where('jenis_kejahatan', $jenis)
+                             ->where('kecamatan_id', 101)
+                             ->select('nama_daerah as wilayah, jenis_kejahatan, COUNT(*) as total')
+                             ->groupBy('nama_daerah, jenis_kejahatan')
+                             ->orderBy('total', 'DESC')
+                             ->findAll();
+    } else {
+        $statistik = $model->getStatistikKejahatan();
+        $rankingData = $model->getRankingWilayah();
+    }
+
+    // Ambil semua jenis kejahatan yang tersedia
+    $jenisList = $model->select('jenis_kejahatan')
+                       ->distinct()
+                       ->where('kecamatan_id', 101)
+                       ->orderBy('jenis_kejahatan', 'asc')
+                       ->findAll();
+
+    $data = [
+        'title'         => 'Statistik Kriminalitas',
+        'statistik'     => $statistik,
+        'rankingData'   => $rankingData,
+        'jenisList'     => $jenisList,
+        'jenisDipilih'  => $jenis
+    ];
+
+    echo view('templates/header', $data);
+    echo view('wilayah/statistik', $data);
+}
+
 
 }

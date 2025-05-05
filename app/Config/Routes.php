@@ -39,7 +39,9 @@ $routes->set404Override();
 $routes->get('/', 'Home::halaman_utama');
 $routes->get('/halaman_utama', 'Home::halaman_utama');
 $routes->cli('/server', 'Server::index');
-$routes->get('statistik', 'Statistik::index');
+$routes->get('statistik', 'Wilayah::statistik');
+
+
 
 // Register dan Login
 $routes->get('/register', 'Users::register');

@@ -7,7 +7,8 @@
     </div>
 
     <!-- Judul / Instansi -->
-    <h5 class="fw-bold">PETA-KRIM LOHBENER</h5>
+    <h5 class="fw-bold" style="font-family: 'Anton', sans-serif; font-size: 1.7rem; color:rgb(0, 0, 0);">
+    PETA-KRIM LOHBENER</h5>
 
     <!-- Notifikasi -->
     <?php if (session()->getFlashdata('error')): ?>

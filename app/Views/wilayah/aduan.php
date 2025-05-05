@@ -39,13 +39,14 @@ $long = ['name' => 'longitude', 'class' => 'form-control fw-bold', 'placeholder'
       <div class="row mb-3">
         <div class="col-md-6">
           <label class="fw-bold">Latitude</label>
-          <?= form_input($lat); ?>
+          <?= form_input(array_merge($lat, ['required' => 'required'])); ?>
         </div>
         <div class="col-md-6">
           <label class="fw-bold">Longitude</label>
-          <?= form_input($long); ?>
+          <?= form_input(array_merge($long, ['required' => 'required'])); ?>
         </div>
       </div>
+
 
       <!-- JENIS KEJAHATAN -->
       <div class="form-group mb-3">
