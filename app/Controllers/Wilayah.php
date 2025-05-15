@@ -20,17 +20,19 @@ class Wilayah extends BaseController
             kelurahan.nama as kelnama, maps.jenis_kejahatan, maps.latitude, maps.longitude, 
             maps.gambar, maps.id'); 
     
+        // Filter data utama hanya untuk status 'diterima'
         $this->builder->join('kecamatan', 'kecamatan.kecamatan_id = maps.kecamatan_id');
         $this->builder->join('kelurahan', 'kelurahan.kelurahan_id = maps.kelurahan_id');
+        $this->builder->where('maps.status', 'diterima');
         $query = $this->builder->get();
     
         $dataModel = new M_Wilayah();
         $data = [
             'title'      => 'Data Wilayah',
-            'content'    => $query->getResult(),
-            'kecamatan'  => $dataModel->get_data_kecamatan()->getResult(), // <--- Tambahkan ini
+            'content'    => $query->getResult(), // Hanya data dengan status 'diterima'
+            'kecamatan'  => $dataModel->get_data_kecamatan()->getResult(),
             'kelurahan'  => $dataModel->get_data_kelurahan()->getResult(),
-            'pengaduan'  => $dataModel->get_pending_laporan()->getResult(), // <-- ini tambahan penting
+            'pengaduan'  => $dataModel->get_pending_laporan()->getResult(), // Data dengan status 'pending'
             'validation' => \Config\Services::validation()
         ];
     
@@ -68,12 +70,13 @@ class Wilayah extends BaseController
             'longitude'         => $this->request->getPost('longitude'),
             'jenis_kejahatan'   => $this->request->getPost('jenis_kejahatan'), 
             'gambar'            => $namaSampul,
+            'status'            => 'pending' // Set status default sebagai 'pending'
         ];
 
         $modelMasterData = new M_Wilayah();
         $modelMasterData->save($dataMaster);
 
-        session()->setFlashdata('msg', 'Data berhasil ditambahkan.');
+        session()->setFlashdata('msg', 'Data berhasil ditambahkan untuk validasi.');
         return redirect()->to('/wilayah');
     }
 
@@ -109,7 +112,7 @@ class Wilayah extends BaseController
             'validation'  => \Config\Services::validation(),
             'wilayah'     => $dataModel->get_wilayah($id),
             'wilayahkec'  => $query->getResult(),
-            'kecamatan'   => $dataModel->get_data_kecamatan()->getResult(), // ← tambahkan ini
+            'kecamatan'   => $dataModel->get_data_kecamatan()->getResult(),
             'kelurahan'   => $dataModel->get_data_kelurahan()->getResult(),
         ];        
 
@@ -161,92 +164,95 @@ class Wilayah extends BaseController
     }
 
     public function aduan()
-{
-    $dataModel = new M_Wilayah();
-    $data = [
-        'title' => 'Form Pengaduan',
-        'kelurahan' => $dataModel->get_data_kelurahan()->getResult()
-    ];
-    echo view('templates/header', $data);
-    echo view('wilayah/aduan');
-}
-
-public function aduanSave()
-{
-    $file = $this->request->getFile('gambar');
-    $namaGambar = $file->isValid() ? $file->getRandomName() : 'danger.png';
-
-    if ($file->isValid() && !$file->hasMoved()) {
-        $file->move('img', $namaGambar);
+    {
+        $dataModel = new M_Wilayah();
+        $data = [
+            'title' => 'Form Pengaduan',
+            'kelurahan' => $dataModel->get_data_kelurahan()->getResult()
+        ];
+        echo view('templates/header', $data);
+        echo view('wilayah/aduan');
     }
 
-    $this->db->table('maps')->insert([
-        'kecamatan_id'    => $this->request->getPost('kecamatan'),
-        'kelurahan_id'    => $this->request->getPost('kelurahan'),
-        'nama_daerah'     => $this->request->getPost('nama_daerah'),
-        'latitude'        => $this->request->getPost('latitude'),
-        'longitude'       => $this->request->getPost('longitude'),
-        'jenis_kejahatan' => $this->request->getPost('jenis_kejahatan'),
-        'gambar'          => $namaGambar,
-        'status'          => 'pending' // tambahkan kolom ini di DB
-    ]);
+    public function aduanSave()
+    {
+        $file = $this->request->getFile('gambar');
+        $namaGambar = $file->isValid() ? $file->getRandomName() : 'danger.png';
 
-    return redirect()->to('/wilayah/aduan')->with('msg', 'Laporan berhasil dikirim');
+        if ($file->isValid() && !$file->hasMoved()) {
+            $file->move('img', $namaGambar);
+        }
+
+        $this->db->table('maps')->insert([
+            'kecamatan_id'    => $this->request->getPost('kecamatan'),
+            'kelurahan_id'    => $this->request->getPost('kelurahan'),
+            'nama_daerah'     => $this->request->getPost('nama_daerah'),
+            'latitude'        => $this->request->getPost('latitude'),
+            'longitude'       => $this->request->getPost('longitude'),
+            'jenis_kejahatan' => $this->request->getPost('jenis_kejahatan'),
+            'gambar'          => $namaGambar,
+            'status'          => 'pending' // Pastikan status default adalah 'pending'
+        ]);
+
+        return redirect()->to('/wilayah/aduan')->with('msg', 'Laporan berhasil dikirim untuk validasi.');
     }
 
     public function aduanTerima($id)
     {
         $this->db->table('maps')->where('id', $id)->update(['status' => 'diterima']);
-        return redirect()->to('/wilayah')->with('msg', '');
+        session()->setFlashdata('msg', 'Laporan diterima dan dipindahkan ke data wilayah.');
+        return redirect()->to('/wilayah');
     }
 
     public function aduanTolak($id)
     {
         $this->db->table('maps')->delete(['id' => $id]);
-        return redirect()->to('/wilayah')->with('msg', 'Laporan ditolak');
+        session()->setFlashdata('msg', 'Laporan ditolak dan dihapus.');
+        return redirect()->to('/wilayah');
     }
 
     public function statistik()
-{
-    $model = new M_Wilayah();
-    $jenis = $this->request->getGet('jenis_kejahatan');
+    {
+        $model = new M_Wilayah();
+        $jenis = $this->request->getGet('jenis_kejahatan');
 
-    if ($jenis) {
-        $statistik = $model->where('jenis_kejahatan', $jenis)
+        if ($jenis) {
+            $statistik = $model->where('jenis_kejahatan', $jenis)
+                               ->where('kecamatan_id', 101)
+                               ->where('status', 'diterima') // Hanya data yang diterima
+                               ->select('jenis_kejahatan, COUNT(*) as total')
+                               ->groupBy('jenis_kejahatan')
+                               ->findAll();
+
+            $rankingData = $model->where('jenis_kejahatan', $jenis)
+                                 ->where('kecamatan_id', 101)
+                                 ->where('status', 'diterima') // Hanya data yang diterima
+                                 ->select('nama_daerah as wilayah, jenis_kejahatan, COUNT(*) as total')
+                                 ->groupBy('nama_daerah, jenis_kejahatan')
+                                 ->orderBy('total', 'DESC')
+                                 ->findAll();
+        } else {
+            $statistik = $model->getStatistikKejahatan();
+            $rankingData = $model->getRankingWilayah();
+        }
+
+        // Ambil semua jenis kejahatan yang tersedia
+        $jenisList = $model->select('jenis_kejahatan')
+                           ->distinct()
                            ->where('kecamatan_id', 101)
-                           ->select('jenis_kejahatan, COUNT(*) as total')
-                           ->groupBy('jenis_kejahatan')
+                           ->where('status', 'diterima') // Hanya data yang diterima
+                           ->orderBy('jenis_kejahatan', 'asc')
                            ->findAll();
 
-        $rankingData = $model->where('jenis_kejahatan', $jenis)
-                             ->where('kecamatan_id', 101)
-                             ->select('nama_daerah as wilayah, jenis_kejahatan, COUNT(*) as total')
-                             ->groupBy('nama_daerah, jenis_kejahatan')
-                             ->orderBy('total', 'DESC')
-                             ->findAll();
-    } else {
-        $statistik = $model->getStatistikKejahatan();
-        $rankingData = $model->getRankingWilayah();
+        $data = [
+            'title'         => 'Statistik Kriminalitas',
+            'statistik'     => $statistik,
+            'rankingData'   => $rankingData,
+            'jenisList'     => $jenisList,
+            'jenisDipilih'  => $jenis
+        ];
+
+        echo view('templates/header', $data);
+        echo view('wilayah/statistik', $data);
     }
-
-    // Ambil semua jenis kejahatan yang tersedia
-    $jenisList = $model->select('jenis_kejahatan')
-                       ->distinct()
-                       ->where('kecamatan_id', 101)
-                       ->orderBy('jenis_kejahatan', 'asc')
-                       ->findAll();
-
-    $data = [
-        'title'         => 'Statistik Kriminalitas',
-        'statistik'     => $statistik,
-        'rankingData'   => $rankingData,
-        'jenisList'     => $jenisList,
-        'jenisDipilih'  => $jenis
-    ];
-
-    echo view('templates/header', $data);
-    echo view('wilayah/statistik', $data);
-}
-
-
 }

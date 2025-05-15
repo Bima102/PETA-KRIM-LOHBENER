@@ -1,10 +1,10 @@
 <?php
 // API endpoint
-$apiUrl = 'https://berita-indo-api.vercel.app/v1/tribun-news/jabar';
+$apiUrl = 'https://berita-indo-api-next.vercel.app/api/cnbc-news/';
 $newsDataArr = [];
 
 // Fetch data
-$response = file_get_contents($apiUrl);
+$response = @file_get_contents($apiUrl);
 if ($response !== FALSE) {
     $resJson = json_decode($response, true);
     if (isset($resJson['data'])) {
@@ -17,7 +17,6 @@ if ($response !== FALSE) {
 <!-- Footer Content Start -->
 <div class="text-center mb-4">
     <h3 class="fw-bold"><i class="bi bi-newspaper me-2 text-primary"></i>Berita & Update Terkini</h3>
-    <p class="text-muted">Informasi terbaru seputar berita Jawa Barat.</p>
 </div>
 
 <!-- News Grid -->
@@ -27,11 +26,17 @@ if ($response !== FALSE) {
             <?php foreach ($newsDataArr as $news) : ?>
                 <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3">
                     <div class="card h-100 shadow-sm">
-                        <img src="<?= htmlspecialchars($news['image']) ?>" class="card-img-top" alt="News Image" style="height: 180px; object-fit: cover;">
+                        <?php
+                        // Ambil URL gambar dari array image (misalnya 'large')
+                        $imageUrl = isset($news['image']) && is_array($news['image']) && isset($news['image']['large'])
+                            ? $news['image']['large']
+                            : 'https://via.placeholder.com/300x180.png?text=Gambar+Tidak+Tersedia';
+                        ?>
+                        <img src="<?= htmlspecialchars($imageUrl) ?>" class="card-img-top" alt="News Image" style="height: 180px; object-fit: cover;">
                         <div class="card-body d-flex flex-column">
-                            <h5 class="card-title"><?= htmlspecialchars($news['title']) ?></h5>
-                            <p class="card-text text-muted"><?= htmlspecialchars($news['contentSnippet']) ?></p>
-                            <a href="<?= htmlspecialchars($news['link']) ?>" target="_blank" class="btn btn-dark mt-auto">Selanjutnya</a>
+                            <h5 class="card-title"><?= htmlspecialchars(is_string($news['title'] ?? '') ? $news['title'] : '') ?></h5>
+                            <p class="card-text text-muted"><?= htmlspecialchars(is_string($news['contentSnippet'] ?? '') ? $news['contentSnippet'] : '') ?></p>
+                            <a href="<?= htmlspecialchars(is_string($news['link'] ?? '') ? $news['link'] : '#') ?>" target="_blank" class="btn btn-dark mt-auto">Selanjutnya</a>
                         </div>
                     </div>
                 </div>
@@ -69,6 +74,4 @@ if ($response !== FALSE) {
 </style>
 
 <!-- Bootstrap JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
