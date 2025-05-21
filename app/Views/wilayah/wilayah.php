@@ -61,8 +61,7 @@ $submit = [
           <table class="table table-bordered table-sm text-center align-middle">
             <thead class="bg-warning text-dark">
               <tr>
-                <th>Kecamatan</th>
-                <th>Kelurahan</th>
+                <th>Kelurahan</th> <!-- Hapus Kecamatan -->
                 <th>Daerah / Jalan</th>
                 <th>Latitude</th>
                 <th>Longitude</th>
@@ -74,8 +73,7 @@ $submit = [
             <tbody>
               <?php foreach ($pengaduan as $row): ?>
                 <tr>
-                  <td><?= $row->kecnama ?></td>
-                  <td><?= $row->kelnama ?></td>
+                  <td><?= $row->kelurahan ?></td> <!-- Sesuai dengan perubahan di controller -->
                   <td class="text-nowrap"><?= $row->nama_daerah ?></td>
                   <td class="text-nowrap">
                     <a href="https://www.google.com/maps?q=<?= $row->latitude ?>,<?= $row->longitude ?>" target="_blank">
@@ -115,8 +113,7 @@ $submit = [
             <thead class="bg-dark text-white text-center">
               <tr class="fw-bold">
                 <th style="width: 5%;">No</th>
-                <th style="width: 25%;">Kecamatan</th>
-                <th style="width: 25%;">Kelurahan</th>
+                <th style="width: 25%;">Kelurahan</th> <!-- Hapus Kecamatan -->
                 <th>Nama Daerah / Jalan</th>
                 <th style="width: 15%;">Aksi</th>
               </tr>
@@ -124,7 +121,7 @@ $submit = [
             <tbody class="bg-white text-center">
               <?php if (empty($content)) : ?>
                 <tr>
-                  <td colspan="5" class="text-center text-muted py-4">
+                  <td colspan="4" class="text-center text-muted py-4">
                     <i class="fas fa-folder-open fa-2x mb-2 d-block"></i>
                     Belum ada data wilayah.
                   </td>
@@ -133,8 +130,7 @@ $submit = [
                 <?php foreach ($content as $row => $value) : ?>
                   <tr class="border-bottom border-light">
                     <td class="fw-semibold"><?= $row + 1; ?></td>
-                    <td><?= $value->kecnama; ?></td>
-                    <td><?= $value->kelnama; ?></td>
+                    <td><?= $value->kelurahan; ?></td> <!-- Sesuai dengan perubahan di controller -->
                     <td><?= $value->nama_daerah; ?></td>
                     <td>
                       <a href="/detailWilayah/<?= $value->id; ?>" class="btn btn-sm btn-primary fw-bold px-3">
@@ -166,20 +162,13 @@ $submit = [
       <div class="modal-body p-4">
         <form action="/wilayah_data_save" method="POST" enctype="multipart/form-data">
 
-          <!-- Kecamatan -->
-          <div class="form-group mb-3">
-            <?= form_label('Kecamatan', 'kecamatan'); ?>
-            <input type="text" class="form-control fw-bold p-2 rounded-3" name="kecamatan_display" value="Lohbener" readonly>
-            <input type="hidden" name="kecamatan" value="101">
-          </div>
-
           <!-- Kelurahan -->
           <div class="form-group mb-3">
             <?= form_label('Kelurahan', 'kelurahan'); ?>
             <select name="kelurahan" id="kelurahan" class="form-control fw-bold p-2 rounded-3" required>
               <option value="" disabled selected>-- Pilih Kelurahan --</option>
-              <?php foreach ($kelurahan as $row) : ?>
-                <option value="<?= $row->kelurahan_id; ?>"><?= $row->nama; ?></option>
+              <?php foreach ($kelurahan as $kel): ?>
+                <option value="<?= $kel; ?>"><?= $kel; ?></option> <!-- Gunakan daftar enum -->
               <?php endforeach; ?>
             </select>
           </div>
@@ -266,7 +255,7 @@ function cetakLaporan() {
     <?php foreach ($content as $row => $value) : ?>
       {
         no: <?= $row + 1 ?>,
-        kelurahan: '<?= $value->kelnama ?>',
+        kelurahan: '<?= $value->kelurahan ?>',
         nama_daerah: '<?= $value->nama_daerah ?>',
         jenis_kejahatan: '<?= ucfirst($value->jenis_kejahatan) ?>'
       },
@@ -298,9 +287,9 @@ function cetakLaporan() {
   doc.line(130, 54, 130, y - 8); // Kolom Nama Daerah
   doc.line(190, 54, 190, y - 8); // Kolom Jenis Kejahatan
 
-  // Footer
-  doc.text('Indramayu, 16 Mei 2025', 150, y + 20);
-  doc.text('Kepala Polsek Sektor Lohbener,', 150, y + 30);
+  // Footer (Update tanggal sesuai hari ini)
+  doc.text('Indramayu, <?= date('d M Y', strtotime('2025-05-21')) ?>', 150, y + 20);
+  doc.text('Kepala Polisi Sektor Lohbener,', 150, y + 30);
   doc.text('NIP. 1234567890', 150, y + 50);
 
   // Simpan PDF

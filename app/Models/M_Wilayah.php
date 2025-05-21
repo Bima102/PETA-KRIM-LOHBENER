@@ -9,73 +9,61 @@ class M_Wilayah extends Model
     protected $table = 'maps';
     protected $primaryKey = 'id';
     protected $allowedFields = [
-        'id', 'kecamatan_id', 'kelurahan_id', 'nrp', 'nama_daerah',
-        'latitude', 'longitude', 'jenis_kejahatan', 'gambar'
+        'id', 'nama_daerah', 'kelurahan', // Hapus kecamatan_id dan kelurahan_id
+        'latitude', 'longitude', 'jenis_kejahatan', 'gambar', 'status'
     ];
     protected $returnType = 'App\Entities\Wilayah';
     protected $useTimestamps = false;
 
-    // Ambil semua data kecamatan, bisa dibatasi langsung Lohbener jika ingin hardcoded
-    public function get_data_kecamatan()
-    {
-        return $this->db->table('kecamatan')
-            ->select('*')
-            ->where('kecamatan_id', 101) // khusus Lohbener
-            ->orderBy('nama', 'asc')
-            ->get();
-    }
+    // Hapus fungsi get_data_kecamatan karena tabel kecamatan sudah dihapus
+    // public function get_data_kecamatan() { ... }
 
-    // Ambil kelurahan yang hanya berada di Kecamatan Lohbener (jika relasinya tersedia)
-    public function get_data_kelurahan()
+    // Hapus fungsi get_data_kelurahan karena tabel kelurahan sudah dihapus
+    // public function get_data_kelurahan() { ... }
+
+    // Fungsi baru untuk mengambil daftar nilai enum dari kolom kelurahan
+    public function getKelurahanEnum()
     {
-        return $this->db->table('kelurahan')
-            ->select('*')
-            ->where('kecamatan_id', 101) // hanya kelurahan di Lohbener
-            ->orderBy('nama', 'asc')
-            ->get();
+        $query = $this->db->query("SHOW COLUMNS FROM maps LIKE 'kelurahan'");
+        $row = $query->getRow();
+        // Ambil daftar enum dari hasil query
+        preg_match_all("/'([^']+)'/", $row->Type, $matches);
+        return $matches[1]; // Daftar nilai enum: ['Bojongslawi', 'Kiajaran Kulon', ...]
     }
 
     // Ambil data wilayah, bisa all atau by ID
     public function get_wilayah($id = false)
     {
         if ($id === false) {
-            return $this->where('kecamatan_id', 101)->findAll();
+            return $this->findAll(); // Hapus filter kecamatan_id
         }
 
-        return $this->where([
-            'id' => $id,
-            'kecamatan_id' => 101 // pastikan hanya data Lohbener
-        ])->first();
+        return $this->where('id', $id)->first(); // Hapus filter kecamatan_id
     }
 
     // Statistik jumlah kejahatan berdasarkan jenis
     public function getStatistikKejahatan()
     {
         return $this->select('jenis_kejahatan, COUNT(*) as total')
-            ->where('kecamatan_id', 101)
             ->groupBy('jenis_kejahatan')
             ->orderBy('total', 'DESC')
-            ->findAll();
+            ->findAll(); // Hapus filter kecamatan_id
     }
 
     // Ranking wilayah rawan berdasarkan jumlah kejahatan per nama daerah
     public function getRankingWilayah()
     {
         return $this->select('nama_daerah as wilayah, jenis_kejahatan, COUNT(*) as total')
-            ->where('kecamatan_id', 101)
             ->groupBy('nama_daerah, jenis_kejahatan')
             ->orderBy('total', 'DESC')
-            ->findAll();
+            ->findAll(); // Hapus filter kecamatan_id
     }
 
     public function get_pending_laporan()
     {
         return $this->db->table('maps')
-            ->select('maps.*, kecamatan.nama as kecnama, kelurahan.nama as kelnama')
-            ->join('kecamatan', 'kecamatan.kecamatan_id = maps.kecamatan_id')
-            ->join('kelurahan', 'kelurahan.kelurahan_id = maps.kelurahan_id')
+            ->select('maps.*') // Hapus join dengan kecamatan dan kelurahan
             ->where('maps.status', 'pending')
             ->get();
     }
-
 }

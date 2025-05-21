@@ -30,10 +30,9 @@
     </h2>
     <h2 class="text-center text-dark mb-4 fw-bold">Jenis-Jenis Kejahatan</h2>
 
-    <div class="row g-4">
-
+    <div class="row g-4 auto-scroll" id="crimeCarousel">
       <!-- CUBIS -->
-      <div class="col-md-6 col-lg-4 mb-4">
+      <div class="col-4 mb-4">
         <div class="card crime-card h-100 shadow-sm border-0 rounded-4 transition hover-shadow position-relative">
           <img src="<?= base_url(); ?>/assets/img/pencuri.jpg" class="card-img-top rounded-top-4" alt="Pencurian Biasa (CUBIS)">
           <div class="card-body">
@@ -57,7 +56,7 @@
       </div>
 
       <!-- CURANMOR -->
-      <div class="col-md-6 col-lg-4 mb-4">
+      <div class="col-4 mb-4">
         <div class="card crime-card h-100 shadow-sm border-0 rounded-4 transition hover-shadow position-relative">
           <img src="<?= base_url(); ?>/assets/img/malingmotor.jpg" class="card-img-top rounded-top-4" alt="Pencurian Kendaraan Bermotor">
           <div class="card-body">
@@ -81,7 +80,7 @@
       </div>
 
       <!-- CURAS -->
-      <div class="col-md-6 col-lg-4 mb-4">
+      <div class="col-4 mb-4">
         <div class="card crime-card h-100 shadow-sm border-0 rounded-4 transition hover-shadow position-relative">
           <img src="<?= base_url(); ?>/assets/img/begal.jpg" class="card-img-top rounded-top-4" alt="CURAS">
           <div class="card-body">
@@ -105,7 +104,7 @@
       </div>
 
       <!-- CURAT -->
-      <div class="col-md-6 col-lg-4 mb-4">
+      <div class="col-4 mb-4">
         <div class="card crime-card h-100 shadow-sm border-0 rounded-4 transition hover-shadow position-relative">
           <img src="<?= base_url(); ?>/assets/img/Pencurianp.jpg" class="card-img-top rounded-top-4" alt="CURAT">
           <div class="card-body">
@@ -129,7 +128,7 @@
       </div>
 
       <!-- Pembunuhan -->
-      <div class="col-md-6 col-lg-4 mb-4">
+      <div class="col-4 mb-4">
         <div class="card crime-card h-100 shadow-sm border-0 rounded-4 transition hover-shadow position-relative">
           <img src="<?= base_url(); ?>/assets/img/pembunuhan.png" class="card-img-top rounded-top-4" alt="Pembunuhan">
           <div class="card-body">
@@ -153,7 +152,7 @@
       </div>
 
       <!-- Tawuran -->
-      <div class="col-md-6 col-lg-4 mb-4">
+      <div class="col-4 mb-4">
         <div class="card crime-card h-100 shadow-sm border-0 rounded-4 transition hover-shadow position-relative">
           <img src="<?= base_url(); ?>/assets/img/tawuran-remaja.png" class="card-img-top rounded-top-4" alt="Tawuran">
           <div class="card-body">
@@ -180,7 +179,6 @@
           </div>
         </div>
       </div>
-
     </div>
   </div>
 
@@ -190,8 +188,8 @@
       Langkah Pencegahan Kriminalitas
     </h2>
 
-    <div class="row g-4" data-aos="fade-up" data-aos-delay="100">
-      <div class="col-md-4">
+    <div class="row g-4 auto-scroll" id="preventionCarousel">
+      <div class="col-4">
         <div class="card shadow border-0 h-100">
           <div class="card-header bg-primary text-white fw-bold">
             <i class="bi bi-shield-lock-fill me-2"></i>Lapor Polisi
@@ -202,7 +200,7 @@
         </div>
       </div>
 
-      <div class="col-md-4">
+      <div class="col-4">
         <div class="card shadow border-0 h-100">
           <div class="card-header bg-success text-white fw-bold">
             <i class="bi bi-people-fill me-2"></i>Ronda Malam
@@ -213,7 +211,7 @@
         </div>
       </div>
 
-      <div class="col-md-4">
+      <div class="col-4">
         <div class="card shadow border-0 h-100">
           <div class="card-header bg-warning text-dark fw-bold">
             <i class="bi bi-camera-video-fill me-2"></i>Pasang CCTV
@@ -223,7 +221,63 @@
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </section>
+
+<!-- Add Custom CSS -->
+<style>
+/* Ensure the row doesn't wrap on mobile and enable horizontal scrolling */
+.row.auto-scroll {
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  scroll-behavior: smooth;
+}
+
+/* Ensure cards take up the correct width and don't shrink too much */
+.col-4 {
+  flex: 0 0 33.333333% !important;
+  max-width: 33.333333% !important;
+  min-width: 250px; /* Prevent cards from becoming too narrow on very small screens */
+}
+
+/* Optional: Hide the scrollbar for a cleaner look (but still scrollable) */
+.row.auto-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.row.auto-scroll {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+</style>
+
+<!-- Add JavaScript for Auto Scroll -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const carousels = [
+    { id: 'crimeCarousel', interval: 3000 }, // Scroll every 3 seconds
+    { id: 'preventionCarousel', interval: 3000 }
+  ];
+
+  carousels.forEach(carousel => {
+    const container = document.getElementById(carousel.id);
+    let scrollPosition = 0;
+    const cardWidth = container.querySelector('.col-4').offsetWidth + 16; // Include gutter (g-4 = 16px)
+    const maxScroll = container.scrollWidth - container.clientWidth;
+
+    function autoScroll() {
+      scrollPosition += cardWidth;
+      if (scrollPosition >= maxScroll) {
+        scrollPosition = 0; // Reset to start
+      }
+      container.scrollTo({
+        left: scrollPosition,
+        behavior: 'smooth'
+      });
+    }
+
+    setInterval(autoScroll, carousel.interval);
+  });
+});
+</script>

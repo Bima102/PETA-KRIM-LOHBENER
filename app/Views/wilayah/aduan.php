@@ -1,8 +1,8 @@
 <?php
 // Hapus atribut 'readonly' dari kolom nama_daerah
 $nama_daerah = ['name' => 'nama_daerah', 'id' => 'nama_daerah', 'class' => 'form-control fw-bold', 'placeholder' => 'Nama Daerah / Jalan'];
-$lat = ['name' => 'latitude', 'id' => 'latitude', 'class' => 'form-control fw-bold', 'placeholder' => 'Contoh: -6.123456', 'readonly' => true];
-$long = ['name' => 'longitude', 'id' => 'longitude', 'class' => 'form-control fw-bold', 'placeholder' => 'Contoh: 108.123456', 'readonly' => true];
+$lat = ['name' => 'latitude', 'id' => 'latitude', 'class' => 'form-control fw-bold', 'placeholder' => 'Contoh: -6.123456'];
+$long = ['name' => 'longitude', 'id' => 'longitude', 'class' => 'form-control fw-bold', 'placeholder' => 'Contoh: 108.123456'];
 ?>
 
 <div class="container mt-5">
@@ -16,31 +16,31 @@ $long = ['name' => 'longitude', 'id' => 'longitude', 'class' => 'form-control fw
         <div id="map" style="height: 400px; width: 100%;"></div>
       </div>
 
-      <!-- KECAMATAN (Auto) -->
-      <div class="form-group mb-3">
+      <!-- KECAMATAN (Hapus karena statis) -->
+      <!-- <div class="form-group mb-3">
         <label class="fw-bold">Kecamatan</label>
         <input type="text" class="form-control fw-bold" name="kecamatan_display" id="kecamatan_display" value="Lohbener" readonly>
         <input type="hidden" name="kecamatan" id="kecamatan" value="101">
-      </div>
+      </div> -->
 
-      <!-- KELURAHAN (Auto) -->
+      <!-- KELURAHAN -->
       <div class="form-group mb-3">
         <label class="fw-bold">Kelurahan</label>
         <select name="kelurahan" id="kelurahan" class="form-control fw-bold" required>
           <option value="" disabled selected>-- Pilih Kelurahan --</option>
-          <?php foreach ($kelurahan as $row): ?>
-            <option value="<?= $row->kelurahan_id ?>"><?= $row->nama ?></option>
+          <?php foreach ($kelurahan as $kel): ?>
+            <option value="<?= $kel; ?>"><?= $kel; ?></option>
           <?php endforeach; ?>
         </select>
       </div>
 
-      <!-- NAMA DAERAH (Auto, tetapi bisa diedit manual) -->
+      <!-- NAMA DAERAH -->
       <div class="form-group mb-3">
         <label class="fw-bold">Nama Daerah / Jalan</label>
         <?= form_input($nama_daerah); ?>
       </div>
 
-      <!-- KOORDINAT (Auto) -->
+      <!-- KOORDINAT -->
       <div class="row mb-3">
         <div class="col-md-6">
           <label class="fw-bold">Latitude</label>
@@ -81,7 +81,7 @@ $long = ['name' => 'longitude', 'id' => 'longitude', 'class' => 'form-control fw
     <div class="alert alert-info">
       <p><strong>Pastikan Anda mengisi data dengan benar agar laporan cepat diproses.</strong></p>
       <ul>
-        <li><strong>Lokasi di Peta:</strong> Klik pada peta untuk memilih lokasi kejadian. Data seperti kecamatan, kelurahan, nama daerah/jalan, latitude, dan longitude akan terisi otomatis.</li>
+        <li><strong>Lokasi di Peta:</strong> Klik pada peta untuk memilih lokasi kejadian. Data seperti nama daerah/jalan, latitude, dan longitude akan terisi otomatis.</li>
         <li><strong>Nama Daerah / Jalan:</strong> Jika data otomatis tidak sesuai, Anda dapat mengeditnya secara manual.</li>
         <li><strong>Jenis Kejahatan:</strong> Pilih kategori yang sesuai.</li>
         <li><strong>Gambar Wilayah:</strong> Opsional. Jika ada bukti visual, unggah untuk membantu proses verifikasi.</li>
@@ -156,10 +156,7 @@ $long = ['name' => 'longitude', 'id' => 'longitude', 'class' => 'form-control fw
             document.getElementById('nama_daerah').value = 'Tidak diketahui';
           }
 
-          // Isi field kecamatan (tetap Lohbener)
-          document.getElementById('kecamatan_display').value = 'Lohbener';
-
-          // Tentukan kelurahan
+          // Kelurahan
           const kelurahanSelect = document.getElementById('kelurahan');
           let kelurahanFound = false;
           village = village || data.address.city || data.address.town || '';

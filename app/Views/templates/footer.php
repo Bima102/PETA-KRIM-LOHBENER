@@ -21,10 +21,10 @@ if ($response !== FALSE) {
 
 <!-- News Grid -->
 <div id="newsdetails" class="container py-4">
-    <div class="row g-4">
+    <div class="row g-4 auto-scroll" id="newsCarousel">
         <?php if (!empty($newsDataArr)) : ?>
             <?php foreach ($newsDataArr as $news) : ?>
-                <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3">
+                <div class="col-4">
                     <div class="card h-100 shadow-sm">
                         <?php
                         // Ambil URL gambar dari array image (misalnya 'large')
@@ -71,7 +71,54 @@ if ($response !== FALSE) {
     h3.fw-bold {
         margin-top: 2rem;
     }
+
+    /* Ensure the row doesn't wrap and enable horizontal scrolling */
+    .row.auto-scroll {
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        scroll-behavior: smooth;
+    }
+
+    /* Ensure cards take up the correct width and don't shrink too much */
+    .col-4 {
+        flex: 0 0 33.333333% !important;
+        max-width: 33.333333% !important;
+        min-width: 250px; /* Prevent cards from becoming too narrow on very small screens */
+    }
+
+    /* Hide the scrollbar for a cleaner look (but still scrollable) */
+    .row.auto-scroll::-webkit-scrollbar {
+        display: none;
+    }
+
+    .row.auto-scroll {
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+    }
 </style>
+
+<!-- JavaScript for Auto Scroll -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const carousel = document.getElementById('newsCarousel');
+    let scrollPosition = 0;
+    const cardWidth = carousel.querySelector('.col-4').offsetWidth + 16; // Include gutter (g-4 = 16px)
+    const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+
+    function autoScroll() {
+        scrollPosition += cardWidth;
+        if (scrollPosition >= maxScroll) {
+            scrollPosition = 0; // Reset to start
+        }
+        carousel.scrollTo({
+            left: scrollPosition,
+            behavior: 'smooth'
+        });
+    }
+
+    setInterval(autoScroll, 3000); // Scroll every 3 seconds
+});
+</script>
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>

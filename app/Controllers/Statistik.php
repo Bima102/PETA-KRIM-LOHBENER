@@ -24,5 +24,4 @@ class Statistik extends BaseController
         echo view('templates/header', $data); 
         echo view('wilayah/statistik'); 
     }    
-
 }

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 15 Apr 2025 pada 08.53
+-- Waktu pembuatan: 21 Bulan Mei 2025 pada 12.08
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -24,30 +24,6 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `aduan`
---
-
-CREATE TABLE `aduan` (
-  `id` int(11) NOT NULL,
-  `jenis_kejahatan` enum('curanmor','perampokan','begal','tawuran') NOT NULL,
-  `kelurahan` varchar(255) NOT NULL,
-  `daerah` varchar(255) NOT NULL,
-  `latitude` varchar(255) NOT NULL,
-  `longitude` varchar(255) NOT NULL,
-  `pelapor` varchar(255) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data untuk tabel `aduan`
---
-
-INSERT INTO `aduan` (`id`, `jenis_kejahatan`, `kelurahan`, `daerah`, `latitude`, `longitude`, `pelapor`, `created_at`) VALUES
-(8, 'curanmor', 'waru', 'jalan waru', '-6.3941201', '108.1407558', 'Bima  saputra', '2025-04-11 17:19:16');
-
--- --------------------------------------------------------
-
---
 -- Struktur dari tabel `connections`
 --
 
@@ -61,76 +37,34 @@ CREATE TABLE `connections` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `kecamatan`
---
-
-CREATE TABLE `kecamatan` (
-  `kecamatan_id` int(11) NOT NULL,
-  `nama` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
-
---
--- Dumping data untuk tabel `kecamatan`
---
-
-INSERT INTO `kecamatan` (`kecamatan_id`, `nama`) VALUES
-(101, 'Lohbener');
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `kelurahan`
---
-
-CREATE TABLE `kelurahan` (
-  `kelurahan_id` int(11) NOT NULL,
-  `kecamatan_id` int(11) NOT NULL,
-  `nama` varchar(255) NOT NULL,
-  `kode_pos` varchar(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
-
---
--- Dumping data untuk tabel `kelurahan`
---
-
-INSERT INTO `kelurahan` (`kelurahan_id`, `kecamatan_id`, `nama`, `kode_pos`) VALUES
-(1, 101, 'Bojongslawi', '45252'),
-(2, 101, 'Kiajaran Kulon', '45252'),
-(3, 101, 'Kiajaran Wetan', '45252'),
-(4, 101, 'Langut', '45252'),
-(5, 101, 'Lanjan', '45252'),
-(6, 101, 'Larangan', '45252'),
-(7, 101, 'Legok', '45252'),
-(8, 101, 'Lohbener', '45252'),
-(9, 101, 'Pamayahan', '45252'),
-(10, 101, 'Rambatan Kulon', '45252'),
-(11, 101, 'Sindangkerta', '45252'),
-(12, 101, 'Waru', '45252');
-
--- --------------------------------------------------------
-
---
 -- Struktur dari tabel `maps`
 --
 
 CREATE TABLE `maps` (
   `id` int(11) NOT NULL,
-  `kecamatan_id` int(11) NOT NULL,
-  `kelurahan_id` int(11) NOT NULL,
+  `kelurahan` enum('Bojongslawi','Kiajaran Kulon','Kiajaran Wetan','Langut','Lanjan','Larangan','Legok','Lohbener','Pamayahan','Rambatan Kulon','Sindangkerta','Waru') NOT NULL,
   `nama_daerah` varchar(255) NOT NULL,
   `latitude` varchar(255) NOT NULL,
   `longitude` varchar(255) NOT NULL,
   `jenis_kejahatan` enum('curanmor','perampokan','begal','tawuran') DEFAULT NULL,
-  `gambar` varchar(255) NOT NULL
+  `gambar` varchar(255) NOT NULL,
+  `status` varchar(20) DEFAULT 'diterima'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data untuk tabel `maps`
 --
 
-INSERT INTO `maps` (`id`, `kecamatan_id`, `kelurahan_id`, `nama_daerah`, `latitude`, `longitude`, `jenis_kejahatan`, `gambar`) VALUES
-(23, 101, 1, 'kiajaran', '-6.4151146', '108.2594006', 'begal', '1744394233_e1df7678be4c3fa0ce89.png'),
-(25, 101, 7, 'sindang', '-6.407893', '108.256797', 'begal', '1744660507_aab684ad66862f2685bd.png');
+INSERT INTO `maps` (`id`, `kelurahan`, `nama_daerah`, `latitude`, `longitude`, `jenis_kejahatan`, `gambar`, `status`) VALUES
+(23, 'Bojongslawi', 'jalan raya slaur', '-6.4151146', '108.2594006', 'curanmor', '1744394233_e1df7678be4c3fa0ce89.png', 'diterima'),
+(25, 'Sindangkerta', 'sindang', '-6.407893', '108.256797', 'begal', '1744798728_a631582e9ed75f58d318.jpg', 'diterima'),
+(28, 'Pamayahan', 'jalan pamayahan', '-6.398401', '108.283808', 'perampokan', '1744819850_6ba7c08c5421288c2161.jpg', 'diterima'),
+(29, 'Lohbener', 'celeng', '-6.401054', '108.275958', 'tawuran', '1744819909_fe453dec8ee3df1efb90.png', 'diterima'),
+(39, 'Lohbener', 'jalan lama lohbener', '-6.410230', '108.282971', 'begal', '1745239207_f8fa3f647cff735d5e7e.png', 'diterima'),
+(47, 'Larangan', 'larangan', '-6.404579', '108.225994', 'begal', '1746433621_6c4e174e68f69e03dec3.png', 'diterima'),
+(48, 'Legok', 'jalan baru', '-6.419881', '108.275440', 'begal', '1746626915_7fcf6eafb3227a8ed0c2.png', 'diterima'),
+(49, 'Kiajaran Kulon', 'wanguk', '-6.407879 ', '108.251600', 'curanmor', '1747316054_49ffb89130a9fac4a596.jpeg', 'diterima'),
+(55, 'Larangan', 'pantura larangan ', '-6.407934', '108.253530', 'perampokan', '1747820382_a048cafbf3081869478d.png', 'diterima');
 
 -- --------------------------------------------------------
 
@@ -187,37 +121,17 @@ INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `role`, `password`,
 --
 
 --
--- Indeks untuk tabel `aduan`
---
-ALTER TABLE `aduan`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indeks untuk tabel `connections`
 --
 ALTER TABLE `connections`
   ADD PRIMARY KEY (`c_id`);
 
 --
--- Indeks untuk tabel `kecamatan`
---
-ALTER TABLE `kecamatan`
-  ADD PRIMARY KEY (`kecamatan_id`);
-
---
--- Indeks untuk tabel `kelurahan`
---
-ALTER TABLE `kelurahan`
-  ADD PRIMARY KEY (`kelurahan_id`),
-  ADD KEY `kecamatan_id` (`kecamatan_id`);
-
---
 -- Indeks untuk tabel `maps`
 --
 ALTER TABLE `maps`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `kecamatan_id` (`kecamatan_id`),
-  ADD KEY `kelurahan_id` (`kelurahan_id`);
+  ADD KEY `kelurahan_id` (`kelurahan`);
 
 --
 -- Indeks untuk tabel `migrations`
@@ -236,28 +150,16 @@ ALTER TABLE `users`
 --
 
 --
--- AUTO_INCREMENT untuk tabel `aduan`
---
-ALTER TABLE `aduan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
-
---
 -- AUTO_INCREMENT untuk tabel `connections`
 --
 ALTER TABLE `connections`
   MODIFY `c_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
--- AUTO_INCREMENT untuk tabel `kelurahan`
---
-ALTER TABLE `kelurahan`
-  MODIFY `kelurahan_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
-
---
 -- AUTO_INCREMENT untuk tabel `maps`
 --
 ALTER TABLE `maps`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
 -- AUTO_INCREMENT untuk tabel `migrations`
@@ -270,23 +172,6 @@ ALTER TABLE `migrations`
 --
 ALTER TABLE `users`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
-
---
--- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
---
-
---
--- Ketidakleluasaan untuk tabel `kelurahan`
---
-ALTER TABLE `kelurahan`
-  ADD CONSTRAINT `kelurahan_ibfk_1` FOREIGN KEY (`kecamatan_id`) REFERENCES `kecamatan` (`kecamatan_id`);
-
---
--- Ketidakleluasaan untuk tabel `maps`
---
-ALTER TABLE `maps`
-  ADD CONSTRAINT `maps_ibfk_5` FOREIGN KEY (`kecamatan_id`) REFERENCES `kecamatan` (`kecamatan_id`),
-  ADD CONSTRAINT `maps_ibfk_7` FOREIGN KEY (`kelurahan_id`) REFERENCES `kelurahan` (`kelurahan_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -16,13 +16,10 @@ class Wilayah extends BaseController
 
     public function wilayah_data_read()
     {
-        $this->builder->select('maps.nama_daerah, kecamatan.nama as kecnama,
-            kelurahan.nama as kelnama, maps.jenis_kejahatan, maps.latitude, maps.longitude, 
-            maps.gambar, maps.id'); 
+        $this->builder->select('maps.nama_daerah, maps.kelurahan, maps.jenis_kejahatan, maps.latitude, maps.longitude, maps.gambar, maps.id'); 
+        // Hapus alias 'as kelnama', gunakan 'kelurahan' langsung
     
         // Filter data utama hanya untuk status 'diterima'
-        $this->builder->join('kecamatan', 'kecamatan.kecamatan_id = maps.kecamatan_id');
-        $this->builder->join('kelurahan', 'kelurahan.kelurahan_id = maps.kelurahan_id');
         $this->builder->where('maps.status', 'diterima');
         $query = $this->builder->get();
     
@@ -30,8 +27,7 @@ class Wilayah extends BaseController
         $data = [
             'title'      => 'Data Wilayah',
             'content'    => $query->getResult(), // Hanya data dengan status 'diterima'
-            'kecamatan'  => $dataModel->get_data_kecamatan()->getResult(),
-            'kelurahan'  => $dataModel->get_data_kelurahan()->getResult(),
+            'kelurahan'  => $dataModel->getKelurahanEnum(), // Gunakan daftar enum untuk dropdown
             'pengaduan'  => $dataModel->get_pending_laporan()->getResult(), // Data dengan status 'pending'
             'validation' => \Config\Services::validation()
         ];
@@ -63,8 +59,7 @@ class Wilayah extends BaseController
         }
 
         $dataMaster = [
-            'kecamatan_id'      => $this->request->getPost('kecamatan'),
-            'kelurahan_id'      => $this->request->getPost('kelurahan'),
+            'kelurahan'         => $this->request->getPost('kelurahan'), // Ganti kelurahan_id dengan kelurahan
             'nama_daerah'       => $this->request->getPost('nama_daerah'),
             'latitude'          => $this->request->getPost('latitude'),
             'longitude'         => $this->request->getPost('longitude'),
@@ -100,11 +95,8 @@ class Wilayah extends BaseController
     {
         $dataModel = new M_Wilayah();
 
-        $this->builder->select('maps.nama_daerah, kecamatan.nama as kecam_nama,
-            kelurahan.nama as kelur_nama, maps.jenis_kejahatan, maps.latitude, maps.longitude, 
-            maps.gambar, maps.id'); 
-        $this->builder->join('kecamatan', 'kecamatan.kecamatan_id = maps.kecamatan_id');
-        $this->builder->join('kelurahan', 'kelurahan.kelurahan_id = maps.kelurahan_id');
+        $this->builder->select('maps.nama_daerah, maps.kelurahan, maps.jenis_kejahatan, maps.latitude, maps.longitude, maps.gambar, maps.id'); 
+        // Hapus alias 'as kelnama', gunakan 'kelurahan' langsung
         $query = $this->builder->get();
 
         $data = [
@@ -112,8 +104,7 @@ class Wilayah extends BaseController
             'validation'  => \Config\Services::validation(),
             'wilayah'     => $dataModel->get_wilayah($id),
             'wilayahkec'  => $query->getResult(),
-            'kecamatan'   => $dataModel->get_data_kecamatan()->getResult(),
-            'kelurahan'   => $dataModel->get_data_kelurahan()->getResult(),
+            'kelurahan'   => $dataModel->getKelurahanEnum(), // Gunakan daftar enum untuk dropdown
         ];        
 
         echo view('templates/header', $data);
@@ -136,8 +127,7 @@ class Wilayah extends BaseController
         $dataModel = new M_Wilayah();
         $dataModel->save([
             'id'              => $id,
-            'kecamatan_id'    => $this->request->getVar('kecamatan'),
-            'kelurahan_id'    => $this->request->getVar('kelurahan'),
+            'kelurahan'       => $this->request->getVar('kelurahan'), // Ganti kelurahan_id dengan kelurahan
             'nama_daerah'     => $this->request->getVar('nama_daerah'),
             'latitude'        => $this->request->getVar('latitude'),
             'longitude'       => $this->request->getVar('longitude'),
@@ -168,7 +158,7 @@ class Wilayah extends BaseController
         $dataModel = new M_Wilayah();
         $data = [
             'title' => 'Form Pengaduan',
-            'kelurahan' => $dataModel->get_data_kelurahan()->getResult()
+            'kelurahan' => $dataModel->getKelurahanEnum() // Gunakan daftar enum untuk dropdown
         ];
         echo view('templates/header', $data);
         echo view('wilayah/aduan');
@@ -184,8 +174,7 @@ class Wilayah extends BaseController
         }
 
         $this->db->table('maps')->insert([
-            'kecamatan_id'    => $this->request->getPost('kecamatan'),
-            'kelurahan_id'    => $this->request->getPost('kelurahan'),
+            'kelurahan'       => $this->request->getPost('kelurahan'), // Ganti kelurahan_id dengan kelurahan
             'nama_daerah'     => $this->request->getPost('nama_daerah'),
             'latitude'        => $this->request->getPost('latitude'),
             'longitude'       => $this->request->getPost('longitude'),
@@ -218,14 +207,12 @@ class Wilayah extends BaseController
 
         if ($jenis) {
             $statistik = $model->where('jenis_kejahatan', $jenis)
-                               ->where('kecamatan_id', 101)
                                ->where('status', 'diterima') // Hanya data yang diterima
                                ->select('jenis_kejahatan, COUNT(*) as total')
                                ->groupBy('jenis_kejahatan')
                                ->findAll();
 
             $rankingData = $model->where('jenis_kejahatan', $jenis)
-                                 ->where('kecamatan_id', 101)
                                  ->where('status', 'diterima') // Hanya data yang diterima
                                  ->select('nama_daerah as wilayah, jenis_kejahatan, COUNT(*) as total')
                                  ->groupBy('nama_daerah, jenis_kejahatan')
@@ -239,7 +226,6 @@ class Wilayah extends BaseController
         // Ambil semua jenis kejahatan yang tersedia
         $jenisList = $model->select('jenis_kejahatan')
                            ->distinct()
-                           ->where('kecamatan_id', 101)
                            ->where('status', 'diterima') // Hanya data yang diterima
                            ->orderBy('jenis_kejahatan', 'asc')
                            ->findAll();

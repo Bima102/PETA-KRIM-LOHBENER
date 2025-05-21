@@ -20,7 +20,7 @@
 
             <!-- Deskripsi Grafik -->
             <div class="text-muted text-center mt-3 mb-4 px-3" style="max-width: 800px; margin-left: auto; margin-right: auto;">
-                Grafik di atas menunjukkan jumlah kasus kriminalitas berdasarkan jenis kejahatan yang terjadi di wilayah Lohbener. 
+                Grafik di atas menunjukkan jumlah kasus kriminalitas berdasarkan jenis kejahatan yang terjadi di wilayah. 
                 Setiap batang mewakili total laporan untuk kategori kejahatan tertentu seperti 
                 <strong>curanmor</strong>, <strong>perampokan</strong>, <strong>begal</strong>, dan <strong>tawuran</strong>. 
                 Data ini berguna untuk mengidentifikasi jenis kejahatan yang paling sering terjadi, sehingga dapat membantu dalam pengambilan kebijakan pencegahan dan peningkatan kewaspadaan masyarakat.
