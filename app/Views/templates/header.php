@@ -40,30 +40,38 @@
 
         /* Styling untuk logo */
         .navbar-brand img {
-            width: 50px; /* Perbesar ukuran ikon */
-            height: 50px;
+            width: 60px; /* Kecilkan sedikit ukuran logo agar lebih proporsional */
+            height: 60px;
             object-fit: contain; /* Pastikan gambar tidak terdistorsi */
-            margin-right: 12px; /* Jarak antara ikon dan teks */
+            margin-right: 8px; /* Jarak antara logo dan teks */
         }
 
         .navbar-brand {
             display: flex;
-            align-items: center; /* Pastikan ikon dan teks sejajar vertikal */
+            align-items: center; /* Pastikan logo dan teks sejajar vertikal */
             font-family: 'Anton', sans-serif;
-            font-size: 1.5rem; /* Kembalikan ukuran teks ke semula */
+            font-size: 1.3rem; /* Sesuaikan ukuran teks agar lebih seimbang */
             letter-spacing: 1px;
             color: #ffc107 !important;
-            padding: 0.2rem 0; /* Tambahkan padding vertikal untuk ketinggian yang lebih baik */
+            padding: 0.1rem 0; /* Kurangi padding vertikal untuk membuat header lebih kompak */
+        }
+
+        /* Styling untuk navbar */
+        .navbar {
+            padding: 0.5rem 1rem; /* Kurangi padding navbar agar header lebih ramping */
         }
 
         /* Responsiveness untuk layar kecil */
         @media (max-width: 576px) {
             .navbar-brand {
-                font-size: 1.2rem; /* Kurangi ukuran teks di layar kecil */
+                font-size: 1rem; /* Kurangi ukuran teks di layar kecil */
             }
             .navbar-brand img {
-                width: 40px; /* Kurangi ukuran ikon di layar kecil */
+                width: 40px; /* Kurangi ukuran logo di layar kecil */
                 height: 40px;
+            }
+            .navbar {
+                padding: 0.3rem 0.8rem; /* Sesuaikan padding navbar di layar kecil */
             }
         }
     </style>
@@ -76,7 +84,7 @@
     ?>
 
     <!-- ====== NAVBAR ====== -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="#">
                 <img src="<?= base_url('assets/img/logo_petakriminal.png'); ?>" alt="Logo Polisi" class="logo-img">

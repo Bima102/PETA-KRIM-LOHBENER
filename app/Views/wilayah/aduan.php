@@ -92,7 +92,7 @@ $long = ['name' => 'longitude', 'id' => 'longitude', 'class' => 'form-control fw
 
 <script>
   // Inisialisasi Mapbox dengan access token
-  mapboxgl.accessToken = 'pk.eyJ1IjoiYmltYTEwMiIsImEiOiJjbWIzazBjM2wwczJhMm1vZ3RmdHpuYjZyIn0.2oTqFAPNCx6E8OoR4K0UhA';
+  mapboxgl.accessToken = 'pk.eyJ1IjoiYWJpbTEyIiwiYSI6ImNtYjZmaTBzYzAwOXQycXB0MGh3YTJzZWUifQ.IG31kSLXsRVUIdPfiF517g';
   let map;
   let marker;
 
@@ -200,14 +200,13 @@ $long = ['name' => 'longitude', 'id' => 'longitude', 'class' => 'form-control fw
           // Jika kelurahan tidak ditemukan atau tidak valid
           if (!kelurahanFound) {
             kelurahanSelect.value = '';
-            alert(`Kelurahan "${kelurahanName}" tidak terdaftar. Pilih kelurahan di Wilayah Polsek Lohbener.`);
+            alert(`Kelurahan "${kelurahanName}" tidak terdaftar. Pilih kelurahan di Wilayah Pengawasan Polsek Lohbener.`);
           }
 
           // Kosongkan kolom nama_daerah agar diisi manual
           document.getElementById('nama_daerah').value = '';
         } else {
           document.getElementById('kelurahan').value = '';
-          document.getElementById('nama_daerah').value = '';
           alert('Gagal mendapatkan informasi lokasi dari Mapbox.');
         }
       })
@@ -215,7 +214,6 @@ $long = ['name' => 'longitude', 'id' => 'longitude', 'class' => 'form-control fw
         console.error('Error fetching geocode:', error);
         alert('Terjadi kesalahan saat mengambil data lokasi. Pastikan koneksi internet stabil.');
         document.getElementById('kelurahan').value = '';
-        document.getElementById('nama_daerah').value = '';
       });
   }
 
