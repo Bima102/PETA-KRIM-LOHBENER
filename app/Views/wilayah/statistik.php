@@ -54,7 +54,7 @@
                         <thead class="table-dark">
                             <tr>
                                 <th>No</th>
-                                <th>Jalan</th>
+                                <th>Tempat/Jalan/Gang Kejadian</th>
                                 <th>Jenis Kejahatan</th>
                                 <th>Total Kasus</th>
                             </tr>

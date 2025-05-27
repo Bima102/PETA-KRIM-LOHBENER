@@ -121,7 +121,7 @@
                     </h5>
                     <p>
                         <b>Kelurahan</b>: ${row.kelnama}<br>
-                        <b>Jalan/Daerah</b>: ${row.nama_daerah}
+                        <b>Tempat/Jalan Kejadian</b>: ${row.nama_daerah}
                     </p>
                 </div>
             `);

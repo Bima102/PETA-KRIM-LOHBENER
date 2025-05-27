@@ -90,7 +90,7 @@ $longitude = [
 
                     <!-- Nama Jalan -->
                     <div class="form-group mb-3">
-                        <?= form_label('<i class="fas fa-road me-1"></i> Nama Jalan/Daerah', 'nama_daerah'); ?>
+                        <?= form_label('<i class="fas fa-road me-1"></i> Detail patokan Tempat/Jalan/Gang Kejadian', 'nama_daerah'); ?>
                         <?= form_input($nama_daerah); ?>
                     </div>
 

@@ -3,7 +3,7 @@
     
     <!-- Logo -->
     <div class="mb-3">
-      <img src="<?= base_url('assets/img/polisi.png') ?>" alt="Logo Kriminalitas" class="img-fluid" style="max-height: 120px;">
+      <img src="<?= base_url('assets/img/logo_petakriminal.png') ?>" alt="Logo Kriminalitas" class="img-fluid" style="max-height: 120px;">
     </div>
 
     <!-- Judul / Instansi -->

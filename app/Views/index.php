@@ -5,14 +5,14 @@
       <div class="col-md-10">
         <div class="row justify-content-center">
           <div class="col-md-8">
-            <h1 class="text-white text-center fw-bold mb-4 shadow-text">PETA-KRIM LOHBENER</h1>
-            <p class="text-white text-center mb-4 lead shadow-text">
+            <h1 class="text-white text-center fw-bold mb-4 shadow-text" data-aos="fade-up">PETA-KRIM LOHBENER</h1>
+            <p class="text-white text-center mb-4 lead shadow-text" data-aos="fade-up" data-aos-delay="100">
               Website ini menampilkan peta lokasi<br>
               dan informasi kasus kriminalitas yang terjadi di wilayah tersebut.<br>
               Tujuannya adalah membantu masyarakat lebih waspada<br>
               dan berhati-hati.
             </p>
-            <p class="text-center">
+            <p class="text-center" data-aos="fade-up" data-aos-delay="200">
               <a class="btn btn-warning btn-lg shadow-sm fw-semibold px-4" href="#features" role="button">JELAJAHI</a>
             </p>
           </div>
@@ -25,14 +25,14 @@
 <!-- EDUKASI KRIMINALITAS -->
 <section class="py-5 bg-white" id="edukasi">
   <div class="container mt-5">
-    <h2 class="text-center mb-2">
+    <h2 class="text-center mb-2" data-aos="fade-up">
       <i class="bi bi-book-half text-primary me-2"></i> Edukasi
     </h2>
-    <h2 class="text-center text-dark mb-4 fw-bold">Jenis-Jenis Kejahatan</h2>
+    <h2 class="text-center text-dark mb-4 fw-bold" data-aos="fade-up" data-aos-delay="100">Jenis-Jenis Kejahatan</h2>
 
     <div class="row g-4 auto-scroll" id="crimeCarousel">
       <!-- CUBIS -->
-      <div class="col-4 mb-4">
+      <div class="col-4 mb-4" data-aos="fade-up" data-aos-delay="200">
         <div class="card crime-card h-100 shadow-sm border-0 rounded-4 transition hover-shadow position-relative">
           <img src="<?= base_url(); ?>/assets/img/pencuri.jpg" class="card-img-top rounded-top-4" alt="Pencurian Biasa (CUBIS)">
           <div class="card-body">
@@ -56,7 +56,7 @@
       </div>
 
       <!-- CURANMOR -->
-      <div class="col-4 mb-4">
+      <div class="col-4 mb-4" data-aos="fade-up" data-aos-delay="300">
         <div class="card crime-card h-100 shadow-sm border-0 rounded-4 transition hover-shadow position-relative">
           <img src="<?= base_url(); ?>/assets/img/malingmotor.jpg" class="card-img-top rounded-top-4" alt="Pencurian Kendaraan Bermotor">
           <div class="card-body">
@@ -80,7 +80,7 @@
       </div>
 
       <!-- CURAS -->
-      <div class="col-4 mb-4">
+      <div class="col-4 mb-4" data-aos="fade-up" data-aos-delay="400">
         <div class="card crime-card h-100 shadow-sm border-0 rounded-4 transition hover-shadow position-relative">
           <img src="<?= base_url(); ?>/assets/img/begal.jpg" class="card-img-top rounded-top-4" alt="CURAS">
           <div class="card-body">
@@ -104,7 +104,7 @@
       </div>
 
       <!-- CURAT -->
-      <div class="col-4 mb-4">
+      <div class="col-4 mb-4" data-aos="fade-up" data-aos-delay="500">
         <div class="card crime-card h-100 shadow-sm border-0 rounded-4 transition hover-shadow position-relative">
           <img src="<?= base_url(); ?>/assets/img/Pencurianp.jpg" class="card-img-top rounded-top-4" alt="CURAT">
           <div class="card-body">
@@ -128,7 +128,7 @@
       </div>
 
       <!-- Pembunuhan -->
-      <div class="col-4 mb-4">
+      <div class="col-4 mb-4" data-aos="fade-up" data-aos-delay="600">
         <div class="card crime-card h-100 shadow-sm border-0 rounded-4 transition hover-shadow position-relative">
           <img src="<?= base_url(); ?>/assets/img/pembunuhan.png" class="card-img-top rounded-top-4" alt="Pembunuhan">
           <div class="card-body">
@@ -152,7 +152,7 @@
       </div>
 
       <!-- Tawuran -->
-      <div class="col-4 mb-4">
+      <div class="col-4 mb-4" data-aos="fade-up" data-aos-delay="700">
         <div class="card crime-card h-100 shadow-sm border-0 rounded-4 transition hover-shadow position-relative">
           <img src="<?= base_url(); ?>/assets/img/tawuran-remaja.png" class="card-img-top rounded-top-4" alt="Tawuran">
           <div class="card-body">
@@ -189,7 +189,7 @@
     </h2>
 
     <div class="row g-4 auto-scroll" id="preventionCarousel">
-      <div class="col-4">
+      <div class="col-4" data-aos="fade-up" data-aos-delay="200">
         <div class="card shadow border-0 h-100">
           <div class="card-header bg-primary text-white fw-bold">
             <i class="bi bi-shield-lock-fill me-2"></i>Lapor Polisi
@@ -200,7 +200,7 @@
         </div>
       </div>
 
-      <div class="col-4">
+      <div class="col-4" data-aos="fade-up" data-aos-delay="300">
         <div class="card shadow border-0 h-100">
           <div class="card-header bg-success text-white fw-bold">
             <i class="bi bi-people-fill me-2"></i>Ronda Malam
@@ -211,7 +211,7 @@
         </div>
       </div>
 
-      <div class="col-4">
+      <div class="col-4" data-aos="fade-up" data-aos-delay="400">
         <div class="card shadow border-0 h-100">
           <div class="card-header bg-warning text-dark fw-bold">
             <i class="bi bi-camera-video-fill me-2"></i>Pasang CCTV
@@ -224,6 +224,9 @@
     </div>
   </div>
 </section>
+
+<!-- Add AOS CSS -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
 <!-- Add Custom CSS -->
 <style>
@@ -252,9 +255,17 @@
 }
 </style>
 
-<!-- Add JavaScript for Auto Scroll -->
+<!-- Add AOS and Auto Scroll JavaScript -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+  // Initialize AOS
+  AOS.init({
+    duration: 800, // Durasi animasi dalam milidetik
+    once: true, // Animasi hanya terjadi sekali saat scroll
+  });
+
+  // Auto Scroll for Carousels
   const carousels = [
     { id: 'crimeCarousel', interval: 3000 }, // Scroll every 3 seconds
     { id: 'preventionCarousel', interval: 3000 }

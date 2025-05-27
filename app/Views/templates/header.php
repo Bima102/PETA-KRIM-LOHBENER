@@ -24,7 +24,7 @@
 
     <!-- Custom chart script (dipanggil terakhir agar Chart dan plugin sudah siap) -->
     <script>
-        // Pastikan plugin datalabels diregistrasi sebelum digunakan
+        // energetica plugin datalabels diregistrasi sebelum digunakan
         Chart.register(ChartDataLabels);
     </script>
     <script src="<?= base_url(); ?>/assets/js/chart.js"></script>
@@ -36,6 +36,35 @@
         .nav-link.active {
             font-weight: bold;
             color: #ffc107 !important;
+        }
+
+        /* Styling untuk logo */
+        .navbar-brand img {
+            width: 50px; /* Perbesar ukuran ikon */
+            height: 50px;
+            object-fit: contain; /* Pastikan gambar tidak terdistorsi */
+            margin-right: 12px; /* Jarak antara ikon dan teks */
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center; /* Pastikan ikon dan teks sejajar vertikal */
+            font-family: 'Anton', sans-serif;
+            font-size: 1.5rem; /* Kembalikan ukuran teks ke semula */
+            letter-spacing: 1px;
+            color: #ffc107 !important;
+            padding: 0.2rem 0; /* Tambahkan padding vertikal untuk ketinggian yang lebih baik */
+        }
+
+        /* Responsiveness untuk layar kecil */
+        @media (max-width: 576px) {
+            .navbar-brand {
+                font-size: 1.2rem; /* Kurangi ukuran teks di layar kecil */
+            }
+            .navbar-brand img {
+                width: 40px; /* Kurangi ukuran ikon di layar kecil */
+                height: 40px;
+            }
         }
     </style>
 </head>
@@ -49,8 +78,8 @@
     <!-- ====== NAVBAR ====== -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
         <div class="container">
-            <a class="navbar-brand fs-6 d-flex align-items-center" href="#" style="font-family: 'Anton', sans-serif; font-size: 1.5rem; letter-spacing: 1px; color: #ffc107;">
-                <img src="<?= base_url('assets/img/polisi.png'); ?>" alt="Logo Polisi" width="40" height="40" class="me-2">
+            <a class="navbar-brand" href="#">
+                <img src="<?= base_url('assets/img/logo_petakriminal.png'); ?>" alt="Logo Polisi" class="logo-img">
                 PETA-KRIM LOHBENER
             </a>                                                                             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
@@ -59,7 +88,6 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
-
                     <?php if (session()->get('isLoggedIn')) : ?>
                         <?php $role = session()->get('role'); ?>
 
@@ -77,7 +105,6 @@
                         <li class="nav-item ms-lg-3">
                             <a class="btn btn-warning text-dark fw-bold" href="/logout">Keluar</a>
                         </li>
-
                     <?php else : ?>
                         <li class="nav-item"><a class="nav-link <?= ($segment1 == 'halaman_utama') ? 'active' : ''; ?>" href="/halaman_utama">Halaman Utama</a></li>
                         <li class="nav-item"><a class="nav-link <?= ($segment1 == 'statistik') ? 'active' : ''; ?>" href="/statistik">Statistik Kejahatan</a></li>
@@ -86,7 +113,6 @@
                             <a class="btn btn-warning text-dark fw-bold" href="/login">Masuk</a>
                         </li>
                     <?php endif; ?>
-
                 </ul>
             </div>
         </div>

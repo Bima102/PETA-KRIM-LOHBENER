@@ -5,7 +5,7 @@ $nama_daerah = [
   'id'          => 'nama_daerah',
   'class'       => 'form-control text-dark fw-bold',
   'value'       => old('nama_daerah'),
-  'placeholder' => 'Nama Daerah / Jalan'
+  'placeholder' => 'Detail patokan Tempat/Jalan/Gang Kejadian'
 ];
 
 $lat = [
@@ -62,7 +62,7 @@ $submit = [
             <thead class="bg-warning text-dark">
               <tr>
                 <th>Kelurahan</th> <!-- Hapus Kecamatan -->
-                <th>Daerah / Jalan</th>
+                <th>Detail patokan Tempat/Jalan/Gang Kejadian</th>
                 <th>Latitude</th>
                 <th>Longitude</th>
                 <th>Jenis Kejahatan</th>
@@ -114,7 +114,7 @@ $submit = [
               <tr class="fw-bold">
                 <th style="width: 5%;">No</th>
                 <th style="width: 25%;">Kelurahan</th> <!-- Hapus Kecamatan -->
-                <th>Nama Daerah / Jalan</th>
+                <th>Detail patokan Tempat/Jalan/Gang Kejadian</th>
                 <th style="width: 15%;">Aksi</th>
               </tr>
             </thead>
@@ -175,7 +175,7 @@ $submit = [
 
           <!-- Nama Daerah -->
           <div class="form-group mb-3">
-            <?= form_label('Nama Daerah / Jalan', 'nama_daerah'); ?>
+            <?= form_label('Detail patokan Tempat/Jalan/Gang Kejadian', 'nama_daerah'); ?>
             <?= form_input($nama_daerah); ?>
           </div>
 
@@ -243,7 +243,7 @@ function cetakLaporan() {
   doc.rect(20, 54, 170, 8, 'F');
   doc.text('NO', 22, 60);
   doc.text('KELURAHAN', 35, 60);
-  doc.text('NAMA DAERAH / JALAN', 75, 60);
+  doc.text('TEMPAT/JALAN/GANG KEJADIAN', 75, 60);
   doc.text('JENIS KEJAHATAN', 140, 60);
 
   // Garis tabel header
