@@ -1,13 +1,9 @@
 <?= $this->extend('templates/header'); ?>
 
 <?= $this->section('head'); ?>
-    <!-- Leaflet JS dan CSS -->
-    <link rel="stylesheet" href="<?= base_url(); ?>/leaflet/leaflet.css">
-    <script src="<?= base_url(); ?>/leaflet/leaflet.js"></script>
-
-    <!-- Leaflet Search -->
-    <link rel="stylesheet" href="<?= base_url(); ?>/leaflet-search/src/leaflet-search.css">
-    <script src="<?= base_url(); ?>/leaflet-search/src/leaflet-search.js"></script>
+    <!-- Mapbox GL JS dan CSS -->
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.js"></script>
 
     <style>
         html, body {
@@ -52,93 +48,92 @@
     <div id="maps"></div>
 
     <script>
-        // Inisialisasi peta terfokus ke Lohbener
-        const map = L.map('maps').setView([-6.403131, 108.270018], 13);
+        // Inisialisasi Mapbox dengan access token
+        mapboxgl.accessToken = 'pk.eyJ1IjoiYWJpbTEyIiwiYSI6ImNtYjZmaTBzYzAwOXQycXB0MGh3YTJzZWUifQ.IG31kSLXsRVUIdPfiF517g';
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '© <a href="https://openstreet.org/copyright" target="_blank">OpenStreetMap</a>'
-        }).addTo(map);
+        // Inisialisasi peta
+        function initMap() {
+            const map = new mapboxgl.Map({
+                container: 'maps',
+                style: 'mapbox://styles/mapbox/streets-v12',
+                center: [108.270018, -6.403131], // Koordinat Lohbener
+                zoom: 13
+            });
 
-        // Definisi icon sesuai warna kejahatan
-        const icons = {
-            default: L.icon({
-                iconUrl: '<?= base_url(); ?>/leaflet/images/marker-icon.png',
-                shadowUrl: '<?= base_url(); ?>/leaflet/images/marker-shadow.png',
-                iconSize: [25, 41],
-                iconAnchor: [12, 41],
-                popupAnchor: [1, -34],
-                shadowSize: [41, 41]
-            }),
-            red: L.icon({
-                iconUrl: '<?= base_url(); ?>/leaflet/images/marker-icon-red.png',
-                shadowUrl: '<?= base_url(); ?>/leaflet/images/marker-shadow.png',
-                iconSize: [25, 41],
-                iconAnchor: [12, 41],
-                popupAnchor: [1, -34],
-                shadowSize: [41, 41]
-            }),
-            yellow: L.icon({
-                iconUrl: '<?= base_url(); ?>/leaflet/images/marker-icon-yellow.png',
-                shadowUrl: '<?= base_url(); ?>/leaflet/images/marker-shadow.png',
-                iconSize: [25, 41],
-                iconAnchor: [12, 41],
-                popupAnchor: [1, -34],
-                shadowSize: [41, 41]
-            }),
-            green: L.icon({
-                iconUrl: '<?= base_url(); ?>/leaflet/images/marker-icon-green.png',
-                shadowUrl: '<?= base_url(); ?>/leaflet/images/marker-shadow.png',
-                iconSize: [25, 41],
-                iconAnchor: [12, 41],
-                popupAnchor: [1, -34],
-                shadowSize: [41, 41]
-            })
-        };
+            // Tambahkan kontrol navigasi (zoom dan rotasi)
+            map.addControl(new mapboxgl.NavigationControl());
 
-        // Data wilayah hanya yang status 'diterima'
-        const dataWilayah = <?= json_encode($dataWilayah); ?>.filter(item => item.status === 'diterima');
+            // Data wilayah hanya yang status 'diterima'
+            const dataWilayah = <?= json_encode($dataWilayah); ?>.filter(item => item.status === 'diterima');
 
-        // Tambahkan marker untuk setiap titik rawan yang diterima
-        dataWilayah.forEach(row => {
-            let icon = icons.default;
-            const jenis = row.jenis_kejahatan.toLowerCase();
+            // Tambahkan marker untuk setiap titik rawan yang diterima
+            dataWilayah.forEach(row => {
+                let markerIcon = '<?= base_url(); ?>/assets/img/marker-icon.png'; // Default (Begal / Lainnya)
+                const jenis = row.jenis_kejahatan.toLowerCase();
 
-            if (jenis === 'curanmor') icon = icons.red;
-            else if (jenis === 'perampokan') icon = icons.yellow;
-            else if (jenis === 'tawuran') icon = icons.green;
+                if (jenis === 'curanmor') {
+                    markerIcon = '<?= base_url(); ?>/assets/img/marker-icon-red.png';
+                } else if (jenis === 'perampokan') {
+                    markerIcon = '<?= base_url(); ?>/assets/img/marker-icon-yellow.png';
+                } else if (jenis === 'tawuran') {
+                    markerIcon = '<?= base_url(); ?>/assets/img/marker-icon-green.png';
+                } else if (jenis === 'begal') {
+                    markerIcon = '<?= base_url(); ?>/assets/img/marker-icon-blue.png';
+                }
 
-            const marker = L.marker(
-                [parseFloat(row.latitude), parseFloat(row.longitude)],
-                { icon: icon }
-            ).addTo(map);
+                const marker = new mapboxgl.Marker({
+                    element: createMarkerElement(markerIcon)
+                })
+                    .setLngLat([parseFloat(row.longitude), parseFloat(row.latitude)])
+                    .setPopup(new mapboxgl.Popup().setHTML(`
+                        <div style="width: 180px; font-size: 13px;">
+                            <img src="<?= base_url(); ?>/img/${row.gambar}" 
+                                 style="width: 100%; height: 135px; object-fit: cover; border-radius: 6px;">
+                            <h5 style="text-align: center; margin-top: 5px; font-size: 14px;">
+                                Hati-hati daerah rawan: ${row.jenis_kejahatan}
+                            </h5>
+                            <p>
+                                <b>Kelurahan</b>: ${row.kelnama}<br>
+                                <b>Jalan/Tempat Kejadian</b>: ${row.nama_daerah}
+                            </p>
+                        </div>
+                    `))
+                    .addTo(map);
+            });
 
-            marker.bindPopup(`
-                <div style="width: 180px; font-size: 13px;">
-                    <img src="<?= base_url(); ?>/img/${row.gambar}" 
-                         style="width: 100%; height: 135px; object-fit: cover; border-radius: 6px;">
-                    <h5 style="text-align: center; margin-top: 5px; font-size: 14px;">
-                        Hati-hati daerah rawan: ${row.jenis_kejahatan}
-                    </h5>
-                    <p>
-                        <b>Kelurahan</b>: ${row.kelnama}<br>
-                        <b>Tempat/Jalan Kejadian</b>: ${row.nama_daerah}
-                    </p>
-                </div>
-            `);
-        });
+            // Tambahkan legenda
+            const legend = new mapboxgl.LngLatBoundsControl({
+                position: 'bottom-right'
+            });
 
-        // Tambahkan legenda
-        const legend = L.control({ position: 'bottomright' });
-        legend.onAdd = function () {
-            const div = L.DomUtil.create('div', 'info legend');
-            div.innerHTML += "<h4>Keterangan</h4>";
-            div.innerHTML += `<i class="legend-icon" style="background-image: url('<?= base_url(); ?>/leaflet/images/marker-icon-red.png');"></i> Curanmor<br>`;
-            div.innerHTML += `<i class="legend-icon" style="background-image: url('<?= base_url(); ?>/leaflet/images/marker-icon-yellow.png');"></i> Perampokan<br>`;
-            div.innerHTML += `<i class="legend-icon" style="background-image: url('<?= base_url(); ?>/leaflet/images/marker-icon-green.png');"></i> Tawuran<br>`;
-            div.innerHTML += `<i class="legend-icon" style="background-image: url('<?= base_url(); ?>/leaflet/images/marker-icon.png');"></i> Begal / Lainnya<br>`;
-            return div;
-        };
-        legend.addTo(map);
+            map.on('load', () => {
+                const legendDiv = document.createElement('div');
+                legendDiv.className = 'info legend';
+                legendDiv.innerHTML = `
+                    <h4>Keterangan</h4>
+                    <i class="legend-icon" style="background-image: url('<?= base_url(); ?>/assets/img/marker-icon-red.png');"></i> Curanmor<br>
+                    <i class="legend-icon" style="background-image: url('<?= base_url(); ?>/assets/img/marker-icon-yellow.png');"></i> Perampokan<br>
+                    <i class="legend-icon" style="background-image: url('<?= base_url(); ?>/assets/img/marker-icon-green.png');"></i> Tawuran<br>
+                    <i class="legend-icon" style="background-image: url('<?= base_url(); ?>/assets/img/marker-icon-blue.png');"></i> Begal<br>
+                    <i class="legend-icon" style="background-image: url('<?= base_url(); ?>/assets/img/marker-icon.png');"></i> Lainnya<br>
+                `;
+
+                const legendControl = new mapboxgl.Control({ element: legendDiv });
+                map.addControl(legendControl, 'bottom-right');
+            });
+        }
+
+        // Fungsi untuk membuat elemen marker kustom
+        function createMarkerElement(iconUrl) {
+            const el = document.createElement('div');
+            el.style.backgroundImage = `url(${iconUrl})`;
+            el.style.width = '25px';
+            el.style.height = '41px';
+            el.style.backgroundSize = '100%';
+            return el;
+        }
+
+        // Inisialisasi peta saat halaman dimuat
+        window.onload = initMap;
     </script>
-<?= $this->endSection(); ?>
+<?= $this->endSection(); ?> 

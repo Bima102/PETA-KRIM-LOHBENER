@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 27 Bulan Mei 2025 pada 13.33
+-- Waktu pembuatan: 29 Bulan Mei 2025 pada 14.57
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -48,24 +48,26 @@ CREATE TABLE `maps` (
   `longitude` varchar(255) NOT NULL,
   `jenis_kejahatan` enum('curanmor','perampokan','begal','tawuran') DEFAULT NULL,
   `gambar` varchar(255) NOT NULL,
-  `status` varchar(20) DEFAULT 'diterima'
+  `status` varchar(20) DEFAULT 'diterima',
+  `created_at` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data untuk tabel `maps`
 --
 
-INSERT INTO `maps` (`id`, `kelurahan`, `nama_daerah`, `latitude`, `longitude`, `jenis_kejahatan`, `gambar`, `status`) VALUES
-(25, 'Sindangkerta', 'sindang', '-6.407893', '108.256797', 'begal', '1744798728_a631582e9ed75f58d318.jpg', 'diterima'),
-(28, 'Pamayahan', 'jalan pamayahan', '-6.398401', '108.283808', 'perampokan', '1744819850_6ba7c08c5421288c2161.jpg', 'diterima'),
-(29, 'Lohbener', 'celeng', '-6.401054', '108.275958', 'tawuran', '1744819909_fe453dec8ee3df1efb90.png', 'diterima'),
-(39, 'Lohbener', 'jalan lama lohbener', '-6.410230', '108.282971', 'begal', '1745239207_f8fa3f647cff735d5e7e.png', 'diterima'),
-(47, 'Larangan', 'larangan', '-6.404579', '108.225994', 'begal', '1746433621_6c4e174e68f69e03dec3.png', 'diterima'),
-(48, 'Legok', 'jalan baru', '-6.419881', '108.275440', 'begal', '1746626915_7fcf6eafb3227a8ed0c2.png', 'diterima'),
-(49, 'Kiajaran Kulon', 'wanguk', '-6.407879 ', '108.251600', 'curanmor', '1747316054_49ffb89130a9fac4a596.jpeg', 'diterima'),
-(55, 'Larangan', 'pantura larangan ', '-6.407934', '108.253530', 'perampokan', '1747820382_a048cafbf3081869478d.png', 'diterima'),
-(56, 'Waru', 'waru lor', '-6.423006', '108.249626', 'curanmor', '1748016456_d1ad14614021a96fb52c.png', 'pending'),
-(57, 'Waru', 'waru', '-6.417650', '108.255233', 'curanmor', 'danger.png', 'pending');
+INSERT INTO `maps` (`id`, `kelurahan`, `nama_daerah`, `latitude`, `longitude`, `jenis_kejahatan`, `gambar`, `status`, `created_at`) VALUES
+(25, 'Sindangkerta', 'sindang', '-6.407893', '108.256797', 'begal', '1744798728_a631582e9ed75f58d318.jpg', 'diterima', '2025-01-01 18:28:17'),
+(28, 'Pamayahan', 'jalan pamayahan', '-6.398401', '108.283808', 'perampokan', '1744819850_6ba7c08c5421288c2161.jpg', 'diterima', '2025-01-29 18:28:17'),
+(29, 'Lohbener', 'celeng', '-6.401054', '108.275958', 'tawuran', '1744819909_fe453dec8ee3df1efb90.png', 'diterima', '2025-02-10 18:42:44'),
+(39, 'Lohbener', 'jalan lama lohbener', '-6.410230', '108.282971', 'begal', '1745239207_f8fa3f647cff735d5e7e.png', 'diterima', '2024-05-29 18:28:17'),
+(47, 'Larangan', 'larangan', '-6.404579', '108.225994', 'begal', '1746433621_6c4e174e68f69e03dec3.png', 'diterima', '2023-05-29 18:28:17'),
+(48, 'Legok', 'jalan baru', '-6.419881', '108.275440', 'begal', '1746626915_7fcf6eafb3227a8ed0c2.png', 'diterima', '2025-05-29 18:28:17'),
+(49, 'Kiajaran Kulon', 'wanguk', '-6.407879 ', '108.251600', 'curanmor', '1747316054_49ffb89130a9fac4a596.jpeg', 'diterima', '2025-03-29 18:28:17'),
+(55, 'Larangan', 'pantura larangan ', '-6.407934', '108.253530', 'perampokan', '1747820382_a048cafbf3081869478d.png', 'diterima', '2025-04-29 18:28:17'),
+(56, 'Waru', 'waru lor', '-6.423006', '108.249626', 'curanmor', '1748016456_d1ad14614021a96fb52c.png', 'pending', '2025-03-29 18:28:17'),
+(58, 'Waru', 'gang baru', '-6.419987', '108.266400', 'curanmor', '1748396381_5185429ca3fd9913b0be.png', 'diterima', '2025-04-29 18:28:17'),
+(59, 'Larangan', 'jalan pantura larangan', '-6.405310', '108.266126', 'begal', '1748518774_4dd16ad5c25c8ff46b5e.jpg', 'diterima', '2025-05-29 06:39:34');
 
 -- --------------------------------------------------------
 
@@ -160,7 +162,7 @@ ALTER TABLE `connections`
 -- AUTO_INCREMENT untuk tabel `maps`
 --
 ALTER TABLE `maps`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 
 --
 -- AUTO_INCREMENT untuk tabel `migrations`
