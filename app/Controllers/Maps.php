@@ -15,9 +15,8 @@ class Maps extends BaseController
 
     public function index()
     {
-        $this->builder->select('maps.nama_daerah, maps.kelurahan AS kelnama, maps.jenis_kejahatan, maps.latitude, maps.longitude, maps.gambar');
-        // Hapus join dengan kecamatan dan kelurahan, gunakan kolom kelurahan langsung
-        // Hapus filter kecamatan_id
+        $this->builder->select('maps.nama_daerah, maps.kelurahan AS kelnama, maps.jenis_kejahatan, maps.latitude, maps.longitude, maps.gambar, maps.status');
+        $this->builder->where('maps.status', 'diterima'); // Filter hanya data diterima
 
         $query = $this->builder->get();
 

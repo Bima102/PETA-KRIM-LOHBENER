@@ -18,7 +18,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     const borderColors = backgroundColors.map(color => {
-        // untuk transparansi .6 menjadi 1 (jika ada), atau tetap jika solid
         return color.includes('0.') ? color.replace(/0\.\d+/, '1') : color;
     });
 
@@ -62,10 +61,8 @@ document.addEventListener('DOMContentLoaded', function () {
             scales: {
                 y: {
                     beginAtZero: true,
-                    min: 0,
-                    max: 20,
                     ticks: {
-                        stepSize: 5
+                        stepSize: 1 // Menyesuaikan langkah agar lebih fleksibel
                     },
                     title: {
                         display: true,

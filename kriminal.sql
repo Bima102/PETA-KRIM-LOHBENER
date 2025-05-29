@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 21 Bulan Mei 2025 pada 12.08
+-- Waktu pembuatan: 27 Bulan Mei 2025 pada 13.33
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -42,7 +42,7 @@ CREATE TABLE `connections` (
 
 CREATE TABLE `maps` (
   `id` int(11) NOT NULL,
-  `kelurahan` enum('Bojongslawi','Kiajaran Kulon','Kiajaran Wetan','Langut','Lanjan','Larangan','Legok','Lohbener','Pamayahan','Rambatan Kulon','Sindangkerta','Waru') NOT NULL,
+  `kelurahan` enum('Bojongslawi','Kiajaran Kulon','Kiajaran Wetan','Langut','Lanjan','Larangan','Legok','Lohbener','Pamayahan','Rambatan Kulon','Sindangkerta','Waru') DEFAULT NULL,
   `nama_daerah` varchar(255) NOT NULL,
   `latitude` varchar(255) NOT NULL,
   `longitude` varchar(255) NOT NULL,
@@ -56,7 +56,6 @@ CREATE TABLE `maps` (
 --
 
 INSERT INTO `maps` (`id`, `kelurahan`, `nama_daerah`, `latitude`, `longitude`, `jenis_kejahatan`, `gambar`, `status`) VALUES
-(23, 'Bojongslawi', 'jalan raya slaur', '-6.4151146', '108.2594006', 'curanmor', '1744394233_e1df7678be4c3fa0ce89.png', 'diterima'),
 (25, 'Sindangkerta', 'sindang', '-6.407893', '108.256797', 'begal', '1744798728_a631582e9ed75f58d318.jpg', 'diterima'),
 (28, 'Pamayahan', 'jalan pamayahan', '-6.398401', '108.283808', 'perampokan', '1744819850_6ba7c08c5421288c2161.jpg', 'diterima'),
 (29, 'Lohbener', 'celeng', '-6.401054', '108.275958', 'tawuran', '1744819909_fe453dec8ee3df1efb90.png', 'diterima'),
@@ -64,7 +63,9 @@ INSERT INTO `maps` (`id`, `kelurahan`, `nama_daerah`, `latitude`, `longitude`, `
 (47, 'Larangan', 'larangan', '-6.404579', '108.225994', 'begal', '1746433621_6c4e174e68f69e03dec3.png', 'diterima'),
 (48, 'Legok', 'jalan baru', '-6.419881', '108.275440', 'begal', '1746626915_7fcf6eafb3227a8ed0c2.png', 'diterima'),
 (49, 'Kiajaran Kulon', 'wanguk', '-6.407879 ', '108.251600', 'curanmor', '1747316054_49ffb89130a9fac4a596.jpeg', 'diterima'),
-(55, 'Larangan', 'pantura larangan ', '-6.407934', '108.253530', 'perampokan', '1747820382_a048cafbf3081869478d.png', 'diterima');
+(55, 'Larangan', 'pantura larangan ', '-6.407934', '108.253530', 'perampokan', '1747820382_a048cafbf3081869478d.png', 'diterima'),
+(56, 'Waru', 'waru lor', '-6.423006', '108.249626', 'curanmor', '1748016456_d1ad14614021a96fb52c.png', 'pending'),
+(57, 'Waru', 'waru', '-6.417650', '108.255233', 'curanmor', 'danger.png', 'pending');
 
 -- --------------------------------------------------------
 
@@ -159,7 +160,7 @@ ALTER TABLE `connections`
 -- AUTO_INCREMENT untuk tabel `maps`
 --
 ALTER TABLE `maps`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
 
 --
 -- AUTO_INCREMENT untuk tabel `migrations`

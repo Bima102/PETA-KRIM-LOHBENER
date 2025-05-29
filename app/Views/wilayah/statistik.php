@@ -25,31 +25,69 @@
                 <strong>curanmor</strong>, <strong>perampokan</strong>, <strong>begal</strong>, dan <strong>tawuran</strong>. 
                 Data ini berguna untuk mengidentifikasi jenis kejahatan yang paling sering terjadi, sehingga dapat membantu dalam pengambilan kebijakan pencegahan dan peningkatan kewaspadaan masyarakat.
             </div>
-            
 
             <!-- Wilayah Rawan -->
             <div class="mb-5">
-                <div class="table-responsive">
-                <!-- Filter Jenis Kejahatan (Diperindah) -->
-                    <form method="GET" action="<?= base_url('/statistik') ?>" class="bg-white p-3 rounded-3 shadow-sm d-flex align-items-center gap-3 flex-wrap">
-                        <label for="jenis_kejahatan" class="form-label fw-semibold mb-0">
-                            <i class="bi bi-funnel-fill me-2 text-primary"></i>Filter Kejahatan:
-                        </label>
-                        <select name="jenis_kejahatan" id="jenis_kejahatan" class="form-select w-auto">
-                            <option value="">Semua</option>
-                            <?php if (isset($jenisList)): ?>
-                                <?php foreach ($jenisList as $jenis): ?>
-                                    <option value="<?= esc($jenis->jenis_kejahatan) ?>"
-                                        <?= $jenisDipilih == $jenis->jenis_kejahatan ? 'selected' : '' ?>>
-                                        <?= ucfirst($jenis->jenis_kejahatan) ?>
-                                    </option>
-                                <?php endforeach ?>
-                            <?php endif ?>
-                        </select>
-                        <button type="submit" class="btn btn-primary">
+                <!-- Filter Laporan -->
+                <div class="mb-4">
+                    <form id="filterForm" method="get" action="<?= base_url('/statistik') ?>" class="bg-white p-3 rounded-3 shadow-sm d-flex align-items-center gap-3 flex-wrap">
+                        <div class="d-flex align-items-center gap-2">
+                            <label for="tahun" class="form-label fw-semibold mb-0">
+                                <i class="bi bi-calendar-year me-2 text-primary"></i>Tahun:
+                            </label>
+                            <select name="tahun" id="tahun" class="form-control fw-bold p-2 rounded-3" onchange="this.form.submit()">
+                                <option value="">-- Pilih Tahun --</option>
+                                <?php
+                                $currentYear = date('Y');
+                                for ($i = $currentYear; $i >= $currentYear - 5; $i--) {
+                                    $selected = ($i == (int)$tahun) ? 'selected' : '';
+                                    echo "<option value='$i' $selected>$i</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <label for="bulan" class="form-label fw-semibold mb-0">
+                                <i class="bi bi-calendar-month me-2 text-primary"></i>Bulan:
+                            </label>
+                            <select name="bulan" id="bulan" class="form-control fw-bold p-2 rounded-3" onchange="this.form.submit()">
+                                <option value="">-- Pilih Bulan --</option>
+                                <?php
+                                $bulanList = [
+                                    '01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April',
+                                    '05' => 'Mei', '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus',
+                                    '09' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember'
+                                ];
+                                foreach ($bulanList as $key => $value) {
+                                    $selected = ($key == $bulan) ? 'selected' : '';
+                                    echo "<option value='$key' $selected>$value</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <label for="jenis_kejahatan" class="form-label fw-semibold mb-0">
+                                <i class="bi bi-funnel-fill me-2 text-primary"></i>Jenis Kejahatan:
+                            </label>
+                            <select name="jenis_kejahatan" id="jenis_kejahatan" class="form-control fw-bold p-2 rounded-3">
+                                <option value="">Semua</option>
+                                <?php if (isset($jenisList)): ?>
+                                    <?php foreach ($jenisList as $jenis): ?>
+                                        <option value="<?= esc($jenis->jenis_kejahatan) ?>"
+                                            <?= $jenisDipilih == $jenis->jenis_kejahatan ? 'selected' : '' ?>>
+                                            <?= ucfirst($jenis->jenis_kejahatan) ?>
+                                        </option>
+                                    <?php endforeach ?>
+                                <?php endif ?>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary fw-bold">
                             <i class="bi bi-search me-1"></i> Tampilkan
                         </button>
                     </form>
+                </div>
+
+                <div class="table-responsive">
                     <table class="table table-striped table-bordered">
                         <thead class="table-dark">
                             <tr>
@@ -60,14 +98,23 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($rankingData as $i => $row): ?>
-                            <tr>
-                                <td><?= $i + 1 ?></td>
-                                <td><?= esc($row->wilayah) ?></td>
-                                <td><?= esc($row->jenis_kejahatan) ?></td>
-                                <td><?= esc($row->total) ?></td>
-                            </tr>
-                            <?php endforeach ?>
+                            <?php if (empty($rankingData)): ?>
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted py-4">
+                                        <i class="fas fa-folder-open fa-2x mb-2 d-block"></i>
+                                        Belum ada data untuk periode ini.
+                                    </td>
+                                </tr>
+                            <?php else: ?>
+                                <?php foreach ($rankingData as $i => $row): ?>
+                                    <tr>
+                                        <td><?= $i + 1 ?></td>
+                                        <td><?= esc($row->wilayah) ?></td>
+                                        <td><?= ucfirst(esc($row->jenis_kejahatan)) ?></td>
+                                        <td><?= esc($row->total) ?></td>
+                                    </tr>
+                                <?php endforeach ?>
+                            <?php endif ?>
                         </tbody>
                     </table>
                 </div>

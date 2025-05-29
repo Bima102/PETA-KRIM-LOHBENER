@@ -16,24 +16,64 @@ class Wilayah extends BaseController
 
     public function wilayah_data_read()
     {
+        // Ambil data untuk tabel utama (data wilayah yang diterima)
         $this->builder->select('maps.nama_daerah, maps.kelurahan, maps.jenis_kejahatan, maps.latitude, maps.longitude, maps.gambar, maps.id'); 
-        // Hapus alias 'as kelnama', gunakan 'kelurahan' langsung
-    
-        // Filter data utama hanya untuk status 'diterima'
         $this->builder->where('maps.status', 'diterima');
+        
+        // Filter berdasarkan tahun atau bulan
+        $tahun = $this->request->getGet('tahun');
+        $bulan = $this->request->getGet('bulan');
+        if ($tahun) {
+            $this->builder->where('YEAR(created_at)', $tahun);
+            if ($bulan) {
+                $this->builder->where('MONTH(created_at)', $bulan);
+            }
+        } elseif ($bulan) {
+            $this->builder->where('MONTH(created_at)', $bulan);
+            $this->builder->where('YEAR(created_at)', date('Y'));
+        }
+
         $query = $this->builder->get();
-    
+        $content = $query->getResult();
+
+        // Ambil data agregat untuk laporan cetak
+        $laporanBuilder = $this->db->table('maps');
+        $laporanBuilder->select("kelurahan,
+            SUM(CASE WHEN jenis_kejahatan = 'curanmor' THEN 1 ELSE 0 END) as curanmor,
+            SUM(CASE WHEN jenis_kejahatan = 'perampokan' THEN 1 ELSE 0 END) as perampokan,
+            SUM(CASE WHEN jenis_kejahatan = 'begal' THEN 1 ELSE 0 END) as begal,
+            SUM(CASE WHEN jenis_kejahatan = 'tawuran' THEN 1 ELSE 0 END) as tawuran,
+            (SUM(CASE WHEN jenis_kejahatan = 'curanmor' THEN 1 ELSE 0 END) +
+             SUM(CASE WHEN jenis_kejahatan = 'perampokan' THEN 1 ELSE 0 END) +
+             SUM(CASE WHEN jenis_kejahatan = 'begal' THEN 1 ELSE 0 END) +
+             SUM(CASE WHEN jenis_kejahatan = 'tawuran' THEN 1 ELSE 0 END)) as total_kejahatan");
+        $laporanBuilder->where('status', 'diterima');
+        if ($tahun) {
+            $laporanBuilder->where('YEAR(created_at)', $tahun);
+            if ($bulan) {
+                $laporanBuilder->where('MONTH(created_at)', $bulan);
+            }
+        } elseif ($bulan) {
+            $laporanBuilder->where('MONTH(created_at)', $bulan);
+            $laporanBuilder->where('YEAR(created_at)', date('Y'));
+        }
+        $laporanBuilder->groupBy('kelurahan');
+        $laporanData = $laporanBuilder->get()->getResult();
+
         $dataModel = new M_Wilayah();
         $data = [
-            'title'      => 'Data Wilayah',
-            'content'    => $query->getResult(), // Hanya data dengan status 'diterima'
-            'kelurahan'  => $dataModel->getKelurahanEnum(), // Gunakan daftar enum untuk dropdown
-            'pengaduan'  => $dataModel->get_pending_laporan()->getResult(), // Data dengan status 'pending'
-            'validation' => \Config\Services::validation()
+            'title'       => 'Data Wilayah',
+            'content'     => $content,
+            'laporanData' => $laporanData, // Data untuk laporan cetak
+            'kelurahan'   => $dataModel->getKelurahanEnum(),
+            'pengaduan'   => $dataModel->get_pending_laporan()->getResult(),
+            'validation'  => \Config\Services::validation(),
+            'tahun'       => $tahun,
+            'bulan'       => $bulan
         ];
     
         echo view('templates/header', $data);
-        echo view('wilayah/wilayah');
+        echo view('wilayah/wilayah', $data);
     }
     
     public function wilayah_data_save()
@@ -59,13 +99,14 @@ class Wilayah extends BaseController
         }
 
         $dataMaster = [
-            'kelurahan'         => $this->request->getPost('kelurahan'), // Ganti kelurahan_id dengan kelurahan
+            'kelurahan'         => $this->request->getPost('kelurahan'),
             'nama_daerah'       => $this->request->getPost('nama_daerah'),
             'latitude'          => $this->request->getPost('latitude'),
             'longitude'         => $this->request->getPost('longitude'),
             'jenis_kejahatan'   => $this->request->getPost('jenis_kejahatan'), 
             'gambar'            => $namaSampul,
-            'status'            => 'pending' // Set status default sebagai 'pending'
+            'status'            => 'pending',
+            'created_at'        => date('Y-m-d H:i:s')
         ];
 
         $modelMasterData = new M_Wilayah();
@@ -96,7 +137,6 @@ class Wilayah extends BaseController
         $dataModel = new M_Wilayah();
 
         $this->builder->select('maps.nama_daerah, maps.kelurahan, maps.jenis_kejahatan, maps.latitude, maps.longitude, maps.gambar, maps.id'); 
-        // Hapus alias 'as kelnama', gunakan 'kelurahan' langsung
         $query = $this->builder->get();
 
         $data = [
@@ -104,7 +144,7 @@ class Wilayah extends BaseController
             'validation'  => \Config\Services::validation(),
             'wilayah'     => $dataModel->get_wilayah($id),
             'wilayahkec'  => $query->getResult(),
-            'kelurahan'   => $dataModel->getKelurahanEnum(), // Gunakan daftar enum untuk dropdown
+            'kelurahan'   => $dataModel->getKelurahanEnum(),
         ];        
 
         echo view('templates/header', $data);
@@ -127,7 +167,7 @@ class Wilayah extends BaseController
         $dataModel = new M_Wilayah();
         $dataModel->save([
             'id'              => $id,
-            'kelurahan'       => $this->request->getVar('kelurahan'), // Ganti kelurahan_id dengan kelurahan
+            'kelurahan'       => $this->request->getVar('kelurahan'),
             'nama_daerah'     => $this->request->getVar('nama_daerah'),
             'latitude'        => $this->request->getVar('latitude'),
             'longitude'       => $this->request->getVar('longitude'),
@@ -158,7 +198,7 @@ class Wilayah extends BaseController
         $dataModel = new M_Wilayah();
         $data = [
             'title' => 'Form Pengaduan',
-            'kelurahan' => $dataModel->getKelurahanEnum() // Gunakan daftar enum untuk dropdown
+            'kelurahan' => $dataModel->getKelurahanEnum()
         ];
         echo view('templates/header', $data);
         echo view('wilayah/aduan');
@@ -174,13 +214,14 @@ class Wilayah extends BaseController
         }
 
         $this->db->table('maps')->insert([
-            'kelurahan'       => $this->request->getPost('kelurahan'), // Ganti kelurahan_id dengan kelurahan
+            'kelurahan'       => $this->request->getPost('kelurahan'),
             'nama_daerah'     => $this->request->getPost('nama_daerah'),
             'latitude'        => $this->request->getPost('latitude'),
             'longitude'       => $this->request->getPost('longitude'),
             'jenis_kejahatan' => $this->request->getPost('jenis_kejahatan'),
             'gambar'          => $namaGambar,
-            'status'          => 'pending' // Pastikan status default adalah 'pending'
+            'status'          => 'pending',
+            'created_at'      => date('Y-m-d H:i:s')
         ]);
 
         return redirect()->to('/wilayah/aduan')->with('msg', 'Laporan berhasil dikirim untuk validasi.');
@@ -204,38 +245,61 @@ class Wilayah extends BaseController
     {
         $model = new M_Wilayah();
         $jenis = $this->request->getGet('jenis_kejahatan');
+        $tahun = $this->request->getGet('tahun');
+        $bulan = $this->request->getGet('bulan');
 
-        if ($jenis) {
-            $statistik = $model->where('jenis_kejahatan', $jenis)
-                               ->where('status', 'diterima') // Hanya data yang diterima
-                               ->select('jenis_kejahatan, COUNT(*) as total')
-                               ->groupBy('jenis_kejahatan')
-                               ->findAll();
+        // Query untuk statistik
+        $statistikBuilder = $this->db->table('maps');
+        $statistikBuilder->select('jenis_kejahatan, COUNT(*) as total')
+            ->where('status', 'diterima')
+            ->groupBy('jenis_kejahatan')
+            ->orderBy('total', 'DESC');
 
-            $rankingData = $model->where('jenis_kejahatan', $jenis)
-                                 ->where('status', 'diterima') // Hanya data yang diterima
-                                 ->select('nama_daerah as wilayah, jenis_kejahatan, COUNT(*) as total')
-                                 ->groupBy('nama_daerah, jenis_kejahatan')
-                                 ->orderBy('total', 'DESC')
-                                 ->findAll();
-        } else {
-            $statistik = $model->getStatistikKejahatan();
-            $rankingData = $model->getRankingWilayah();
+        // Query untuk ranking
+        $rankingBuilder = $this->db->table('maps');
+        $rankingBuilder->select('nama_daerah as wilayah, jenis_kejahatan, COUNT(*) as total')
+            ->where('status', 'diterima')
+            ->groupBy('nama_daerah, jenis_kejahatan')
+            ->orderBy('total', 'DESC');
+
+        // Terapkan filter tahun dan bulan
+        if ($tahun) {
+            $statistikBuilder->where('YEAR(created_at)', $tahun);
+            $rankingBuilder->where('YEAR(created_at)', $tahun);
+            if ($bulan) {
+                $statistikBuilder->where('MONTH(created_at)', $bulan);
+                $rankingBuilder->where('MONTH(created_at)', $bulan);
+            }
+        } elseif ($bulan) {
+            $statistikBuilder->where('MONTH(created_at)', $bulan)
+                ->where('YEAR(created_at)', date('Y'));
+            $rankingBuilder->where('MONTH(created_at)', $bulan)
+                ->where('YEAR(created_at)', date('Y'));
         }
 
-        // Ambil semua jenis kejahatan yang tersedia
+        // Terapkan filter jenis kejahatan
+        if ($jenis) {
+            $statistikBuilder->where('jenis_kejahatan', $jenis);
+            $rankingBuilder->where('jenis_kejahatan', $jenis);
+        }
+
+        $statistik = $statistikBuilder->get()->getResult();
+        $rankingData = $rankingBuilder->get()->getResult();
+
         $jenisList = $model->select('jenis_kejahatan')
-                           ->distinct()
-                           ->where('status', 'diterima') // Hanya data yang diterima
-                           ->orderBy('jenis_kejahatan', 'asc')
-                           ->findAll();
+            ->distinct()
+            ->where('status', 'diterima')
+            ->orderBy('jenis_kejahatan', 'asc')
+            ->findAll();
 
         $data = [
             'title'         => 'Statistik Kriminalitas',
             'statistik'     => $statistik,
             'rankingData'   => $rankingData,
             'jenisList'     => $jenisList,
-            'jenisDipilih'  => $jenis
+            'jenisDipilih'  => $jenis,
+            'tahun'         => $tahun,
+            'bulan'         => $bulan
         ];
 
         echo view('templates/header', $data);

@@ -61,7 +61,7 @@ $submit = [
           <table class="table table-bordered table-sm text-center align-middle">
             <thead class="bg-warning text-dark">
               <tr>
-                <th>Kelurahan</th> <!-- Hapus Kecamatan -->
+                <th>Kelurahan</th>
                 <th>Detail patokan Tempat/Jalan/Gang Kejadian</th>
                 <th>Latitude</th>
                 <th>Longitude</th>
@@ -73,7 +73,7 @@ $submit = [
             <tbody>
               <?php foreach ($pengaduan as $row): ?>
                 <tr>
-                  <td><?= $row->kelurahan ?></td> <!-- Sesuai dengan perubahan di controller -->
+                  <td><?= $row->kelurahan ?></td>
                   <td class="text-nowrap"><?= $row->nama_daerah ?></td>
                   <td class="text-nowrap">
                     <a href="https://www.google.com/maps?q=<?= $row->latitude ?>,<?= $row->longitude ?>" target="_blank">
@@ -97,13 +97,39 @@ $submit = [
           </table>
         </div>
 
-        <!-- Tombol Tambah dan Cetak -->
-        <div class="d-flex justify-content-center my-4 gap-3">
+        <!-- Filter, Cetak, dan Tambah Data di Pojok Kiri -->
+        <div class="d-flex justify-content-start align-items-center my-4">
+          <form id="filterForm" method="get" action="" class="d-flex gap-2 me-3">
+            <select name="tahun" id="tahun" class="form-control fw-bold p-2 rounded-3" onchange="this.form.submit()">
+              <option value="">-- Pilih Tahun --</option>
+              <?php
+              $currentYear = date('Y');
+              for ($i = $currentYear; $i >= $currentYear - 5; $i--) {
+                $selected = ($i == (int)$tahun) ? 'selected' : '';
+                echo "<option value='$i' $selected>$i</option>";
+              }
+              ?>
+            </select>
+            <select name="bulan" id="bulan" class="form-control fw-bold p-2 rounded-3" onchange="this.form.submit()">
+              <option value="">-- Pilih Bulan --</option>
+              <?php
+              $bulanList = [
+                '01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April',
+                '05' => 'Mei', '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus',
+                '09' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember'
+              ];
+              foreach ($bulanList as $key => $value) {
+                $selected = ($key == $bulan) ? 'selected' : '';
+                echo "<option value='$key' $selected>$value</option>";
+              }
+              ?>
+            </select>
+          </form>
+          <button type="button" class="btn btn-success fw-bold shadow-sm px-4 py-2 me-3" onclick="cetakLaporan()">
+            <i class="fas fa-print me-1"></i> Cetak
+          </button>
           <button type="button" class="btn btn-primary fw-bold shadow-sm px-4 py-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
             <i class="fas fa-plus me-1"></i> Tambah Data
-          </button>
-          <button type="button" class="btn btn-success fw-bold shadow-sm px-4 py-2" onclick="cetakLaporan()">
-            <i class="fas fa-print me-1"></i> Cetak
           </button>
         </div>
 
@@ -113,7 +139,7 @@ $submit = [
             <thead class="bg-dark text-white text-center">
               <tr class="fw-bold">
                 <th style="width: 5%;">No</th>
-                <th style="width: 25%;">Kelurahan</th> <!-- Hapus Kecamatan -->
+                <th style="width: 25%;">Kelurahan</th>
                 <th>Detail patokan Tempat/Jalan/Gang Kejadian</th>
                 <th style="width: 15%;">Aksi</th>
               </tr>
@@ -130,7 +156,7 @@ $submit = [
                 <?php foreach ($content as $row => $value) : ?>
                   <tr class="border-bottom border-light">
                     <td class="fw-semibold"><?= $row + 1; ?></td>
-                    <td><?= $value->kelurahan; ?></td> <!-- Sesuai dengan perubahan di controller -->
+                    <td><?= $value->kelurahan; ?></td>
                     <td><?= $value->nama_daerah; ?></td>
                     <td>
                       <a href="/detailWilayah/<?= $value->id; ?>" class="btn btn-sm btn-primary fw-bold px-3">
@@ -168,7 +194,7 @@ $submit = [
             <select name="kelurahan" id="kelurahan" class="form-control fw-bold p-2 rounded-3" required>
               <option value="" disabled selected>-- Pilih Kelurahan --</option>
               <?php foreach ($kelurahan as $kel): ?>
-                <option value="<?= $kel; ?>"><?= $kel; ?></option> <!-- Gunakan daftar enum -->
+                <option value="<?= $kel; ?>"><?= $kel; ?></option>
               <?php endforeach; ?>
             </select>
           </div>
@@ -229,70 +255,100 @@ function cetakLaporan() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
+  // Debugging: Log untuk memastikan fungsi dipanggil
+  console.log("Fungsi cetakLaporan dipanggil");
+
   // Header
   doc.setFontSize(14);
   doc.setFont("helvetica", "bold");
-  doc.text('LAPORAN KEJAHATAN WILAYAH KEAMANAN POLSEK LOHBENER', 105, 15, { align: 'center' });
+  doc.text('LAPORAN KRIMINALITAS POLSEK LOHBENER', 105, 15, { align: 'center' });
   doc.setFontSize(12);
   doc.setFont("helvetica", "normal");
+
+  // Periode
+  <?php
+  $periode = '';
+  if ($tahun && !$bulan) {
+    $periode = "Tahun $tahun";
+  } elseif ($bulan && $tahun) {
+    $bulanList = ['01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April', '05' => 'Mei', '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus', '09' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember'];
+    $periode = $bulanList[$bulan] . " $tahun";
+  }
+  ?>
+  doc.text('Periode: <?= $periode ? : date('Y') ?>', 105, 25, { align: 'center' });
 
   // Tabel Header
   doc.setFontSize(10);
   doc.setFont("helvetica", "bold");
-  doc.setFillColor(255, 204, 0); // Warna kuning untuk header
-  doc.rect(20, 54, 170, 8, 'F');
-  doc.text('NO', 22, 60);
-  doc.text('KELURAHAN', 35, 60);
-  doc.text('TEMPAT/JALAN/GANG KEJADIAN', 75, 60);
-  doc.text('JENIS KEJAHATAN', 140, 60);
+  doc.setFillColor(255, 204, 0);
+  doc.rect(20, 35, 170, 8, 'F');
+  doc.text('No', 22, 41);
+  doc.text('Kelurahan', 50, 41);
+  doc.text('Curanmor', 70, 41);
+  doc.text('Perampokan', 90, 41);
+  doc.text('Begal', 110, 41);
+  doc.text('Tawuran', 130, 41);
+  doc.text('Total Kejahatan', 150, 41);
 
   // Garis tabel header
   doc.setLineWidth(0.2);
-  doc.line(20, 62, 190, 62);
+  doc.line(20, 43, 190, 43);
 
-  // Isi tabel
+  // Isi tabel (menggunakan laporanData dari controller)
   const data = [
-    <?php foreach ($content as $row => $value) : ?>
-      {
-        no: <?= $row + 1 ?>,
-        kelurahan: '<?= $value->kelurahan ?>',
-        nama_daerah: '<?= $value->nama_daerah ?>',
-        jenis_kejahatan: '<?= ucfirst($value->jenis_kejahatan) ?>'
-      },
-    <?php endforeach; ?>
+    <?php
+    if (!empty($laporanData)) {
+      $no = 1;
+      foreach ($laporanData as $row) {
+        echo "{ no: $no, kelurahan: '" . addslashes($row->kelurahan) . "', curanmor: {$row->curanmor}, perampokan: {$row->perampokan}, begal: {$row->begal}, tawuran: {$row->tawuran}, total_kejahatan: {$row->total_kejahatan} },\n";
+        $no++;
+      }
+    }
+    ?>
   ];
 
-  let y = 68;
-  doc.setFont("helvetica", "normal");
-  data.forEach((item, index) => {
-    // Warna abu-abu terang untuk baris genap
-    if (index % 2 === 0) {
-      doc.setFillColor(240, 240, 240);
-      doc.rect(20, y - 6, 170, 8, 'F');
+  // Debugging: Log data yang dikirim ke JavaScript
+  console.log("Data untuk laporan:", data);
+
+  if (data.length === 0) {
+    doc.text('Tidak ada data untuk periode ini.', 105, 50, { align: 'center' });
+  } else {
+    let y = 49;
+    doc.setFont("helvetica", "normal");
+    data.forEach((item, index) => {
+      if (index % 2 === 0) {
+        doc.setFillColor(240, 240, 240);
+        doc.rect(20, y - 6, 170, 8, 'F');
+      }
+      doc.text(String(item.no), 22, y);
+      doc.text(item.kelurahan, 50, y);
+      doc.text(String(item.curanmor), 70, y);
+      doc.text(String(item.perampokan), 90, y);
+      doc.text(String(item.begal), 110, y);
+      doc.text(String(item.tawuran), 130, y);
+      doc.text(String(item.total_kejahatan), 150, y);
+      y += 8;
+    });
+
+    // Garis tabel
+    for (let i = 49; i <= y - 8; i += 8) {
+      doc.line(20, i, 190, i);
     }
-    doc.text(String(item.no), 22, y);
-    doc.text(item.kelurahan, 35, y);
-    doc.text(item.nama_daerah, 75, y);
-    doc.text(item.jenis_kejahatan, 140, y);
-    y += 8;
-  });
+    doc.line(20, 35, 20, y - 8);
+    doc.line(45, 35, 45, y - 8);
+    doc.line(65, 35, 65, y - 8);
+    doc.line(85, 35, 85, y - 8);
+    doc.line(105, 35, 105, y - 8);
+    doc.line(125, 35, 125, y - 8);
+    doc.line(145, 35, 145, y - 8);
+    doc.line(190, 35, 190, y - 8);
 
-  // Garis tabel
-  for (let i = 68; i <= y - 8; i += 8) {
-    doc.line(20, i, 190, i);
+    // Footer
+    doc.text('Indramayu, <?= date('d M Y') ?>', 150, y + 20);
+    doc.text('Kepala Polisi Sektor Lohbener,', 150, y + 30);
+    doc.text('NIP. 1234567890', 150, y + 50);
   }
-  doc.line(20, 54, 20, y - 8);   // Kolom NO
-  doc.line(30, 54, 30, y - 8);   // Kolom NO
-  doc.line(65, 54, 65, y - 8);   // Kolom Kelurahan
-  doc.line(130, 54, 130, y - 8); // Kolom Nama Daerah
-  doc.line(190, 54, 190, y - 8); // Kolom Jenis Kejahatan
 
-  // Footer (Update tanggal sesuai hari ini)
-  doc.text('Indramayu, <?= date('d M Y', strtotime('2025-05-21')) ?>', 150, y + 20);
-  doc.text('Kepala Polisi Sektor Lohbener,', 150, y + 30);
-  doc.text('NIP. 1234567890', 150, y + 50);
-
-  // Simpan PDF
-  doc.save('Laporan_Wilayah_Lohbener.pdf');
+  doc.save('Laporan_Kriminalitas_Lohbener.pdf');
 }
 </script>

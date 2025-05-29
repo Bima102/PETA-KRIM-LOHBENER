@@ -9,60 +9,82 @@ class M_Wilayah extends Model
     protected $table = 'maps';
     protected $primaryKey = 'id';
     protected $allowedFields = [
-        'id', 'nama_daerah', 'kelurahan', // Hapus kecamatan_id dan kelurahan_id
-        'latitude', 'longitude', 'jenis_kejahatan', 'gambar', 'status'
+        'id', 'nama_daerah', 'kelurahan',
+        'latitude', 'longitude', 'jenis_kejahatan', 'gambar', 'status', 'created_at'
     ];
     protected $returnType = 'App\Entities\Wilayah';
     protected $useTimestamps = false;
 
-    // Hapus fungsi get_data_kecamatan karena tabel kecamatan sudah dihapus
-    // public function get_data_kecamatan() { ... }
-
-    // Hapus fungsi get_data_kelurahan karena tabel kelurahan sudah dihapus
-    // public function get_data_kelurahan() { ... }
-
-    // Fungsi baru untuk mengambil daftar nilai enum dari kolom kelurahan
     public function getKelurahanEnum()
     {
         $query = $this->db->query("SHOW COLUMNS FROM maps LIKE 'kelurahan'");
         $row = $query->getRow();
-        // Ambil daftar enum dari hasil query
         preg_match_all("/'([^']+)'/", $row->Type, $matches);
-        return $matches[1]; // Daftar nilai enum: ['Bojongslawi', 'Kiajaran Kulon', ...]
+        return $matches[1];
     }
 
-    // Ambil data wilayah, bisa all atau by ID
     public function get_wilayah($id = false)
     {
         if ($id === false) {
-            return $this->findAll(); // Hapus filter kecamatan_id
+            return $this->findAll();
+        }
+        return $this->where('id', $id)->first();
+    }
+
+    public function getStatistikKejahatan($tahun = null, $bulan = null, $jenis = null)
+    {
+        $builder = $this->db->table('maps');
+        $builder->select('jenis_kejahatan, COUNT(*) as total')
+            ->where('status', 'diterima')
+            ->groupBy('jenis_kejahatan')
+            ->orderBy('total', 'DESC');
+
+        if ($tahun) {
+            $builder->where('YEAR(created_at)', $tahun);
+            if ($bulan) {
+                $builder->where('MONTH(created_at)', $bulan);
+            }
+        } elseif ($bulan) {
+            $builder->where('MONTH(created_at)', $bulan)
+                ->where('YEAR(created_at)', date('Y'));
         }
 
-        return $this->where('id', $id)->first(); // Hapus filter kecamatan_id
+        if ($jenis) {
+            $builder->where('jenis_kejahatan', $jenis);
+        }
+
+        return $builder->get()->getResult();
     }
 
-    // Statistik jumlah kejahatan berdasarkan jenis
-    public function getStatistikKejahatan()
+    public function getRankingWilayah($tahun = null, $bulan = null, $jenis = null)
     {
-        return $this->select('jenis_kejahatan, COUNT(*) as total')
-            ->groupBy('jenis_kejahatan')
-            ->orderBy('total', 'DESC')
-            ->findAll(); // Hapus filter kecamatan_id
-    }
-
-    // Ranking wilayah rawan berdasarkan jumlah kejahatan per nama daerah
-    public function getRankingWilayah()
-    {
-        return $this->select('nama_daerah as wilayah, jenis_kejahatan, COUNT(*) as total')
+        $builder = $this->db->table('maps');
+        $builder->select('nama_daerah as wilayah, jenis_kejahatan, COUNT(*) as total')
+            ->where('status', 'diterima')
             ->groupBy('nama_daerah, jenis_kejahatan')
-            ->orderBy('total', 'DESC')
-            ->findAll(); // Hapus filter kecamatan_id
+            ->orderBy('total', 'DESC');
+
+        if ($tahun) {
+            $builder->where('YEAR(created_at)', $tahun);
+            if ($bulan) {
+                $builder->where('MONTH(created_at)', $bulan);
+            }
+        } elseif ($bulan) {
+            $builder->where('MONTH(created_at)', $bulan)
+                ->where('YEAR(created_at)', date('Y'));
+        }
+
+        if ($jenis) {
+            $builder->where('jenis_kejahatan', $jenis);
+        }
+
+        return $builder->get()->getResult();
     }
 
     public function get_pending_laporan()
     {
         return $this->db->table('maps')
-            ->select('maps.*') // Hapus join dengan kecamatan dan kelurahan
+            ->select('maps.*')
             ->where('maps.status', 'pending')
             ->get();
     }

@@ -57,7 +57,7 @@
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
-            attribution: '© <a href="https://openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>'
+            attribution: '© <a href="https://openstreet.org/copyright" target="_blank">OpenStreetMap</a>'
         }).addTo(map);
 
         // Definisi icon sesuai warna kejahatan
@@ -96,9 +96,10 @@
             })
         };
 
-        const dataWilayah = <?= json_encode($dataWilayah); ?>;
+        // Data wilayah hanya yang status 'diterima'
+        const dataWilayah = <?= json_encode($dataWilayah); ?>.filter(item => item.status === 'diterima');
 
-        // Tambahkan marker untuk setiap titik rawan
+        // Tambahkan marker untuk setiap titik rawan yang diterima
         dataWilayah.forEach(row => {
             let icon = icons.default;
             const jenis = row.jenis_kejahatan.toLowerCase();
