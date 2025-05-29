@@ -91,8 +91,8 @@ $long = ['name' => 'longitude', 'id' => 'longitude', 'class' => 'form-control fw
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.js"></script>
 
 <script>
-  // Inisialisasi Mapbox dengan access token
-  mapboxgl.accessToken = 'pk.eyJ1IjoiYWJpbTEyIiwiYSI6ImNtYjZmaTBzYzAwOXQycXB0MGh3YTJzZWUifQ.IG31kSLXsRVUIdPfiF517g';
+  // Inisialisasi Mapbox dengan access token dari PHP
+  mapboxgl.accessToken = '<?php echo env('MAPBOX_TOKEN'); ?>';
   let map;
   let marker;
 
@@ -162,7 +162,7 @@ $long = ['name' => 'longitude', 'id' => 'longitude', 'class' => 'form-control fw
   }
 
   function reverseGeocode(lat, lng) {
-    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${mapboxgl.accessToken}&language=id&types=address,poi,place,neighborhood,locality,postcode`;
+    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=<?php echo env('MAPBOX_TOKEN'); ?>&language=id&types=address,poi,place,neighborhood,locality,postcode`;
 
     fetch(url)
       .then(response => response.json())

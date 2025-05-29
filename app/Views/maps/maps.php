@@ -48,8 +48,8 @@
     <div id="maps"></div>
 
     <script>
-        // Inisialisasi Mapbox dengan access token
-        mapboxgl.accessToken = 'pk.eyJ1IjoiYWJpbTEyIiwiYSI6ImNtYjZmaTBzYzAwOXQycXB0MGh3YTJzZWUifQ.IG31kSLXsRVUIdPfiF517g';
+        // Inisialisasi Mapbox dengan access token dari PHP
+        mapboxgl.accessToken = '<?php echo env('MAPBOX_TOKEN'); ?>';
 
         // Inisialisasi peta
         function initMap() {
@@ -102,10 +102,6 @@
             });
 
             // Tambahkan legenda
-            const legend = new mapboxgl.LngLatBoundsControl({
-                position: 'bottom-right'
-            });
-
             map.on('load', () => {
                 const legendDiv = document.createElement('div');
                 legendDiv.className = 'info legend';
@@ -136,4 +132,4 @@
         // Inisialisasi peta saat halaman dimuat
         window.onload = initMap;
     </script>
-<?= $this->endSection(); ?> 
+<?= $this->endSection(); ?>

@@ -44,8 +44,9 @@ $submit = [
       </div>
 
       <div class="card-body p-4">
+        <!-- Notifikasi di bagian atas, di bawah header -->
         <?php if (session()->getFlashdata('msg')) : ?>
-          <div class="alert alert-success shadow-sm fw-bold" role="alert">
+          <div class="alert alert-success shadow-sm fw-bold mt-3" role="alert">
             <i class="fas fa-check-circle me-2 text-success"></i>
             <?= session()->getFlashdata('msg'); ?>
           </div>
@@ -189,7 +190,6 @@ $submit = [
 
       <div class="modal-body p-4">
         <form action="/wilayah_data_save" method="POST" enctype="multipart/form-data">
-
           <!-- Kelurahan -->
           <div class="form-group mb-3">
             <?= form_label('Kelurahan', 'kelurahan'); ?>

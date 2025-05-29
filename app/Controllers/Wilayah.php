@@ -16,6 +16,12 @@ class Wilayah extends BaseController
 
     public function wilayah_data_read()
     {
+        // Cek apakah user sudah login dan memiliki role 'admin'
+        if (!session()->get('isLoggedIn') || session()->get('role') !== 'admin') {
+            session()->setFlashdata('error', 'Anda harus login sebagai admin untuk mengakses halaman ini.');
+            return redirect()->to('/login');
+        }
+
         // Ambil data untuk tabel utama (data wilayah yang diterima)
         $this->builder->select('maps.nama_daerah, maps.kelurahan, maps.jenis_kejahatan, maps.latitude, maps.longitude, maps.gambar, maps.id'); 
         $this->builder->where('maps.status', 'diterima');
@@ -78,6 +84,12 @@ class Wilayah extends BaseController
     
     public function wilayah_data_save()
     {
+        // Cek apakah user sudah login dan memiliki role 'admin'
+        if (!session()->get('isLoggedIn') || session()->get('role') !== 'admin') {
+            session()->setFlashdata('error', 'Anda harus login sebagai admin untuk menambah data.');
+            return redirect()->to('/login');
+        }
+
         if (!$this->validate([
             'gambar' => [
                 'rules' => 'max_size[gambar,1024]|is_image[gambar]|mime_in[gambar,image/jpg,image/jpeg,image/png]',
@@ -118,6 +130,12 @@ class Wilayah extends BaseController
 
     public function wilayah_detail($id)
     {
+        // Cek apakah user sudah login dan memiliki role 'admin'
+        if (!session()->get('isLoggedIn') || session()->get('role') !== 'admin') {
+            session()->setFlashdata('error', 'Anda harus login sebagai admin untuk mengakses halaman ini.');
+            return redirect()->to('/login');
+        }
+
         $dataModel = new M_Wilayah();
         $data = [
             'title' => 'Detail Wilayah',
@@ -131,9 +149,15 @@ class Wilayah extends BaseController
         echo view('templates/header', $data);
         echo view('wilayah/wilayah_detail');
     }
-
+    
     public function wilayah_edit($id)
     {
+        // Cek apakah user sudah login dan memiliki role 'admin'
+        if (!session()->get('isLoggedIn') || session()->get('role') !== 'admin') {
+            session()->setFlashdata('error', 'Anda harus login sebagai admin untuk mengedit data.');
+            return redirect()->to('/login');
+        }
+
         $dataModel = new M_Wilayah();
 
         $this->builder->select('maps.nama_daerah, maps.kelurahan, maps.jenis_kejahatan, maps.latitude, maps.longitude, maps.gambar, maps.id'); 
@@ -153,6 +177,12 @@ class Wilayah extends BaseController
 
     public function wilayahUpdate($id)
     {
+        // Cek apakah user sudah login dan memiliki role 'admin'
+        if (!session()->get('isLoggedIn') || session()->get('role') !== 'admin') {
+            session()->setFlashdata('error', 'Anda harus login sebagai admin untuk memperbarui data.');
+            return redirect()->to('/login');
+        }
+
         $fileGambar = $this->request->getFile('gambar');
         $namaGambar = $this->request->getVar('gambarLama');
 
@@ -181,6 +211,12 @@ class Wilayah extends BaseController
 
     public function wilayahDelete($id)
     {
+        // Cek apakah user sudah login dan memiliki role 'admin'
+        if (!session()->get('isLoggedIn') || session()->get('role') !== 'admin') {
+            session()->setFlashdata('error', 'Anda harus login sebagai admin untuk menghapus data.');
+            return redirect()->to('/login');
+        }
+
         $dataModel = new M_Wilayah();
         $mWilayah = $dataModel->find($id);
     
@@ -195,6 +231,12 @@ class Wilayah extends BaseController
 
     public function aduan()
     {
+        // Cek apakah user sudah login dan memiliki role 'user'
+        if (!session()->get('isLoggedIn') || session()->get('role') !== 'user') {
+            session()->setFlashdata('error', 'Anda harus login sebagai user untuk mengakses halaman ini.');
+            return redirect()->to('/login');
+        }
+
         $dataModel = new M_Wilayah();
         $data = [
             'title' => 'Form Pengaduan',
@@ -206,6 +248,12 @@ class Wilayah extends BaseController
 
     public function aduanSave()
     {
+        // Cek apakah user sudah login dan memiliki role 'user'
+        if (!session()->get('isLoggedIn') || session()->get('role') !== 'user') {
+            session()->setFlashdata('error', 'Anda harus login sebagai user untuk mengirim pengaduan.');
+            return redirect()->to('/login');
+        }
+
         $file = $this->request->getFile('gambar');
         $namaGambar = $file->isValid() ? $file->getRandomName() : 'danger.png';
 
@@ -229,6 +277,12 @@ class Wilayah extends BaseController
 
     public function aduanTerima($id)
     {
+        // Cek apakah user sudah login dan memiliki role 'admin'
+        if (!session()->get('isLoggedIn') || session()->get('role') !== 'admin') {
+            session()->setFlashdata('error', 'Anda harus login sebagai admin untuk menerima laporan.');
+            return redirect()->to('/login');
+        }
+
         $this->db->table('maps')->where('id', $id)->update(['status' => 'diterima']);
         session()->setFlashdata('msg', 'Laporan diterima dan dipindahkan ke data wilayah.');
         return redirect()->to('/wilayah');
@@ -236,6 +290,12 @@ class Wilayah extends BaseController
 
     public function aduanTolak($id)
     {
+        // Cek apakah user sudah login dan memiliki role 'admin'
+        if (!session()->get('isLoggedIn') || session()->get('role') !== 'admin') {
+            session()->setFlashdata('error', 'Anda harus login sebagai admin untuk menolak laporan.');
+            return redirect()->to('/login');
+        }
+
         $this->db->table('maps')->delete(['id' => $id]);
         session()->setFlashdata('msg', 'Laporan ditolak dan dihapus.');
         return redirect()->to('/wilayah');
