@@ -88,8 +88,10 @@ $submit = [
                   <td class="text-nowrap"><?= ucfirst($row->jenis_kejahatan) ?></td>
                   <td><img src="/img/<?= $row->gambar ?>" width="60" class="rounded-3"></td>
                   <td>
-                    <a href="/wilayah/aduanTerima/<?= $row->id ?>" class="btn btn-success btn-sm">Terima</a>
-                    <a href="/wilayah/aduanTolak/<?= $row->id ?>" class="btn btn-danger btn-sm">Tolak</a>
+                    <div class="d-flex justify-content-center gap-2">
+                      <a href="/wilayah/aduanTerima/<?= $row->id ?>" class="btn btn-success btn-sm">Terima</a>
+                      <a href="/wilayah/aduanTolak/<?= $row->id ?>" class="btn btn-danger btn-sm">Tolak</a>
+                    </div>
                   </td>
                 </tr>
               <?php endforeach ?>
@@ -262,37 +264,39 @@ function cetakLaporan() {
   doc.setFontSize(14);
   doc.setFont("helvetica", "bold");
   doc.text('LAPORAN KRIMINALITAS POLSEK LOHBENER', 105, 15, { align: 'center' });
-  doc.setFontSize(12);
+  doc.setFontSize(10);
   doc.setFont("helvetica", "normal");
 
   // Periode
   <?php
   $periode = '';
   if ($tahun && !$bulan) {
-    $periode = "Tahun $tahun";
+    $periode = "TAHUN $tahun";
   } elseif ($bulan && $tahun) {
-    $bulanList = ['01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April', '05' => 'Mei', '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus', '09' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember'];
+    $bulanList = ['01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April', '05' => 'Mei', '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus', '09' => 'September Keane', '10' => 'Oktober', '11' => 'November', '12' => 'Desember'];
     $periode = $bulanList[$bulan] . " $tahun";
+  } else {
+    $periode = "TAHUN " . date('Y');
   }
   ?>
-  doc.text('Periode: <?= $periode ? : date('Y') ?>', 105, 25, { align: 'center' });
+  doc.text('<?= $periode ?>', 105, 25, { align: 'center' });
 
   // Tabel Header
   doc.setFontSize(10);
   doc.setFont("helvetica", "bold");
   doc.setFillColor(255, 204, 0);
-  doc.rect(20, 35, 170, 8, 'F');
-  doc.text('No', 22, 41);
-  doc.text('Kelurahan', 50, 41);
-  doc.text('Curanmor', 70, 41);
-  doc.text('Perampokan', 90, 41);
-  doc.text('Begal', 110, 41);
-  doc.text('Tawuran', 130, 41);
-  doc.text('Total Kejahatan', 150, 41);
+  doc.rect(10, 35, 190, 10, 'F');
+  doc.text('No', 15, 42);
+  doc.text('Kelurahan', 30, 42);
+  doc.text('Curanmor', 70, 42);
+  doc.text('Perampokan', 95, 42);
+  doc.text('Begal', 125, 42);
+  doc.text('Tawuran', 150, 42);
+  doc.text('Total Kejahatan', 175, 42);
 
   // Garis tabel header
   doc.setLineWidth(0.2);
-  doc.line(20, 43, 190, 43);
+  doc.line(10, 45, 200, 45);
 
   // Isi tabel (menggunakan laporanData dari controller)
   const data = [
@@ -310,40 +314,67 @@ function cetakLaporan() {
   // Debugging: Log data yang dikirim ke JavaScript
   console.log("Data untuk laporan:", data);
 
+  // Hitung total
+  let totalCuranmor = 0;
+  let totalPerampokan = 0;
+  let totalBegal = 0;
+  let totalTawuran = 0;
+  let totalKejahatan = 0;
+
+  data.forEach(item => {
+    totalCuranmor += item.curanmor;
+    totalPerampokan += item.perampokan;
+    totalBegal += item.begal;
+    totalTawuran += item.tawuran;
+    totalKejahatan += item.total_kejahatan;
+  });
+
   if (data.length === 0) {
-    doc.text('Tidak ada data untuk periode ini.', 105, 50, { align: 'center' });
+    doc.text('Tidak ada data untuk periode ini.', 105, 55, { align: 'center' });
   } else {
-    let y = 49;
+    let y = 55;
+    const rowHeight = 10; // Tinggi baris disesuaikan agar lebih rapi
     doc.setFont("helvetica", "normal");
     data.forEach((item, index) => {
-      if (index % 2 === 0) {
-        doc.setFillColor(240, 240, 240);
-        doc.rect(20, y - 6, 170, 8, 'F');
-      }
-      doc.text(String(item.no), 22, y);
-      doc.text(item.kelurahan, 50, y);
-      doc.text(String(item.curanmor), 70, y);
-      doc.text(String(item.perampokan), 90, y);
-      doc.text(String(item.begal), 110, y);
-      doc.text(String(item.tawuran), 130, y);
-      doc.text(String(item.total_kejahatan), 150, y);
-      y += 8;
+      doc.setFillColor(255, 255, 255); // Warna putih untuk baris
+      doc.rect(10, y - rowHeight, 190, rowHeight, 'F');
+      doc.text(String(item.no), 15, y - 2);
+      doc.text(item.kelurahan, 30, y - 2);
+      doc.text(String(item.curanmor), 70, y - 2);
+      doc.text(String(item.perampokan), 95, y - 2);
+      doc.text(String(item.begal), 125, y - 2);
+      doc.text(String(item.tawuran), 150, y - 2);
+      doc.text(String(item.total_kejahatan), 175, y - 2);
+      y += rowHeight;
     });
 
+    // Baris Total
+    doc.setFillColor(200, 200, 200);
+    doc.rect(10, y - rowHeight, 190, rowHeight, 'F');
+    doc.setFont("helvetica", "bold");
+    doc.text('TOTAL KEJAHATAN', 30, y - 2);
+    doc.text(String(totalCuranmor), 70, y - 2);
+    doc.text(String(totalPerampokan), 95, y - 2);
+    doc.text(String(totalBegal), 125, y - 2);
+    doc.text(String(totalTawuran), 150, y - 2);
+    doc.text(String(totalKejahatan), 175, y - 2);
+    y += rowHeight;
+
     // Garis tabel
-    for (let i = 49; i <= y - 8; i += 8) {
-      doc.line(20, i, 190, i);
+    for (let i = 55; i <= y - rowHeight; i += rowHeight) {
+      doc.line(10, i, 200, i);
     }
-    doc.line(20, 35, 20, y - 8);
-    doc.line(45, 35, 45, y - 8);
-    doc.line(65, 35, 65, y - 8);
-    doc.line(85, 35, 85, y - 8);
-    doc.line(105, 35, 105, y - 8);
-    doc.line(125, 35, 125, y - 8);
-    doc.line(145, 35, 145, y - 8);
-    doc.line(190, 35, 190, y - 8);
+    doc.line(10, 35, 10, y - rowHeight);
+    doc.line(25, 35, 25, y - rowHeight); // Garis untuk No
+    doc.line(65, 35, 65, y - rowHeight);
+    doc.line(90, 35, 90, y - rowHeight);
+    doc.line(120, 35, 120, y - rowHeight);
+    doc.line(145, 35, 145, y - rowHeight);
+    doc.line(170, 35, 170, y - rowHeight);
+    doc.line(200, 35, 200, y - rowHeight);
 
     // Footer
+    doc.setFont("helvetica", "normal");
     doc.text('Indramayu, <?= date('d M Y') ?>', 150, y + 20);
     doc.text('Kepala Polisi Sektor Lohbener,', 150, y + 30);
     doc.text('NIP. 1234567890', 150, y + 50);
