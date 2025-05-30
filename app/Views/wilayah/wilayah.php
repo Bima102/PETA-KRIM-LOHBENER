@@ -103,7 +103,7 @@ $submit = [
         <!-- Filter, Cetak, dan Tambah Data di Pojok Kiri -->
         <div class="d-flex justify-content-start align-items-center my-4">
           <form id="filterForm" method="get" action="" class="d-flex gap-2 me-3">
-            <select name="tahun" id="tahun" class="form-control fw-bold p-2 rounded-3" onchange="this.form.submit()">
+            <select name="tahun" id="tahun" class="form-control custom-select-sm fw-bold rounded-3" onchange="this.form.submit()">
               <option value="">-- Pilih Tahun --</option>
               <?php
               $currentYear = date('Y');
@@ -113,7 +113,7 @@ $submit = [
               }
               ?>
             </select>
-            <select name="bulan" id="bulan" class="form-control fw-bold p-2 rounded-3" onchange="this.form.submit()">
+            <select name="bulan" id="bulan" class="form-control custom-select-sm fw-bold rounded-3" onchange="this.form.submit()">
               <option value="">-- Pilih Bulan --</option>
               <?php
               $bulanList = [
@@ -128,10 +128,13 @@ $submit = [
               ?>
             </select>
           </form>
-          <button type="button" class="btn btn-success fw-bold shadow-sm px-4 py-2 me-3" onclick="cetakLaporan()">
+          <button type="button" class="btn btn-secondary btn-sm-custom fw-bold shadow-sm me-3" onclick="resetFilter()">
+            <i class="fas fa-sync-alt me-1"></i> Reset
+          </button>
+          <button type="button" class="btn btn-success btn-sm-custom fw-bold shadow-sm me-3" onclick="cetakLaporan()">
             <i class="fas fa-print me-1"></i> Cetak
           </button>
-          <button type="button" class="btn btn-primary fw-bold shadow-sm px-4 py-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          <button type="button" class="btn btn-primary btn-sm-custom fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
             <i class="fas fa-plus me-1"></i> Tambah Data
           </button>
         </div>
@@ -250,7 +253,7 @@ $submit = [
   </div>
 </div>
 
-<!-- Skrip untuk cetak laporan -->
+<!-- Skrip untuk cetak laporan dan reset filter -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 function cetakLaporan() {
@@ -376,10 +379,16 @@ function cetakLaporan() {
     // Footer
     doc.setFont("helvetica", "normal");
     doc.text('Indramayu, <?= date('d M Y') ?>', 150, y + 20);
-    doc.text('Kepala Polisi Sektor Lohbener,', 150, y + 30);
+    doc.text('Kepala Polisi Sektor Lohbener,', 150, y + 45);
     doc.text('NIP. 1234567890', 150, y + 50);
   }
 
   doc.save('Laporan_Kriminalitas_Lohbener.pdf');
+}
+
+// Fungsi untuk reset filter
+function resetFilter() {
+  console.log("Fungsi resetFilter dipanggil"); // Debugging
+  window.location.href = '/wilayah'; // Ganti '/wilayah' dengan rute yang sesuai
 }
 </script>

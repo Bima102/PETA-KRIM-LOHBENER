@@ -3,11 +3,8 @@
         <div class="card-body p-5">
             <div class="text-center mb-4">
                 <h2 class="fw-bold">
-                    <i class="bi bi-bar-chart-fill text-primary me-2"></i><?= esc($title) ?>
+                    <i class="bi bi-bar-chart-fill text-primary me-2"></i> Data Statistik Tindak Kriminalitas 
                 </h2>
-                <p class="text-muted mb-0">
-                    Statistik data kriminalitas berdasarkan kategori kejahatan
-                </p>
             </div>
 
             <!-- Grafik -->
@@ -84,6 +81,9 @@
                         <button type="submit" class="btn btn-primary fw-bold">
                             <i class="bi bi-search me-1"></i> Tampilkan
                         </button>
+                        <a href="<?= base_url('/statistik') ?>" class="btn btn-secondary fw-bold">
+                            <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
+                        </a>
                     </form>
                 </div>
 
