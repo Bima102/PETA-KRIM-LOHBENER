@@ -1,5 +1,4 @@
 <?php
-// Input form fields configuration
 $nama_daerah = [
   'name'        => 'nama_daerah',
   'id'          => 'nama_daerah',
