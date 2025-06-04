@@ -87,7 +87,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <img src="<?= base_url('assets/img/logo_petakriminal.png'); ?>" alt="Logo Polisi" class="logo-img">
+                <img src="<?= base_url('assets/img/log.png'); ?>" alt="Logo Polisi" class="logo-img">
                 PETA-KRIM LOHBENER
             </a>                                                                             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
