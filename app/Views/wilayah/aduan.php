@@ -51,13 +51,18 @@ $long = ['name' => 'longitude', 'id' => 'longitude', 'class' => 'form-control fw
       <!-- JENIS KEJAHATAN -->
       <div class="form-group mb-3">
         <label class="fw-bold">Jenis Kejahatan</label>
-        <select name="jenis_kejahatan" class="form-control fw-bold" required>
-          <option disabled selected>-- Pilih Jenis Kejahatan --</option>
+        <select name="jenis_kejahatan" id="jenis_kejahatan" class="form-control fw-bold" required onchange="toggleCustomInput()">
+          <option value="" disabled selected>-- Pilih Jenis Kejahatan --</option>
           <option value="curanmor">Curanmor</option>
           <option value="perampokan">Perampokan</option>
           <option value="begal">Begal</option>
           <option value="tawuran">Tawuran</option>
+          <option value="lainnya">Lainnya</option>
         </select>
+        <div id="custom_kejahatan_div" class="form-group mt-2" style="display: none;">
+          <label class="fw-bold">Jenis Kejahatan Lainnya</label>
+          <input type="text" name="custom_kejahatan" id="custom_kejahatan" class="form-control fw-bold" placeholder="Masukkan jenis kejahatan lainnya">
+        </div>
       </div>
 
       <!-- GAMBAR -->
@@ -79,7 +84,7 @@ $long = ['name' => 'longitude', 'id' => 'longitude', 'class' => 'form-control fw
       <ul>
         <li><strong>Lokasi di Peta:</strong> Klik pada peta untuk memilih lokasi kejadian. Data seperti kelurahan, latitude, dan longitude akan terisi otomatis.</li>
         <li><strong>Detail patokan Tempat/Jalan/Gang Kejadian:</strong> Masukkan Detail patokan Tempat/Jalan/Gang Kejadian secara manual sesuai kejadian.</li>
-        <li><strong>Jenis Kejahatan:</strong> Pilih kategori yang sesuai.</li>
+        <li><strong>Jenis Kejahatan:</strong> Pilih kategori yang sesuai. Jika tidak ada kategori yang sesuai, pilih 'Lainnya' dan isi manual.</li>
         <li><strong>Gambar Wilayah:</strong> Opsional. Jika ada bukti visual, unggah untuk membantu proses verifikasi.</li>
       </ul>
     </div>
@@ -215,6 +220,21 @@ $long = ['name' => 'longitude', 'id' => 'longitude', 'class' => 'form-control fw
         alert('Terjadi kesalahan saat mengambil data lokasi. Pastikan koneksi internet stabil.');
         document.getElementById('kelurahan').value = '';
       });
+  }
+
+  // Fungsi untuk menampilkan/menyembunyikan input custom kejahatan
+  function toggleCustomInput() {
+    const jenisKejahatan = document.getElementById('jenis_kejahatan').value;
+    const customDiv = document.getElementById('custom_kejahatan_div');
+    const customInput = document.getElementById('custom_kejahatan');
+    if (jenisKejahatan === 'lainnya') {
+      customDiv.style.display = 'block';
+      customInput.required = true;
+    } else {
+      customDiv.style.display = 'none';
+      customInput.required = false;
+      customInput.value = ''; // Kosongkan input jika bukan "Lainnya"
+    }
   }
 
   // Inisialisasi peta saat halaman dimuat

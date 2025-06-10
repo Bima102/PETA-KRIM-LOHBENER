@@ -224,13 +224,18 @@ $submit = [
           <!-- Jenis Kejahatan -->
           <div class="form-group mb-3">
             <?= form_label('Jenis Kejahatan', 'jenis_kejahatan'); ?>
-            <select name="jenis_kejahatan" id="jenis_kejahatan" class="form-control fw-bold p-2 rounded-3" required>
-              <option value="" disabled selected>-- Pilih Jenis Kejahatan --</option>
+            <select name="jenis_kejahatan" id="jenis_kejahatan" class="form-control fw-bold p-2 rounded-3" required onchange="toggleCustomInput()">
+              <option value="" disabled <?= !old('jenis_kejahatan') ? 'selected' : '' ?>>-- Pilih Jenis Kejahatan --</option>
               <option value="curanmor" <?= old('jenis_kejahatan') == 'curanmor' ? 'selected' : '' ?>>Curanmor</option>
               <option value="perampokan" <?= old('jenis_kejahatan') == 'perampokan' ? 'selected' : '' ?>>Perampokan</option>
               <option value="begal" <?= old('jenis_kejahatan') == 'begal' ? 'selected' : '' ?>>Begal</option>
               <option value="tawuran" <?= old('jenis_kejahatan') == 'tawuran' ? 'selected' : '' ?>>Tawuran</option>
+              <option value="lainnya" <?= old('jenis_kejahatan') == 'lainnya' ? 'selected' : '' ?>>Lainnya</option>
             </select>
+            <div id="custom_kejahatan_div" class="form-group mt-2" style="display: none;">
+              <?= form_label('Jenis Kejahatan Lainnya', 'custom_kejahatan'); ?>
+              <input type="text" name="custom_kejahatan" id="custom_kejahatan" class="form-control fw-bold p-2 rounded-3" value="<?= old('custom_kejahatan') ?>" placeholder="Masukkan jenis kejahatan lainnya">
+            </div>
           </div>
 
           <!-- Upload Gambar -->
@@ -275,7 +280,7 @@ function cetakLaporan() {
   if ($tahun && !$bulan) {
     $periode = "TAHUN $tahun";
   } elseif ($bulan && $tahun) {
-    $bulanList = ['01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April', '05' => 'Mei', '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus', '09' => 'September Keane', '10' => 'Oktober', '11' => 'November', '12' => 'Desember'];
+    $bulanList = ['01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April', '05' => 'Mei', '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus', '09' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember'];
     $periode = $bulanList[$bulan] . " $tahun";
   } else {
     $periode = "TAHUN " . date('Y');
@@ -389,5 +394,20 @@ function cetakLaporan() {
 function resetFilter() {
   console.log("Fungsi resetFilter dipanggil"); // Debugging
   window.location.href = '/wilayah'; // Ganti '/wilayah' dengan rute yang sesuai
+}
+
+// Fungsi untuk menampilkan/menyembunyikan input custom kejahatan
+function toggleCustomInput() {
+  const jenisKejahatan = document.getElementById('jenis_kejahatan').value;
+  const customDiv = document.getElementById('custom_kejahatan_div');
+  const customInput = document.getElementById('custom_kejahatan');
+  if (jenisKejahatan === 'lainnya') {
+    customDiv.style.display = 'block';
+    customInput.required = true;
+  } else {
+    customDiv.style.display = 'none';
+    customInput.required = false;
+    customInput.value = ''; // Kosongkan input jika bukan "Lainnya"
+  }
 }
 </script>

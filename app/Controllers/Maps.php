@@ -25,6 +25,9 @@ class Maps extends BaseController
             'dataWilayah'  => $query->getResult()
         ];
 
+        // Debugging: Log data yang dikirim ke view
+        log_message('debug', 'Data Wilayah dikirim ke view: ' . print_r($data['dataWilayah'], true));
+
         return view('maps/maps', $data);
     }
 }

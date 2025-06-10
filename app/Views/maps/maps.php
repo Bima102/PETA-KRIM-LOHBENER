@@ -66,9 +66,20 @@
             // Data wilayah hanya yang status 'diterima'
             const dataWilayah = <?= json_encode($dataWilayah); ?>.filter(item => item.status === 'diterima');
 
+            // Debugging: Log data untuk memeriksa isi
+            console.log('Data Wilayah:', dataWilayah);
+
             // Tambahkan marker untuk setiap titik rawan yang diterima
             dataWilayah.forEach(row => {
-                let markerIcon = '<?= base_url(); ?>/assets/img/marker-icon.png'; // Default (Begal / Lainnya)
+                // Pastikan koordinat valid
+                const lng = parseFloat(row.longitude);
+                const lat = parseFloat(row.latitude);
+                if (isNaN(lng) || isNaN(lat)) {
+                    console.warn(`Koordinat tidak valid untuk ${row.nama_daerah}: lng=${lng}, lat=${lat}`);
+                    return; // Lewati jika koordinat tidak valid
+                }
+
+                let markerIcon = '<?= base_url(); ?>/assets/img/marker-icon-blue.png'; // Default biru untuk "Lainnya"
                 const jenis = row.jenis_kejahatan.toLowerCase();
 
                 if (jenis === 'curanmor') {
@@ -84,11 +95,12 @@
                 const marker = new mapboxgl.Marker({
                     element: createMarkerElement(markerIcon)
                 })
-                    .setLngLat([parseFloat(row.longitude), parseFloat(row.latitude)])
+                    .setLngLat([lng, lat])
                     .setPopup(new mapboxgl.Popup().setHTML(`
                         <div style="width: 180px; font-size: 13px;">
                             <img src="<?= base_url(); ?>/img/${row.gambar}" 
-                                 style="width: 100%; height: 135px; object-fit: cover; border-radius: 6px;">
+                                 style="width: 100%; height: 135px; object-fit: cover; border-radius: 6px;"
+                                 onerror="this.src='<?= base_url(); ?>/assets/img/default-image.jpg';">
                             <h5 style="text-align: center; margin-top: 5px; font-size: 14px;">
                                 Hati-hati daerah rawan: ${row.jenis_kejahatan}
                             </h5>
@@ -110,8 +122,7 @@
                     <i class="legend-icon" style="background-image: url('<?= base_url(); ?>/assets/img/marker-icon-red.png');"></i> Curanmor<br>
                     <i class="legend-icon" style="background-image: url('<?= base_url(); ?>/assets/img/marker-icon-yellow.png');"></i> Perampokan<br>
                     <i class="legend-icon" style="background-image: url('<?= base_url(); ?>/assets/img/marker-icon-green.png');"></i> Tawuran<br>
-                    <i class="legend-icon" style="background-image: url('<?= base_url(); ?>/assets/img/marker-icon-blue.png');"></i> Begal<br>
-                    <i class="legend-icon" style="background-image: url('<?= base_url(); ?>/assets/img/marker-icon.png');"></i> Lainnya<br>
+                    <i class="legend-icon" style="background-image: url('<?= base_url(); ?>/assets/img/marker-icon-blue.png');"></i> Begal / Lainnya<br>
                 `;
 
                 const legendControl = new mapboxgl.Control({ element: legendDiv });

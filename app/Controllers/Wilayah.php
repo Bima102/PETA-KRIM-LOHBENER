@@ -110,24 +110,30 @@ class Wilayah extends BaseController
             $fileSampul->move('img', $namaSampul);
         }
 
+        // Ambil jenis kejahatan, gunakan custom_kejahatan jika "lainnya" dipilih
+        $jenisKejahatan = $this->request->getPost('jenis_kejahatan');
+        if ($jenisKejahatan === 'lainnya') {
+            $customKejahatan = $this->request->getPost('custom_kejahatan');
+            $jenisKejahatan = $customKejahatan ? $customKejahatan : $jenisKejahatan; // Jika custom_kejahatan kosong, tetap gunakan "lainnya"
+        }
+
         $dataMaster = [
             'kelurahan'         => $this->request->getPost('kelurahan'),
             'nama_daerah'       => $this->request->getPost('nama_daerah'),
             'latitude'          => $this->request->getPost('latitude'),
             'longitude'         => $this->request->getPost('longitude'),
-            'jenis_kejahatan'   => $this->request->getPost('jenis_kejahatan'), 
+            'jenis_kejahatan'   => $jenisKejahatan,
             'gambar'            => $namaSampul,
-            'status'            => 'pending',
+            'status'            => 'diterima', // Ubah dari 'pending' ke 'diterima'
             'created_at'        => date('Y-m-d H:i:s')
         ];
 
         $modelMasterData = new M_Wilayah();
         $modelMasterData->save($dataMaster);
 
-        session()->setFlashdata('msg', 'Data berhasil ditambahkan untuk validasi.');
+        session()->setFlashdata('msg', 'Data berhasil ditambahkan.');
         return redirect()->to('/wilayah');
     }
-
     public function wilayah_detail($id)
     {
         // Cek apakah user sudah login dan memiliki role 'admin'
@@ -194,6 +200,13 @@ class Wilayah extends BaseController
             $fileGambar->move('img', $namaGambar);
         }
 
+        // Ambil jenis kejahatan, gunakan custom_kejahatan jika "lainnya" dipilih
+        $jenisKejahatan = $this->request->getVar('jenis_kejahatan');
+        if ($jenisKejahatan === 'lainnya') {
+            $customKejahatan = trim($this->request->getVar('custom_kejahatan'));
+            $jenisKejahatan = !empty($customKejahatan) ? $customKejahatan : $jenisKejahatan; // Fallback jika kosong
+        }
+
         $dataModel = new M_Wilayah();
         $dataModel->save([
             'id'              => $id,
@@ -201,7 +214,7 @@ class Wilayah extends BaseController
             'nama_daerah'     => $this->request->getVar('nama_daerah'),
             'latitude'        => $this->request->getVar('latitude'),
             'longitude'       => $this->request->getVar('longitude'),
-            'jenis_kejahatan' => $this->request->getVar('jenis_kejahatan'),
+            'jenis_kejahatan' => $jenisKejahatan,
             'gambar'          => $namaGambar,
         ]);
 
@@ -254,6 +267,9 @@ class Wilayah extends BaseController
             return redirect()->to('/login');
         }
 
+        // Debug: Tampilkan semua data yang diterima dari form
+        log_message('debug', 'Data POST: ' . print_r($this->request->getPost(), true));
+
         $file = $this->request->getFile('gambar');
         $namaGambar = $file->isValid() ? $file->getRandomName() : 'danger.png';
 
@@ -261,16 +277,32 @@ class Wilayah extends BaseController
             $file->move('img', $namaGambar);
         }
 
+        // Ambil jenis kejahatan, gunakan custom_kejahatan jika "lainnya" dipilih
+        $jenisKejahatan = $this->request->getPost('jenis_kejahatan');
+        if ($jenisKejahatan === 'lainnya') {
+            $customKejahatan = trim($this->request->getPost('custom_kejahatan'));
+            $jenisKejahatan = !empty($customKejahatan) ? $customKejahatan : 'Lainnya Tidak Ditentukan'; // Fallback jika kosong
+        }
+
+        // Validasi sederhana untuk memastikan jenis kejahatan tidak kosong
+        if (empty($jenisKejahatan)) {
+            session()->setFlashdata('error', 'Jenis kejahatan tidak boleh kosong.');
+            return redirect()->back()->withInput();
+        }
+
         $this->db->table('maps')->insert([
             'kelurahan'       => $this->request->getPost('kelurahan'),
             'nama_daerah'     => $this->request->getPost('nama_daerah'),
             'latitude'        => $this->request->getPost('latitude'),
             'longitude'       => $this->request->getPost('longitude'),
-            'jenis_kejahatan' => $this->request->getPost('jenis_kejahatan'),
+            'jenis_kejahatan' => $jenisKejahatan,
             'gambar'          => $namaGambar,
             'status'          => 'pending',
             'created_at'      => date('Y-m-d H:i:s')
         ]);
+
+        // Debug: Tampilkan query terakhir
+        log_message('debug', 'Last Query: ' . $this->db->getLastQuery());
 
         return redirect()->to('/wilayah/aduan')->with('msg', 'Laporan berhasil dikirim untuk validasi.');
     }

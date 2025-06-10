@@ -111,13 +111,18 @@ $longitude = [
                     <!-- Jenis Kejahatan -->
                     <div class="form-group mb-3">
                         <?= form_label('<i class="fas fa-info-circle me-1"></i> Jenis Kejahatan', 'jenis_kejahatan'); ?>
-                        <select name="jenis_kejahatan" id="jenis_kejahatan" class="form-control fw-bold p-2 rounded-3" required>
+                        <select name="jenis_kejahatan" id="jenis_kejahatan" class="form-control fw-bold p-2 rounded-3" required onchange="toggleCustomInput()">
                             <option value="" disabled hidden>Pilih Jenis Kejahatan</option>
                             <option value="curanmor" <?= old('jenis_kejahatan', $wilayah->jenis_kejahatan) == 'curanmor' ? 'selected' : ''; ?>>Curanmor</option>
                             <option value="perampokan" <?= old('jenis_kejahatan', $wilayah->jenis_kejahatan) == 'perampokan' ? 'selected' : ''; ?>>Perampokan</option>
                             <option value="begal" <?= old('jenis_kejahatan', $wilayah->jenis_kejahatan) == 'begal' ? 'selected' : ''; ?>>Begal</option>
                             <option value="tawuran" <?= old('jenis_kejahatan', $wilayah->jenis_kejahatan) == 'tawuran' ? 'selected' : ''; ?>>Tawuran</option>
+                            <option value="lainnya" <?= old('jenis_kejahatan', $wilayah->jenis_kejahatan) == 'lainnya' || (strpos($wilayah->jenis_kejahatan, 'lainnya') === false && !in_array($wilayah->jenis_kejahatan, ['curanmor', 'perampokan', 'begal', 'tawuran'])) ? 'selected' : ''; ?>>Lainnya</option>
                         </select>
+                        <div id="custom_kejahatan_div" class="form-group mt-2" style="display: <?= (old('jenis_kejahatan', $wilayah->jenis_kejahatan) == 'lainnya' || (strpos($wilayah->jenis_kejahatan, 'lainnya') === false && !in_array($wilayah->jenis_kejahatan, ['curanmor', 'perampokan', 'begal', 'tawuran']))) ? 'block' : 'none'; ?>;">
+                            <?= form_label('Jenis Kejahatan Lainnya', 'custom_kejahatan'); ?>
+                            <input type="text" name="custom_kejahatan" id="custom_kejahatan" class="form-control fw-bold p-2 rounded-3" value="<?= old('custom_kejahatan', (strpos($wilayah->jenis_kejahatan, 'lainnya') === false && !in_array($wilayah->jenis_kejahatan, ['curanmor', 'perampokan', 'begal', 'tawuran'])) ? esc($wilayah->jenis_kejahatan) : ''); ?>" placeholder="Masukkan jenis kejahatan lainnya">
+                        </div>
                     </div>
 
                     <!-- Upload Gambar -->
@@ -142,3 +147,24 @@ $longitude = [
         </div>
     </div>
 </div>
+
+<script>
+function toggleCustomInput() {
+    const jenisKejahatan = document.getElementById('jenis_kejahatan').value;
+    const customDiv = document.getElementById('custom_kejahatan_div');
+    const customInput = document.getElementById('custom_kejahatan');
+    if (jenisKejahatan === 'lainnya') {
+        customDiv.style.display = 'block';
+        customInput.required = true;
+    } else {
+        customDiv.style.display = 'none';
+        customInput.required = false;
+        customInput.value = ''; // Kosongkan input jika bukan "Lainnya"
+    }
+}
+
+// Panggil fungsi saat halaman dimuat untuk menyesuaikan tampilan berdasarkan nilai awal
+document.addEventListener('DOMContentLoaded', function() {
+    toggleCustomInput();
+});
+</script>

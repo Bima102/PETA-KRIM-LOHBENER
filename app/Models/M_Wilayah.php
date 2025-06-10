@@ -23,6 +23,15 @@ class M_Wilayah extends Model
         return $matches[1];
     }
 
+    // Tambahkan metode untuk mendapatkan enum jenis_kejahatan (opsional)
+    public function getJenisKejahatanEnum()
+    {
+        $query = $this->db->query("SHOW COLUMNS FROM maps LIKE 'jenis_kejahatan'");
+        $row = $query->getRow();
+        preg_match_all("/'([^']+)'/", $row->Type, $matches);
+        return $matches[1];
+    }
+    
     public function get_wilayah($id = false)
     {
         if ($id === false) {
