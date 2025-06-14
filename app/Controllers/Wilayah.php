@@ -31,7 +31,7 @@ class Wilayah extends BaseController
         }
 
         // Mengambil data wilayah dari tabel maps dengan status 'diterima'
-        $this->builder->select('maps.nama_daerah, maps.kelurahan, maps.jenis_kejahatan, maps.latitude, maps.longitude, maps.gambar, maps.id');
+        $this->builder->select('maps.kelurahan, maps.nama_daerah, maps.latitude, maps.longitude, maps.jenis_kejahatan, maps.gambar, maps.id');
         $this->builder->where('maps.status', 'diterima');
 
         // Mengambil parameter tahun dan bulan dari query string untuk filter
@@ -157,35 +157,6 @@ class Wilayah extends BaseController
         // Menampilkan pesan sukses dan redirect
         session()->setFlashdata('msg', 'Data berhasil ditambahkan.');
         return redirect()->to('/wilayah');
-    }
-
-    /**
-     * Fungsi untuk menampilkan detail data wilayah berdasarkan ID.
-     * Hanya dapat diakses oleh admin.
-     */
-    public function wilayah_detail($id)
-    {
-        // Memeriksa apakah pengguna sudah login dan memiliki role admin
-        if (!session()->get('isLoggedIn') || session()->get('role') !== 'admin') {
-            session()->setFlashdata('error', 'Anda harus login sebagai admin untuk mengakses halaman ini.');
-            return redirect()->to('/login');
-        }
-
-        // Mengambil data wilayah berdasarkan ID
-        $dataModel = new M_Wilayah();
-        $data = [
-            'title'    => 'Detail Wilayah',
-            'dWilayah' => $dataModel->get_wilayah($id)
-        ];
-
-        // Memeriksa apakah data ditemukan
-        if (empty($data['dWilayah'])) {
-            throw new \CodeIgniter\Exceptions\PageNotFoundException("Wilayah $id tidak ditemukan");
-        }
-
-        // Menampilkan view detail
-        echo view('templates/header', $data);
-        echo view('wilayah/wilayah_detail');
     }
 
     /**
@@ -357,7 +328,7 @@ class Wilayah extends BaseController
         // Menyimpan data pengaduan ke database dengan status 'pending'
         $this->db->table('maps')->insert([
             'kelurahan'       => $this->request->getPost('kelurahan'),
-            'nama_daerah'     => $this->request->getPost('nama_daerah'),
+            'nama_daerah'     => $this->request->getPost('nama_daerahatan'),
             'latitude'        => $this->request->getPost('latitude'),
             'longitude'       => $this->request->getPost('longitude'),
             'jenis_kejahatan' => $jenisKejahatan,

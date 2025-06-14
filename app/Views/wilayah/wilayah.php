@@ -4,7 +4,7 @@ $nama_daerah = [
     'name'        => 'nama_daerah',
     'id'          => 'nama_daerah',
     'class'       => 'form-control text-dark fw-bold',
-    'value'       => old('nama_daerah'), // Menggunakan nilai lama jika ada
+    'value'       => old('nama_daerah'),
     'placeholder' => 'Detail patokan Tempat/Jalan/Gang Kejadian'
 ];
 
@@ -13,7 +13,7 @@ $lat = [
     'name'        => 'latitude',
     'id'          => 'latitude',
     'class'       => 'form-control text-dark fw-bold',
-    'value'       => old('latitude'), // Menggunakan nilai lama jika ada
+    'value'       => old('latitude'),
     'placeholder' => 'Contoh: -6.123456'
 ];
 
@@ -22,7 +22,7 @@ $long = [
     'name'        => 'longitude',
     'id'          => 'longitude',
     'class'       => 'form-control text-dark fw-bold',
-    'value'       => old('longitude'), // Menggunakan nilai lama jika ada
+    'value'       => old('longitude'),
     'placeholder' => 'Contoh: 108.123456'
 ];
 
@@ -89,30 +89,30 @@ $submit = [
                             <?php foreach ($pengaduan as $row): ?>
                                 <tr>
                                     <!-- Kolom kelurahan -->
-                                    <td><?= $row->kelurahan ?></td>
+                                    <td><?= esc($row->kelurahan) ?></td>
                                     <!-- Kolom detail patokan tempat -->
-                                    <td class="text-nowrap"><?= $row->nama_daerah ?></td>
+                                    <td class="text-nowrap"><?= esc($row->nama_daerah) ?></td>
                                     <!-- Kolom latitude dengan tautan ke Google Maps -->
                                     <td class="text-nowrap">
-                                        <a href="https://www.google.com/maps?q=<?= $row->latitude ?>,<?= $row->longitude ?>" target="_blank">
-                                            <?= $row->latitude ?>
+                                        <a href="https://www.google.com/maps?q=<?= esc($row->latitude) ?>,<?= esc($row->longitude) ?>" target="_blank">
+                                            <?= esc($row->latitude) ?>
                                         </a>
                                     </td>
                                     <!-- Kolom longitude dengan tautan ke Google Maps -->
                                     <td class="text-nowrap">
-                                        <a href="https://www.google.com/maps?q=<?= $row->latitude ?>,<?= $row->longitude ?>" target="_blank">
-                                            <?= $row->longitude ?>
+                                        <a href="https://www.google.com/maps?q=<?= esc($row->latitude) ?>,<?= esc($row->longitude) ?>" target="_blank">
+                                            <?= esc($row->longitude) ?>
                                         </a>
                                     </td>
                                     <!-- Kolom jenis kejahatan dengan huruf kapital awal -->
-                                    <td class="text-nowrap"><?= ucfirst($row->jenis_kejahatan) ?></td>
+                                    <td class="text-nowrap"><?= ucfirst(esc($row->jenis_kejahatan)) ?></td>
                                     <!-- Kolom gambar dengan pratinjau -->
-                                    <td><img src="/img/<?= $row->gambar ?>" width="60" class="rounded-3"></td>
+                                    <td><img src="/img/<?= esc($row->gambar) ?>" width="60" class="rounded-3"></td>
                                     <!-- Kolom aksi untuk terima atau tolak laporan -->
                                     <td>
                                         <div class="d-flex justify-content-center gap-2">
-                                            <a href="/wilayah/aduanTerima/<?= $row->id ?>" class="btn btn-success btn-sm">Terima</a>
-                                            <a href="/wilayah/aduanTolak/<?= $row->id ?>" class="btn btn-danger btn-sm">Tolak</a>
+                                            <a href="/wilayah/aduanTerima/<?= esc($row->id) ?>" class="btn btn-success btn-sm">Terima</a>
+                                            <a href="/wilayah/aduanTolak/<?= esc($row->id) ?>" class="btn btn-danger btn-sm">Tolak</a>
                                         </div>
                                     </td>
                                 </tr>
@@ -173,10 +173,13 @@ $submit = [
                         <!-- Kepala tabel dengan latar gelap -->
                         <thead class="bg-dark text-white text-center">
                             <tr class="fw-bold">
-                                <th style="width: 5%;">No</th>
-                                <th style="width: 25%;">Kelurahan</th>
+                                <th>Kelurahan</th>
                                 <th>Detail patokan Tempat/Jalan/Gang Kejadian</th>
-                                <th style="width: 15%;">Aksi</th>
+                                <th>Latitude</th>
+                                <th>Longitude</th>
+                                <th>Jenis Kejahatan</th>
+                                <th>Gambar</th>
+                                <th>Aksi</th>
                             </tr>
                         </thead>
                         <!-- Badan tabel untuk menampilkan data -->
@@ -184,25 +187,55 @@ $submit = [
                             <?php if (empty($content)) : ?>
                                 <!-- Pesan jika tidak ada data -->
                                 <tr>
-                                    <td colspan="4" class="text-center text-muted py-4">
+                                    <td colspan="7" class="text-center text-muted py-4">
                                         <i class="fas fa-folder-open fa-2x mb-2 d-block"></i>
                                         Belum ada data wilayah.
                                     </td>
                                 </tr>
                             <?php else : ?>
-                                <?php foreach ($content as $row => $value) : ?>
+                                <?php foreach ($content as $row): ?>
                                     <!-- Baris data wilayah -->
                                     <tr class="border-bottom border-light">
-                                        <td class="fw-semibold"><?= $row + 1; ?></td>
-                                        <td><?= $value->kelurahan; ?></td>
-                                        <td><?= $value->nama_daerah; ?></td>
-                                        <!-- Kolom aksi untuk melihat detail -->
-                                        <td>
-                                            <a href="/detailWilayah/<?= $value->id; ?>" class="btn btn-sm btn-primary fw-bold px-3">
-                                                <i class="fas fa-info-circle me-1"></i> Detail
+                                        <td><?= esc($row->kelurahan) ?></td>
+                                        <td class="text-nowrap"><?= esc($row->nama_daerah) ?></td>
+                                        <td class="text-nowrap">
+                                            <a href="https://www.google.com/maps?q=<?= esc($row->latitude) ?>,<?= esc($row->longitude) ?>" target="_blank">
+                                                <?= esc($row->latitude) ?>
                                             </a>
                                         </td>
+                                        <td class="text-nowrap">
+                                            <a href="https://www.google.com/maps?q=<?= esc($row->latitude) ?>,<?= esc($row->longitude) ?>" target="_blank">
+                                                <?= esc($row->longitude) ?>
+                                            </a>
+                                        </td>
+                                        <td class="text-nowrap"><?= ucfirst(esc($row->jenis_kejahatan)) ?></td>
+                                        <td><img src="/img/<?= esc($row->gambar) ?>" width="60" class="rounded-3"></td>
+                                        <td>
+                                            <div class="d-flex justify-content-center gap-2">
+                                                <a href="/editWilayah/<?= esc($row->id) ?>" class="btn btn-warning btn-sm">Edit</a>
+                                                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal<?= esc($row->id) ?>">Hapus</button>
+                                            </div>
+                                        </td>
                                     </tr>
+
+                                    <!-- Modal untuk konfirmasi penghapusan data -->
+                                    <div class="modal fade" id="deleteModal<?= esc($row->id) ?>" tabindex="-1" aria-labelledby="deleteModalLabel<?= esc($row->id) ?>" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content shadow-lg">
+                                                <div class="modal-header bg-danger text-white">
+                                                    <h5 class="modal-title" id="deleteModalLabel<?= esc($row->id) ?>">Konfirmasi Hapus</h5>
+                                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Apakah Anda yakin ingin menghapus data wilayah ini?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                                    <a href="/wilayahDelete/<?= esc($row->id) ?>" class="btn btn-danger">Ya, Hapus</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 <?php endforeach; ?>
                             <?php endif; ?>
                         </tbody>
@@ -241,7 +274,7 @@ $submit = [
                             <option value="" disabled selected>-- Pilih Kelurahan --</option>
                             <?php foreach ($kelurahan as $kel): ?>
                                 <!-- Opsi kelurahan -->
-                                <option value="<?= $kel; ?>"><?= $kel; ?></option>
+                                <option value="<?= esc($kel) ?>"><?= esc($kel) ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
