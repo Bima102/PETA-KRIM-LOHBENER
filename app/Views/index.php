@@ -77,7 +77,7 @@
                     <img src="<?= base_url(); ?>/assets/img/malingmotor.jpg" class="card-img-top rounded-top-4" alt="Pencurian Kendaraan Bermotor">
                     <div class="card-body">
                         <h5 class="card-title">
-                            <i class="bi bi-car-front-fill text-warning me-2"></i>CURANMOR
+                            <i class="fa-solid fa-motorcycle" style="margin-right: 8px;"></i>CURANMOR
                         </h5>
                         <p class="card-text small">
                             Pencurian kendaraan bermotor secara melawan hukum dengan tujuan memiliki atau menjual kembali. Contoh: mencuri motor di parkiran, membobol mobil, dan menyikat motor ojek online saat lengah.
@@ -149,7 +149,7 @@
                     <img src="<?= base_url(); ?>/assets/img/pembunuhan.png" class="card-img-top rounded-top-4" alt="Pembunuhan">
                     <div class="card-body">
                         <h5 class="card-title">
-                            <i class="bi bi-skull-crossbones text-dark me-2"></i>Pembunuhan
+                            <i class="fa-solid fa-skull-crossbones" style="margin-right: 8px;"></i>Pembunuhan
                         </h5>
                         <p class="card-text small">
                             Tindakan menghilangkan nyawa orang lain secara sengaja dan melawan hukum, baik dengan perencanaan atau spontan.
