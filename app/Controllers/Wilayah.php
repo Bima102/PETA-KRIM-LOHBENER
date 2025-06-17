@@ -301,6 +301,46 @@ class Wilayah extends BaseController
             return redirect()->to('/login');
         }
 
+        // Validasi input form
+        if (!$this->validate([
+            'kelurahan' => [
+                'rules' => 'required',
+                'errors' => ['required' => 'Kelurahan wajib dipilih.']
+            ],
+            'nama_daerah' => [
+                'rules' => 'required',
+                'errors' => ['required' => 'Detail patokan tempat wajib diisi.']
+            ],
+            'latitude' => [
+                'rules' => 'required|decimal',
+                'errors' => [
+                    'required' => 'Latitude wajib diisi.',
+                    'decimal' => 'Latitude harus berupa angka desimal.'
+                ]
+            ],
+            'longitude' => [
+                'rules' => 'required|decimal',
+                'errors' => [
+                    'required' => 'Longitude wajib diisi.',
+                    'decimal' => 'Longitude harus berupa angka desimal.'
+                ]
+            ],
+            'jenis_kejahatan' => [
+                'rules' => 'required',
+                'errors' => ['required' => 'Jenis kejahatan wajib dipilih.']
+            ],
+            'gambar' => [
+                'rules' => 'max_size[gambar,1024]|is_image[gambar]|mime_in[gambar,image/jpg,image/jpeg,image/png]',
+                'errors' => [
+                    'max_size' => 'Ukuran gambar terlalu besar.',
+                    'is_image' => 'File yang diunggah bukan gambar.',
+                    'mime_in' => 'File yang diunggah bukan gambar.'
+                ]
+            ]
+        ])) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
         // Debug: Mencatat data POST yang diterima
         log_message('debug', 'Data POST: ' . print_r($this->request->getPost(), true));
 
@@ -316,19 +356,17 @@ class Wilayah extends BaseController
         $jenisKejahatan = $this->request->getPost('jenis_kejahatan');
         if ($jenisKejahatan === 'lainnya') {
             $customKejahatan = trim($this->request->getPost('custom_kejahatan'));
-            $jenisKejahatan = !empty($customKejahatan) ? $customKejahatan : 'Lainnya Tidak Ditentukan';
-        }
-
-        // Validasi jenis kejahatan tidak boleh kosong
-        if (empty($jenisKejahatan)) {
-            session()->setFlashdata('error', 'Jenis kejahatan tidak boleh kosong.');
-            return redirect()->back()->withInput();
+            if (empty($customKejahatan)) {
+                session()->setFlashdata('error', 'Jenis kejahatan lainnya wajib diisi jika memilih "Lainnya".');
+                return redirect()->back()->withInput();
+            }
+            $jenisKejahatan = $customKejahatan;
         }
 
         // Menyimpan data pengaduan ke database dengan status 'pending'
         $this->db->table('maps')->insert([
             'kelurahan'       => $this->request->getPost('kelurahan'),
-            'nama_daerah'     => $this->request->getPost('nama_daerahatan'),
+            'nama_daerah'     => $this->request->getPost('nama_daerah'), 
             'latitude'        => $this->request->getPost('latitude'),
             'longitude'       => $this->request->getPost('longitude'),
             'jenis_kejahatan' => $jenisKejahatan,
@@ -341,12 +379,16 @@ class Wilayah extends BaseController
         log_message('debug', 'Last Query: ' . $this->db->getLastQuery());
 
         // Menampilkan pesan sukses dan redirect
-        return redirect()->to('/wilayah/aduan')->with('msg', 'Laporan berhasil dikirim untuk validasi.');
+        return redirect()->to('/wilayah/aduan')->with('msg', 'Laporan berhasil dikirim untuk proses.');
     }
 
-    /**
-     * Fungsi untuk menerima pengaduan dan mengubah status menjadi 'diterima'.
+
+        /**
+     * Fungsi untuk menerima pengaduan dan mengubah statusnya menjadi 'diterima'.
      * Hanya dapat diakses oleh admin.
+     * 
+     * @param int $id ID pengaduan yang akan diterima
+     * @return \CodeIgniter\HTTP\RedirectResponse
      */
     public function aduanTerima($id)
     {
@@ -356,11 +398,17 @@ class Wilayah extends BaseController
             return redirect()->to('/login');
         }
 
-        // Mengubah status pengaduan menjadi 'diterima'
-        $this->db->table('maps')->where('id', $id)->update(['status' => 'diterima']);
+        // Memperbarui status pengaduan menjadi 'diterima'
+        $this->db->table('maps')->update(['status' => 'diterima'], ['id' => $id]);
 
-        // Menampilkan pesan sukses dan redirect
-        session()->setFlashdata('msg', 'Laporan diterima dan dipindahkan ke data wilayah.');
+        // Memeriksa apakah update berhasil
+        if ($this->db->affectedRows() > 0) {
+            session()->setFlashdata('msg', 'Laporan berhasil diterima.');
+        } else {
+            session()->setFlashdata('error', 'Gagal menerima laporan. Data tidak ditemukan.');
+        }
+
+        // Redirect kembali ke halaman wilayah
         return redirect()->to('/wilayah');
     }
 
