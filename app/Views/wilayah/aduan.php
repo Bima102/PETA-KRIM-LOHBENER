@@ -1,14 +1,12 @@
 <?php
-// Definisi input form untuk nama daerah
 $nama_daerah = [
     'name' => 'nama_daerah',
     'id' => 'nama_daerah',
     'class' => 'form-control fw-bold',
     'placeholder' => 'Detail patokan Tempat/Jalan/Gang Kejadian',
-    'required' => true // Tambahkan required untuk validasi sisi klien
+    'required' => true
 ];
 
-// Definisi input form untuk latitude
 $lat = [
     'name' => 'latitude',
     'id' => 'latitude',
@@ -17,7 +15,6 @@ $lat = [
     'required' => true
 ];
 
-// Definisi input form untuk longitude
 $long = [
     'name' => 'longitude',
     'id' => 'longitude',
@@ -25,16 +22,36 @@ $long = [
     'placeholder' => 'Contoh: 108.123456',
     'required' => true
 ];
+
+$nama_pelapor = [
+    'name' => 'nama_pelapor',
+    'id' => 'nama_pelapor',
+    'class' => 'form-control fw-bold',
+    'placeholder' => 'Masukkan nama pelapor',
+    'required' => true
+];
+
+$no_hp = [
+    'name' => 'no_hp',
+    'id' => 'no_hp',
+    'class' => 'form-control fw-bold',
+    'placeholder' => 'Masukkan nomor telepon (contoh: 081234567890)',
+    'required' => true
+];
+
+$deskripsi = [
+    'name' => 'deskripsi',
+    'id' => 'deskripsi',
+    'class' => 'form-control fw-bold',
+    'placeholder' => 'Masukkan kronologi kejadian',
+    'required' => true
+];
 ?>
 
-<!-- Kontainer utama untuk form pengaduan dengan margin atas -->
 <div class="container mt-5">
-    <!-- Bagian Form Pengaduan Masyarakat -->
     <div class="card shadow rounded-4 p-4">
-        <!-- Judul form pengaduan -->
         <h4 class="fw-bold mb-4">Form Pengaduan Masyarakat</h4>
         
-        <!-- Menampilkan pesan error atau sukses jika ada -->
         <?php if (session()->getFlashdata('error')): ?>
             <div class="alert alert-danger">
                 <?= session()->getFlashdata('error'); ?>
@@ -55,15 +72,12 @@ $long = [
             </div>
         <?php endif; ?>
 
-        <!-- Form untuk mengirim data pengaduan -->
         <form action="/wilayah/aduanSave" method="POST" enctype="multipart/form-data">
-            <!-- Bagian peta Mapbox untuk memilih lokasi -->
             <div class="form-group mb-3">
                 <label class="fw-bold">Pilih Lokasi di Peta</label>
                 <div id="map" style="height: 400px; width: 100%;"></div>
             </div>
 
-            <!-- Dropdown untuk memilih kelurahan -->
             <div class="form-group mb-3">
                 <label class="fw-bold">Kelurahan</label>
                 <select name="kelurahan" id="kelurahan" class="form-control fw-bold" required>
@@ -81,13 +95,11 @@ $long = [
                 </select>
             </div>
 
-            <!-- Input untuk detail patokan tempat kejadian -->
             <div class="form-group mb-3">
                 <label class="fw-bold">Detail patokan Tempat/Jalan/Gang Kejadian</label>
                 <?= form_input($nama_daerah); ?>
             </div>
 
-            <!-- Input untuk koordinat latitude dan longitude -->
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label class="fw-bold">Latitude</label>
@@ -99,7 +111,11 @@ $long = [
                 </div>
             </div>
 
-            <!-- Dropdown untuk memilih jenis kejahatan -->
+            <div class="form-group mb-3">
+                <label class="fw-bold">Kronologi Kejadian</label>
+                <?= form_textarea($deskripsi); ?>
+            </div>
+
             <div class="form-group mb-3">
                 <label class="fw-bold">Jenis Kejahatan</label>
                 <select name="jenis_kejahatan" id="jenis_kejahatan" class="form-control fw-bold" required onchange="toggleCustomInput()">
@@ -116,18 +132,25 @@ $long = [
                 </div>
             </div>
 
-            <!-- Input untuk mengunggah gambar -->
             <div class="form-group mb-3">
                 <label class="fw-bold">Gambar</label>
                 <input type="file" class="form-control" name="gambar">
             </div>
 
-            <!-- Tombol untuk mengirim form -->
+            <div class="form-group mb-3">
+                <label class="fw-bold">Nama Pelapor</label>
+                <?= form_input($nama_pelapor); ?>
+            </div>
+
+            <div class="form-group mb-3">
+                <label class="fw-bold">Nomor Telepon</label>
+                <?= form_input($no_hp); ?>
+            </div>
+
             <button type="submit" class="btn btn-primary fw-bold">Kirim Pengaduan</button>
         </form>
     </div>
 
-    <!-- Bagian Panduan Pengisian Form -->
     <div class="mt-5">
         <h5><i class="bi bi-info-circle-fill text-primary"></i> Panduan Mengisi Form & Mengambil Titik Lokasi</h5>
         <div class="alert alert-info">
@@ -136,28 +159,25 @@ $long = [
                 <li><strong>Lokasi di Peta:</strong> Klik pada peta untuk memilih lokasi kejadian. Data seperti kelurahan, latitude, dan longitude akan terisi otomatis.</li>
                 <li><strong>Detail patokan Tempat/Jalan/Gang Kejadian:</strong> Masukkan Detail patokan Tempat/Jalan/Gang Kejadian secara manual sesuai kejadian.</li>
                 <li><strong>Jenis Kejahatan:</strong> Pilih kategori yang sesuai. Jika tidak ada kategori yang sesuai, pilih 'Lainnya' dan isi manual.</li>
+                <li><strong>Nama Pelapor:</strong> Masukkan nama lengkap pelapor.</li>
+                <li><strong>Nomor Telepon:</strong> Masukkan nomor telepon aktif untuk komunikasi.</li>
+                <li><strong>Kronologi Kejadian:</strong> Tulis kronologi kejadian secara rinci.</li>
                 <li><strong>Gambar Wilayah:</strong> Opsional. Jika ada bukti visual, unggah untuk membantu proses verifikasi.</li>
             </ul>
         </div>
     </div>
 </div>
 
-<!-- Memuat CSS Mapbox GL JS -->
 <link href="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.css" rel="stylesheet">
-<!-- Memuat SweetAlert2 CSS -->
 <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
-<!-- Memuat JavaScript Mapbox GL JS -->
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.js"></script>
-<!-- Memuat SweetAlert2 JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-    // Inisialisasi token Mapbox dari variabel lingkungan PHP
     mapboxgl.accessToken = '<?php echo env('MAPBOX_TOKEN'); ?>';
-    let map; // Variabel untuk menyimpan objek peta
-    let marker; // Variabel untuk menyimpan objek marker
+    let map;
+    let marker;
 
-    // Fungsi untuk menginisialisasi peta
     function initMap() {
         const defaultLocation = [108.270021, -6.402907];
         map = new mapboxgl.Map({
@@ -196,7 +216,6 @@ $long = [
         });
     }
 
-    // Fungsi untuk menempatkan marker pada peta
     function placeMarker(lng, lat) {
         if (marker) {
             marker.remove();
@@ -212,13 +231,11 @@ $long = [
         });
     }
 
-    // Fungsi untuk memperbarui kolom latitude dan longitude pada form
     function updateFormFields(lat, lng) {
         document.getElementById('latitude').value = lat.toFixed(6);
         document.getElementById('longitude').value = lng.toFixed(6);
     }
 
-    // Fungsi untuk mendapatkan informasi kelurahan dari koordinat (reverse geocoding)
     function reverseGeocode(lat, lng) {
         const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=<?php echo env('MAPBOX_TOKEN'); ?>&language=id&types=address,poi,place,neighborhood,locality,postcode`;
         fetch(url)
@@ -283,7 +300,6 @@ $long = [
             });
     }
 
-    // Fungsi untuk menampilkan/menyembunyikan input jenis kejahatan lainnya
     function toggleCustomInput() {
         const jenisKejahatan = document.getElementById('jenis_kejahatan').value;
         const customDiv = document.getElementById('custom_kejahatan_div');
@@ -298,13 +314,15 @@ $long = [
         }
     }
 
-    // Validasi sisi klien saat form dikirim
     document.querySelector('form').addEventListener('submit', function(e) {
         const namaDaerah = document.getElementById('nama_daerah').value.trim();
         const latitude = document.getElementById('latitude').value.trim();
         const longitude = document.getElementById('longitude').value.trim();
         const jenisKejahatan = document.getElementById('jenis_kejahatan').value;
         const customKejahatan = document.getElementById('custom_kejahatan').value.trim();
+        const namaPelapor = document.getElementById('nama_pelapor').value.trim();
+        const noHp = document.getElementById('no_hp').value.trim();
+        const deskripsi = document.getElementById('deskripsi').value.trim();
 
         if (!namaDaerah) {
             e.preventDefault();
@@ -349,8 +367,40 @@ $long = [
             document.getElementById('custom_kejahatan').focus();
             return false;
         }
+
+        if (!namaPelapor) {
+            e.preventDefault();
+            Swal.fire({
+                icon: 'error',
+                title: 'Data Tidak Lengkap',
+                text: 'Nama pelapor wajib diisi.',
+            });
+            document.getElementById('nama_pelapor').focus();
+            return false;
+        }
+
+        if (!noHp || isNaN(noHp)) {
+            e.preventDefault();
+            Swal.fire({
+                icon: 'error',
+                title: 'Data Tidak Valid',
+                text: 'Nomor telepon wajib diisi dengan angka.',
+            });
+            document.getElementById('no_hp').focus();
+            return false;
+        }
+
+        if (!deskripsi) {
+            e.preventDefault();
+            Swal.fire({
+                icon: 'error',
+                title: 'Data Tidak Lengkap',
+                text: 'Kronologi kejadian wajib diisi.',
+            });
+            document.getElementById('deskripsi').focus();
+            return false;
+        }
     });
 
-    // Memanggil fungsi inisialisasi peta saat halaman dimuat
     window.onload = initMap;
 </script>

@@ -67,6 +67,11 @@
                 <input type="text" class="form-control" name="lastname" id="lastname" placeholder="Masukkan nama belakang" required>
             </div>
 
+            <div class="form-group mb-3 text-start">
+                <label for="phone" class="fw-bold">Nomor Handphone</label>
+                <input type="text" class="form-control" name="phone" id="phone" placeholder="Masukkan nomor handphone" required>
+            </div>
+
             <!-- Kolom input email -->
             <div class="form-group mb-3 text-start">
                 <!-- Label untuk input email -->
