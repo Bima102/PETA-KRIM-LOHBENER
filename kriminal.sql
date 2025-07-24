@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 29 Bulan Mei 2025 pada 14.57
+-- Waktu pembuatan: 24 Jul 2025 pada 13.12
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -46,9 +46,12 @@ CREATE TABLE `maps` (
   `nama_daerah` varchar(255) NOT NULL,
   `latitude` varchar(255) NOT NULL,
   `longitude` varchar(255) NOT NULL,
-  `jenis_kejahatan` enum('curanmor','perampokan','begal','tawuran') DEFAULT NULL,
+  `jenis_kejahatan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_swedish_ci DEFAULT NULL,
+  `nama_pelapor` varchar(255) DEFAULT NULL,
+  `no_hp` varchar(20) DEFAULT NULL,
+  `deskripsi` text DEFAULT NULL,
   `gambar` varchar(255) NOT NULL,
-  `status` varchar(20) DEFAULT 'diterima',
+  `status` enum('pending','Diproses','Selesai','Ditolak') DEFAULT 'pending',
   `created_at` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
@@ -56,18 +59,10 @@ CREATE TABLE `maps` (
 -- Dumping data untuk tabel `maps`
 --
 
-INSERT INTO `maps` (`id`, `kelurahan`, `nama_daerah`, `latitude`, `longitude`, `jenis_kejahatan`, `gambar`, `status`, `created_at`) VALUES
-(25, 'Sindangkerta', 'sindang', '-6.407893', '108.256797', 'begal', '1744798728_a631582e9ed75f58d318.jpg', 'diterima', '2025-01-01 18:28:17'),
-(28, 'Pamayahan', 'jalan pamayahan', '-6.398401', '108.283808', 'perampokan', '1744819850_6ba7c08c5421288c2161.jpg', 'diterima', '2025-01-29 18:28:17'),
-(29, 'Lohbener', 'celeng', '-6.401054', '108.275958', 'tawuran', '1744819909_fe453dec8ee3df1efb90.png', 'diterima', '2025-02-10 18:42:44'),
-(39, 'Lohbener', 'jalan lama lohbener', '-6.410230', '108.282971', 'begal', '1745239207_f8fa3f647cff735d5e7e.png', 'diterima', '2024-05-29 18:28:17'),
-(47, 'Larangan', 'larangan', '-6.404579', '108.225994', 'begal', '1746433621_6c4e174e68f69e03dec3.png', 'diterima', '2023-05-29 18:28:17'),
-(48, 'Legok', 'jalan baru', '-6.419881', '108.275440', 'begal', '1746626915_7fcf6eafb3227a8ed0c2.png', 'diterima', '2025-05-29 18:28:17'),
-(49, 'Kiajaran Kulon', 'wanguk', '-6.407879 ', '108.251600', 'curanmor', '1747316054_49ffb89130a9fac4a596.jpeg', 'diterima', '2025-03-29 18:28:17'),
-(55, 'Larangan', 'pantura larangan ', '-6.407934', '108.253530', 'perampokan', '1747820382_a048cafbf3081869478d.png', 'diterima', '2025-04-29 18:28:17'),
-(56, 'Waru', 'waru lor', '-6.423006', '108.249626', 'curanmor', '1748016456_d1ad14614021a96fb52c.png', 'pending', '2025-03-29 18:28:17'),
-(58, 'Waru', 'gang baru', '-6.419987', '108.266400', 'curanmor', '1748396381_5185429ca3fd9913b0be.png', 'diterima', '2025-04-29 18:28:17'),
-(59, 'Larangan', 'jalan pantura larangan', '-6.405310', '108.266126', 'begal', '1748518774_4dd16ad5c25c8ff46b5e.jpg', 'diterima', '2025-05-29 06:39:34');
+INSERT INTO `maps` (`id`, `kelurahan`, `nama_daerah`, `latitude`, `longitude`, `jenis_kejahatan`, `nama_pelapor`, `no_hp`, `deskripsi`, `gambar`, `status`, `created_at`) VALUES
+(102, 'Waru', 'esuk', '-6.417799', '108.255021', 'begal', 'bima', '081935487229', 'bdjq', 'danger.png', 'Selesai', '2025-07-24 03:59:25'),
+(103, 'Waru', 'hadvhahd', '-6.417568', '108.255226', 'perampokan', 'bima', '081935487229', 'wdbjwbdjw', 'danger.png', 'Selesai', '2025-07-24 04:17:48'),
+(105, 'Larangan', 'hdwhwd', '-6.407934', '108.256070', 'curanmor', 'andre', '081935487229', 'wdbqwdbwj', 'danger.png', 'Selesai', '2025-07-24 04:58:54');
 
 -- --------------------------------------------------------
 
@@ -106,18 +101,20 @@ CREATE TABLE `users` (
   `email` varchar(50) NOT NULL,
   `role` varchar(10) NOT NULL DEFAULT 'user',
   `password` varchar(255) NOT NULL,
-  `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL
+  `phone` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data untuk tabel `users`
 --
 
-INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `role`, `password`, `created_at`, `updated_at`) VALUES
-(10, 'wahyu', 'pratama', 'wahyu@gmail.com', 'user', '$2y$10$pdGpQIFWT73BlouWYYaSw.twKwQylqL.T32ia5yApT9Ftd.B1YOna', '2025-04-05 02:05:26', '0000-00-00 00:00:00'),
-(11, 'admin', 'kepolisian', 'admin@gmail.com', 'admin', '$2y$10$jukls5o2bzgj2ssnmMWbu.bZx67ucP1SZGwr.eCQRfUwXnc.8qCyi', '2025-04-05 02:26:20', '0000-00-00 00:00:00'),
-(12, 'Bima ', 'saputra', 'bima@gmail.com', 'user', '$2y$10$PNKXVL04Q66TEyHHlgBytuIzSgllAZAMKlRGZiyCuv.TiCS2cATh.', '2025-04-09 04:53:37', '0000-00-00 00:00:00');
+INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `role`, `password`, `phone`) VALUES
+(10, 'wahyu', 'pratama', 'wahyu@gmail.com', 'user', '$2y$10$pdGpQIFWT73BlouWYYaSw.twKwQylqL.T32ia5yApT9Ftd.B1YOna', NULL),
+(11, 'admin', 'kepolisian', 'admin@gmail.com', 'admin', '$2y$10$jukls5o2bzgj2ssnmMWbu.bZx67ucP1SZGwr.eCQRfUwXnc.8qCyi', NULL),
+(12, 'Bima ', 'saputra', 'bimasputra102@gmail.com', 'user', '$2y$10$PNKXVL04Q66TEyHHlgBytuIzSgllAZAMKlRGZiyCuv.TiCS2cATh.', '081935487229'),
+(13, 'wasno', 'tardi', 'wasno@gmail.com', 'user', '$2y$10$HKT340IE13DmLdsVkFVNYeSUzPqYpuaaXQcWVMGbbvUYB4Y3sY/.2', NULL),
+(14, 'latifa', 'nazwa', 'latifa@gmail.com', 'user', '$2y$10$HDBbTdkTOXxE75lA14AIt.Jz8yNIgI.SPAmQoP582AV9I9XUzy5Z6', NULL),
+(19, 'deni', 'pirman', 'punchkyy@gmail.com', 'user', '$2y$10$hBgv.vdNa7atIrPKl92OG.ujRQdyPhICHSK0iHvzX.5mZfwmBCCqu', '081935487229');
 
 --
 -- Indexes for dumped tables
@@ -162,7 +159,7 @@ ALTER TABLE `connections`
 -- AUTO_INCREMENT untuk tabel `maps`
 --
 ALTER TABLE `maps`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=106;
 
 --
 -- AUTO_INCREMENT untuk tabel `migrations`
@@ -174,7 +171,7 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT untuk tabel `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
