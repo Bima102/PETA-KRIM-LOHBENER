@@ -72,6 +72,23 @@
             padding: 0.5rem 1rem; /* Padding navbar yang ramping */
         }
 
+        /* Gaya untuk pop-up notifikasi */
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -10px;
+            background-color: #dc3545; /* Warna merah untuk perhatian */
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
         /* Responsivitas untuk layar kecil */
         @media (max-width: 576px) {
             .navbar-brand {
@@ -84,6 +101,13 @@
             .navbar {
                 padding: 0.3rem 0.8rem; /* Padding navbar lebih kecil */
             }
+            .notification-badge {
+                top: -3px;
+                right: -5px;
+                width: 15px;
+                height: 15px;
+                font-size: 10px;
+            }
         }
     </style>
 </head>
@@ -93,6 +117,8 @@
     <?php
         $uri = service('uri');
         $segment1 = $uri->getSegment(1, ''); // Mengambil segmen pertama URI, default kosong
+        $dataModel = new \App\Models\M_Wilayah();
+        $pendingCount = $dataModel->whereIn('status', ['pending', 'Diproses'])->countAllResults();
     ?>
 
     <!-- Bagian Navbar -->
@@ -119,30 +145,35 @@
 
                         <!-- Menu untuk admin -->
                         <?php if ($role == 'admin') : ?>
-                            <li class="nav-item">
+                            <li class="nav-item position-relative">
                                 <a class="nav-link <?= ($segment1 == 'dashboard') ? 'active' : ''; ?>" href="/dashboard">Dashboard</a>
                             </li>
-                            <li class="nav-item">
+                            <li class="nav-item position-relative">
                                 <a class="nav-link <?= ($segment1 == 'statistik') ? 'active' : ''; ?>" href="/statistik">Statistik Kejahatan</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link <?= ($segment1 == 'wilayah') ? 'active' : ''; ?>" href="/wilayah">Data Wilayah</a>
+                            <li class="nav-item position-relative">
+                                <a class="nav-link <?= ($segment1 == 'wilayah') ? 'active' : ''; ?>" href="/wilayah">
+                                    Data Wilayah
+                                    <?php if ($pendingCount > 0): ?>
+                                        <span class="notification-badge"><?= $pendingCount ?></span>
+                                    <?php endif; ?>
+                                </a>
                             </li>
-                            <li class="nav-item">
+                            <li class="nav-item position-relative">
                                 <a class="nav-link <?= ($segment1 == 'maps') ? 'active' : ''; ?>" href="/maps">Peta</a>
                             </li>
                         <!-- Menu untuk pengguna biasa -->
                         <?php elseif ($role == 'user') : ?>
-                            <li class="nav-item">
+                            <li class="nav-item position-relative">
                                 <a class="nav-link <?= ($segment1 == 'halaman_utama') ? 'active' : ''; ?>" href="/halaman_utama">Halaman Utama</a>
                             </li>
-                            <li class="nav-item">
+                            <li class="nav-item position-relative">
                                 <a class="nav-link <?= ($segment1 == 'statistik') ? 'active' : ''; ?>" href="/statistik">Statistik Kejahatan</a>
                             </li>
-                            <li class="nav-item">
+                            <li class="nav-item position-relative">
                                 <a class="nav-link <?= ($segment1 == 'maps_user') ? 'active' : ''; ?>" href="/maps_user">Peta</a>
                             </li>
-                            <li class="nav-item">
+                            <li class="nav-item position-relative">
                                 <a class="nav-link <?= ($segment1 == 'wilayah') ? 'active fw-bold text-primary' : ''; ?>" href="<?= base_url('/wilayah/aduan'); ?>">Lapor</a>
                             </li>
                         <?php endif; ?>
@@ -152,13 +183,13 @@
                         </li>
                     <!-- Menu untuk pengguna yang belum login -->
                     <?php else : ?>
-                        <li class="nav-item">
+                        <li class="nav-item position-relative">
                             <a class="nav-link <?= ($segment1 == 'halaman_utama') ? 'active' : ''; ?>" href="/halaman_utama">Halaman Utama</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item position-relative">
                             <a class="nav-link <?= ($segment1 == 'statistik') ? 'active' : ''; ?>" href="/statistik">Statistik Kejahatan</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item position-relative">
                             <a class="nav-link <?= ($segment1 == 'maps_user') ? 'active' : ''; ?>" href="/maps_user">Peta</a>
                         </li>
                         <!-- Tombol login untuk pengguna yang belum login -->

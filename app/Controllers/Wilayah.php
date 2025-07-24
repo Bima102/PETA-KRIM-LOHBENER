@@ -62,7 +62,7 @@ class Wilayah extends BaseController
         }
 
         $this->builder->select('maps.kelurahan, maps.nama_daerah, maps.latitude, maps.longitude, maps.jenis_kejahatan, maps.nama_pelapor, maps.no_hp, maps.deskripsi, maps.gambar, maps.id, maps.status');
-        $this->builder->whereIn('maps.status', ['Diproses', 'Selesai']);
+        $this->builder->whereIn('maps.status', ['pending', 'Diproses', 'Selesai']);
         $tahun = $this->request->getGet('tahun');
         $bulan = $this->request->getGet('bulan');
 
@@ -89,7 +89,7 @@ class Wilayah extends BaseController
              SUM(CASE WHEN jenis_kejahatan = 'perampokan' THEN 1 ELSE 0 END) +
              SUM(CASE WHEN jenis_kejahatan = 'begal' THEN 1 ELSE 0 END) +
              SUM(CASE WHEN jenis_kejahatan = 'tawuran' THEN 1 ELSE 0 END)) as total_kejahatan");
-        $laporanBuilder->whereIn('status', ['Diproses', 'Selesai']);
+        $laporanBuilder->whereIn('status', ['pending', 'Diproses', 'Selesai']);
         if ($tahun) {
             $laporanBuilder->where('YEAR(created_at)', $tahun);
             if ($bulan) {
