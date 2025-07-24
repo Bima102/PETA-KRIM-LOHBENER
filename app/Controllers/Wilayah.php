@@ -15,6 +15,45 @@ class Wilayah extends BaseController
         $this->builder = $this->db->table('maps');
     }
 
+    private function sendWhatsAppMessage($no_hp, $message)
+    {
+        $token = 'utLc1fdSmBVG2weieKt6'; // Ganti dengan token API Fonnte Anda
+        $url = 'https://api.fonnte.com/send';
+
+        $data = [
+            'target' => $no_hp,
+            'message' => $message,
+            'countryCode' => '+62', // Kode negara Indonesia
+        ];
+
+        $curl = curl_init();
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => http_build_query($data),
+            CURLOPT_HTTPHEADER => [
+                "Authorization: $token"
+            ],
+        ]);
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+        curl_close($curl);
+
+        if ($err) {
+            log_message('error', 'Fonnte API Error: ' . $err);
+            return false;
+        } else {
+            $result = json_decode($response, true);
+            return isset($result['status']) && $result['status'] === true;
+        }
+    }
+
     public function wilayah_data_read()
     {
         if (!session()->get('isLoggedIn') || session()->get('role') !== 'admin') {
@@ -22,8 +61,8 @@ class Wilayah extends BaseController
             return redirect()->to('/login');
         }
 
-        $this->builder->select('maps.kelurahan, maps.nama_daerah, maps.latitude, maps.longitude, maps.jenis_kejahatan, maps.nama_pelapor, maps.no_hp, maps.deskripsi, maps.gambar, maps.id');
-        $this->builder->where('maps.status', 'diterima');
+        $this->builder->select('maps.kelurahan, maps.nama_daerah, maps.latitude, maps.longitude, maps.jenis_kejahatan, maps.nama_pelapor, maps.no_hp, maps.deskripsi, maps.gambar, maps.id, maps.status');
+        $this->builder->whereIn('maps.status', ['Diproses', 'Selesai']);
         $tahun = $this->request->getGet('tahun');
         $bulan = $this->request->getGet('bulan');
 
@@ -50,7 +89,7 @@ class Wilayah extends BaseController
              SUM(CASE WHEN jenis_kejahatan = 'perampokan' THEN 1 ELSE 0 END) +
              SUM(CASE WHEN jenis_kejahatan = 'begal' THEN 1 ELSE 0 END) +
              SUM(CASE WHEN jenis_kejahatan = 'tawuran' THEN 1 ELSE 0 END)) as total_kejahatan");
-        $laporanBuilder->where('status', 'diterima');
+        $laporanBuilder->whereIn('status', ['Diproses', 'Selesai']);
         if ($tahun) {
             $laporanBuilder->where('YEAR(created_at)', $tahun);
             if ($bulan) {
@@ -70,6 +109,7 @@ class Wilayah extends BaseController
             'laporanData' => $laporanData,
             'kelurahan'   => $dataModel->getKelurahanEnum(),
             'pengaduan'   => $dataModel->get_pending_laporan()->getResult(),
+            'selesai'     => $dataModel->get_selesai_laporan()->getResult(),
             'validation'  => \Config\Services::validation(),
             'tahun'       => $tahun,
             'bulan'       => $bulan
@@ -77,6 +117,51 @@ class Wilayah extends BaseController
 
         echo view('templates/header', $data);
         echo view('wilayah/wilayah', $data);
+    }
+
+    public function updateStatus($id)
+    {
+        if (!session()->get('isLoggedIn') || session()->get('role') !== 'admin') {
+            session()->setFlashdata('error', 'Anda harus login sebagai admin untuk mengubah status laporan.');
+            return redirect()->to('/login');
+        }
+
+        $status = $this->request->getPost('status');
+        $dataModel = new M_Wilayah();
+        $laporan = $dataModel->find($id);
+
+        if (!$laporan) {
+            session()->setFlashdata('error', 'Laporan tidak ditemukan.');
+            return redirect()->to('/wilayah');
+        }
+
+        $no_hp = $laporan->no_hp;
+        $nama_pelapor = $laporan->nama_pelapor;
+        $message = '';
+
+        if ($status === 'Diproses') {
+            $message = "Halo $nama_pelapor, laporan Anda sedang diproses oleh Polsek Lohbener.";
+            $this->db->table('maps')->update(['status' => 'Diproses'], ['id' => $id]);
+        } elseif ($status === 'Selesai') {
+            $message = "Halo $nama_pelapor, laporan Anda telah selesai ditangani oleh Polsek Lohbener. Terima kasih atas laporan Anda.";
+            $this->db->table('maps')->update(['status' => 'Selesai'], ['id' => $id]);
+        } elseif ($status === 'Ditolak') {
+            $message = "Halo $nama_pelapor, maaf laporan Anda ditolak oleh Polsek Lohbener karena tidak memenuhi syarat.";
+            if ($laporan->gambar != 'danger.png' && file_exists('img/' . $laporan->gambar)) {
+                unlink('img/' . $laporan->gambar);
+            }
+            $dataModel->delete($id);
+        } else {
+            session()->setFlashdata('error', 'Status tidak valid.');
+            return redirect()->to('/wilayah');
+        }
+
+        if (!empty($message)) {
+            $this->sendWhatsAppMessage($no_hp, $message);
+        }
+
+        session()->setFlashdata('msg', 'Status laporan berhasil diperbarui.');
+        return redirect()->to('/wilayah');
     }
 
     public function wilayah_data_save()
@@ -122,12 +207,17 @@ class Wilayah extends BaseController
             'no_hp'             => $this->request->getPost('no_hp'),
             'deskripsi'         => $this->request->getPost('deskripsi'),
             'gambar'            => $namaSampul,
-            'status'            => 'diterima',
+            'status'            => 'pending',
             'created_at'        => date('Y-m-d H:i:s')
         ];
 
         $modelMasterData = new M_Wilayah();
         $modelMasterData->save($dataMaster);
+
+        $this->sendWhatsAppMessage(
+            $this->request->getPost('no_hp'),
+            "Halo {$this->request->getPost('nama_pelapor')}, laporan Anda telah diterima dan sedang menunggu validasi oleh Polsek Lohbener."
+        );
 
         session()->setFlashdata('msg', 'Data berhasil ditambahkan.');
         return redirect()->to('/wilayah');
@@ -194,6 +284,11 @@ class Wilayah extends BaseController
             'gambar'          => $namaGambar,
         ]);
 
+        $this->sendWhatsAppMessage(
+            $this->request->getVar('no_hp'),
+            "Halo {$this->request->getVar('nama_pelapor')}, data laporan Anda telah diperbarui oleh Polsek Lohbener."
+        );
+
         session()->setFlashdata('msg', 'Data berhasil diubah.');
         return redirect()->to('/wilayah');
     }
@@ -206,15 +301,22 @@ class Wilayah extends BaseController
         }
 
         $dataModel = new M_Wilayah();
-        $mWilayah = $dataModel->find($id);
+        $laporan = $dataModel->find($id);
 
-        if ($mWilayah && $mWilayah->gambar != 'danger.png' && file_exists('img/' . $mWilayah->gambar)) {
-            unlink('img/' . $mWilayah->gambar);
+        if ($laporan) {
+            if ($laporan->gambar != 'danger.png' && file_exists('img/' . $laporan->gambar)) {
+                unlink('img/' . $laporan->gambar);
+            }
+            $this->sendWhatsAppMessage(
+                $laporan->no_hp,
+                "Halo {$laporan->nama_pelapor}, laporan Anda telah dihapus oleh Polsek Lohbener."
+            );
+            $dataModel->delete($id);
+            session()->setFlashdata('msg', 'Data berhasil dihapus.');
+        } else {
+            session()->setFlashdata('error', 'Laporan tidak ditemukan.');
         }
 
-        $dataModel->delete($id);
-
-        session()->setFlashdata('msg', 'Data berhasil dihapus.');
         return redirect()->to('/wilayah');
     }
 
@@ -298,8 +400,6 @@ class Wilayah extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        log_message('debug', 'Data POST: ' . print_r($this->request->getPost(), true));
-
         $file = $this->request->getFile('gambar');
         $namaGambar = $file->isValid() ? $file->getRandomName() : 'danger.png';
 
@@ -331,7 +431,10 @@ class Wilayah extends BaseController
             'created_at'      => date('Y-m-d H:i:s')
         ]);
 
-        log_message('debug', 'Last Query: ' . $this->db->getLastQuery());
+        $this->sendWhatsAppMessage(
+            $this->request->getPost('no_hp'),
+            "Halo {$this->request->getPost('nama_pelapor')}, laporan Anda telah diterima dan sedang menunggu validasi oleh Polsek Lohbener."
+        );
 
         return redirect()->to('/wilayah/aduan')->with('msg', 'Laporan berhasil dikirim untuk proses.');
     }
@@ -343,12 +446,18 @@ class Wilayah extends BaseController
             return redirect()->to('/login');
         }
 
-        $this->db->table('maps')->update(['status' => 'diterima'], ['id' => $id]);
+        $dataModel = new M_Wilayah();
+        $laporan = $dataModel->find($id);
 
-        if ($this->db->affectedRows() > 0) {
+        if ($laporan) {
+            $this->db->table('maps')->update(['status' => 'Diproses'], ['id' => $id]);
+            $this->sendWhatsAppMessage(
+                $laporan->no_hp,
+                "Halo {$laporan->nama_pelapor}, laporan Anda sedang diproses oleh Polsek Lohbener."
+            );
             session()->setFlashdata('msg', 'Laporan berhasil diterima.');
         } else {
-            session()->setFlashdata('error', 'Gagal menerima laporan. Data tidak ditemukan.');
+            session()->setFlashdata('error', 'Laporan tidak ditemukan.');
         }
 
         return redirect()->to('/wilayah');
@@ -361,9 +470,23 @@ class Wilayah extends BaseController
             return redirect()->to('/login');
         }
 
-        $this->db->table('maps')->delete(['id' => $id]);
+        $dataModel = new M_Wilayah();
+        $laporan = $dataModel->find($id);
 
-        session()->setFlashdata('msg', 'Laporan ditolak dan dihapus.');
+        if ($laporan) {
+            if ($laporan->gambar != 'danger.png' && file_exists('img/' . $laporan->gambar)) {
+                unlink('img/' . $laporan->gambar);
+            }
+            $this->sendWhatsAppMessage(
+                $laporan->no_hp,
+                "Halo {$laporan->nama_pelapor}, maaf laporan Anda ditolak oleh Polsek Lohbener karena tidak memenuhi syarat."
+            );
+            $dataModel->delete($id);
+            session()->setFlashdata('msg', 'Laporan ditolak dan dihapus.');
+        } else {
+            session()->setFlashdata('error', 'Laporan tidak ditemukan.');
+        }
+
         return redirect()->to('/wilayah');
     }
 
@@ -376,13 +499,13 @@ class Wilayah extends BaseController
 
         $statistikBuilder = $this->db->table('maps');
         $statistikBuilder->select('jenis_kejahatan, COUNT(*) as total')
-            ->where('status', 'diterima')
+            ->whereIn('status', ['Diproses', 'Selesai'])
             ->groupBy('jenis_kejahatan')
             ->orderBy('total', 'DESC');
 
         $rankingBuilder = $this->db->table('maps');
         $rankingBuilder->select('nama_daerah as wilayah, jenis_kejahatan, COUNT(*) as total')
-            ->where('status', 'diterima')
+            ->whereIn('status', ['Diproses', 'Selesai'])
             ->groupBy('nama_daerah, jenis_kejahatan')
             ->orderBy('total', 'DESC');
 
@@ -410,7 +533,7 @@ class Wilayah extends BaseController
 
         $jenisList = $model->select('jenis_kejahatan')
             ->distinct()
-            ->where('status', 'diterima')
+            ->whereIn('status', ['Diproses', 'Selesai'])
             ->orderBy('jenis_kejahatan', 'asc')
             ->findAll();
 

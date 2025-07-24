@@ -72,8 +72,15 @@ $submit = [
                         <?= session()->getFlashdata('msg'); ?>
                     </div>
                 <?php endif; ?>
+                <?php if (session()->getFlashdata('error')) : ?>
+                    <div class="alert alert-danger shadow-sm fw-bold mt-3" role="alert">
+                        <i class="fas fa-exclamation-circle me-2 text-danger"></i>
+                        <?= session()->getFlashdata('error'); ?>
+                    </div>
+                <?php endif; ?>
 
                 <hr class="my-5">
+
                 <h5 class="fw-bold mb-3">
                     <i class="fas fa-check-circle text-success me-2"></i> Validasi Laporan Masyarakat
                 </h5>
@@ -91,41 +98,62 @@ $submit = [
                                 <th>Nomor Telepon</th>
                                 <th>Deskripsi Kejadian</th>
                                 <th>Gambar</th>
+                                <th>Status</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($pengaduan as $row): ?>
+                            <?php if (empty($pengaduan)) : ?>
                                 <tr>
-                                    <td><?= esc($row->kelurahan) ?></td>
-                                    <td class="text-nowrap"><?= esc($row->nama_daerah) ?></td>
-                                    <td class="text-nowrap">
-                                        <a href="https://www.google.com/maps?q=<?= esc($row->latitude) ?>,<?= esc($row->longitude) ?>" target="_blank">
-                                            <?= esc($row->latitude) ?>
-                                        </a>
-                                    </td>
-                                    <td class="text-nowrap">
-                                        <a href="https://www.google.com/maps?q=<?= esc($row->latitude) ?>,<?= esc($row->longitude) ?>" target="_blank">
-                                            <?= esc($row->longitude) ?>
-                                        </a>
-                                    </td>
-                                    <td class="text-nowrap"><?= ucfirst(esc($row->jenis_kejahatan)) ?></td>
-                                    <td class="text-nowrap"><?= esc($row->nama_pelapor) ?></td>
-                                    <td class="text-nowrap"><?= esc($row->no_hp) ?></td>
-                                    <td class="text-wrap" style="max-width: 150px;"><?= esc($row->deskripsi) ?></td>
-                                    <td><img src="/img/<?= esc($row->gambar) ?>" width="60" class="rounded-3"></td>
-                                    <td>
-                                        <div class="d-flex justify-content-center gap-2">
-                                            <a href="/wilayah/aduanTerima/<?= esc($row->id) ?>" class="btn btn-success btn-sm">Terima</a>
-                                            <a href="/wilayah/aduanTolak/<?= esc($row->id) ?>" class="btn btn-danger btn-sm">Tolak</a>
-                                        </div>
+                                    <td colspan="11" class="text-center text-muted py-4">
+                                        <i class="fas fa-folder-open fa-2x mb-2 d-block"></i>
+                                        Tidak ada laporan yang perlu divalidasi.
                                     </td>
                                 </tr>
-                            <?php endforeach ?>
+                            <?php else : ?>
+                                <?php foreach ($pengaduan as $row): ?>
+                                    <tr>
+                                        <td><?= esc($row->kelurahan) ?></td>
+                                        <td class="text-nowrap"><?= esc($row->nama_daerah) ?></td>
+                                        <td class="text-nowrap">
+                                            <a href="https://www.google.com/maps?q=<?= esc($row->latitude) ?>,<?= esc($row->longitude) ?>" target="_blank">
+                                                <?= esc($row->latitude) ?>
+                                            </a>
+                                        </td>
+                                        <td class="text-nowrap">
+                                            <a href="https://www.google.com/maps?q=<?= esc($row->latitude) ?>,<?= esc($row->longitude) ?>" target="_blank">
+                                                <?= esc($row->longitude) ?>
+                                            </a>
+                                        </td>
+                                        <td class="text-nowrap"><?= ucfirst(esc($row->jenis_kejahatan)) ?></td>
+                                        <td class="text-nowrap"><?= esc($row->nama_pelapor) ?></td>
+                                        <td class="text-nowrap"><?= esc($row->no_hp) ?></td>
+                                        <td class="text-wrap" style="max-width: 150px;"><?= esc($row->deskripsi) ?></td>
+                                        <td><img src="/img/<?= esc($row->gambar) ?>" width="60" class="rounded-3"></td>
+                                        <td class="text-nowrap"><?= esc($row->status) ?></td>
+                                        <td>
+                                            <form action="/wilayah/updateStatus/<?= esc($row->id) ?>" method="POST">
+                                                <select name="status" class="form-control status-dropdown" onchange="this.form.submit()">
+                                                    <option value="" <?= $row->status == 'pending' ? 'selected' : '' ?>>Pilih Salah Satu</option>
+                                                    <option value="Diproses" <?= $row->status == 'Diproses' ? 'selected' : '' ?>>Diproses</option>
+                                                    <option value="Selesai" <?= $row->status == 'Selesai' ? 'selected' : '' ?>>Selesai</option>
+                                                    <option value="Ditolak">Ditolak</option>
+                                                </select>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                <?php endforeach ?>
+                            <?php endif; ?>
                         </tbody>
                     </table>
                 </div>
 
+                <hr class="my-5">
+                <h5 class="fw-bold mb-3">
+                    <i class="fas fa-check-circle text-success me-2"></i> Laporan Selesai
+                </h5>
+
+                                <!-- Memindahkan filter dan button ke atas kiri tabel -->
                 <div class="d-flex justify-content-start align-items-center my-4 flex-wrap gap-2">
                     <form id="filterForm" method="get" action="" class="d-flex gap-2 me-3">
                         <select name="tahun" id="tahun" class="form-control fw-bold rounded-3" onchange="this.form.submit()">
@@ -177,15 +205,15 @@ $submit = [
                             </tr>
                         </thead>
                         <tbody class="bg-white text-center">
-                            <?php if (empty($content)) : ?>
+                            <?php if (empty($selesai)) : ?>
                                 <tr>
                                     <td colspan="10" class="text-center text-muted py-4">
                                         <i class="fas fa-folder-open fa-2x mb-2 d-block"></i>
-                                        Tidak ada data.
+                                        Tidak ada laporan selesai.
                                     </td>
                                 </tr>
                             <?php else : ?>
-                                <?php foreach ($content as $row): ?>
+                                <?php foreach ($selesai as $row): ?>
                                     <tr class="border-bottom border-light">
                                         <td><?= esc($row->kelurahan) ?></td>
                                         <td class="text-nowrap"><?= esc($row->nama_daerah) ?></td>

@@ -24,7 +24,7 @@ $routes->get('statistik', 'Wilayah::statistik');
 $routes->get('/register', 'Users::register');
 $routes->post('/register', 'Users::register');
 $routes->get('/login', 'Users::index');
-$routes->post('/login', 'Users::index'); // Ubah dari /index ke /login
+$routes->post('/login', 'Users::index');
 $routes->get('/logout', 'Users::logout');
 $routes->get('/wilayah/aduan', 'Wilayah::aduan');
 $routes->post('/wilayah/aduanSave', 'Wilayah::aduanSave');
@@ -38,8 +38,9 @@ $routes->post('/wilayah_data_save', 'Wilayah::wilayah_data_save', ['filter' => '
 $routes->post('/wilayah/wilayahUpdate/(:segment)', 'Wilayah::wilayahUpdate/$1', ['filter' => 'auth']);
 $routes->get('/editWilayah/(:any)', 'Wilayah::wilayah_edit/$1', ['filter' => 'auth']);
 $routes->get('/wilayahDelete/(:any)', 'Wilayah::wilayahDelete/$1', ['filter' => 'auth']);
-$routes->get('/wilayah/aduanTerima/(:num)', 'Wilayah::aduanTerima/$1');
-$routes->get('/wilayah/aduanTolak/(:num)', 'Wilayah::aduanTolak/$1');
+$routes->get('/wilayah/aduanTerima/(:num)', 'Wilayah::aduanTerima/$1', ['filter' => 'auth']);
+$routes->get('/wilayah/aduanTolak/(:num)', 'Wilayah::aduanTolak/$1', ['filter' => 'auth']);
+$routes->post('/wilayah/updateStatus/(:num)', 'Wilayah::updateStatus/$1', ['filter' => 'auth']);
 
 if (is_file(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
     require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';

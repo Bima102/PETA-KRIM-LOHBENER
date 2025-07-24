@@ -21,10 +21,6 @@
                             Tujuannya adalah membantu masyarakat lebih waspada<br>
                             dan berhati-hati.
                         </p>
-                        <!-- Tombol untuk menjelajahi fitur dengan animasi AOS -->
-                        <p class="text-center" data-aos="fade-up" data-aos-delay="200">
-                            <a class="btn btn-warning btn-lg shadow-sm fw-semibold px-4" href="#features" role="button">JELAJAHI</a>
-                        </p>
                     </div>
                 </div>
             </div>

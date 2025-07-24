@@ -53,7 +53,7 @@ class M_Wilayah extends Model
     {
         $builder = $this->db->table('maps');
         $builder->select('jenis_kejahatan, COUNT(*) as total')
-                ->where('status', 'diterima')
+                ->whereIn('status', ['Diproses', 'Selesai'])
                 ->groupBy('jenis_kejahatan')
                 ->orderBy('total', 'DESC');
         if ($tahun) {
@@ -75,7 +75,7 @@ class M_Wilayah extends Model
     {
         $builder = $this->db->table('maps');
         $builder->select('nama_daerah as wilayah, jenis_kejahatan, COUNT(*) as total')
-                ->where('status', 'diterima')
+                ->whereIn('status', ['Diproses', 'Selesai'])
                 ->groupBy('nama_daerah, jenis_kejahatan')
                 ->orderBy('total', 'DESC');
         if ($tahun) {
@@ -97,7 +97,15 @@ class M_Wilayah extends Model
     {
         return $this->db->table('maps')
                        ->select('maps.*')
-                       ->where('maps.status', 'pending')
+                       ->whereIn('maps.status', ['pending', 'Diproses'])
                        ->get();
     }
-}   
+
+    public function get_selesai_laporan()
+    {
+        return $this->db->table('maps')
+                       ->select('maps.*')
+                       ->where('maps.status', 'Selesai')
+                       ->get();
+    }
+}
